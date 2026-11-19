@@ -66,7 +66,7 @@ PHOTOS = {  # key -> file in src/photos (optional)
     "kiln": "kiln.webp", "stock": "stock.webp", "hydrators": "hydrators.webp", "classifier": "classifier.webp",
     "smallbag": "smallbag.webp", "jumbo": "jumbo.webp", "jumbo-front": "jumbo-front.webp",
     "jumbo-vs-bags": "jumbo-vs-bags.webp", "warehouse": "warehouse.webp", "lab-titration": "lab-titration.webp",
-    "lab-balance": "lab-balance.webp", "lab-hotplate": "lab-hotplate.webp", "akshay": "akshay.webp",
+    "lab-balance": "lab-balance.webp", "lab-hotplate": "lab-hotplate.webp", "akshay": "akshay.webp", "brochure-cover": "brochure-cover.webp",
 }
 
 
@@ -171,7 +171,7 @@ def footer(root):
     return f'''<footer class="site-foot">
 <div class="wrap foot-grid">
 <div>{brand(root, dark=True)}<p>Hydrated lime in seven grades, made at our own plant in Ransigaon, Jodhpur.</p></div>
-<div><h2>Products</h2><ul><li><a href="{href(root, 'hydrated-lime')}">Hydrated lime grades</a></li><li><a href="{href(root, 'export')}">Prices &amp; export</a></li><li><a href="{href(root, 'hydroxyapatite')}">Hydroxyapatite</a></li></ul></div>
+<div><h2>Products</h2><ul><li><a href="{href(root, 'hydrated-lime')}">Hydrated lime grades</a></li><li><a href="{href(root, 'export')}">Prices &amp; export</a></li><li><a href="{brochure_href(root, 'lime')}" download>Hydrated lime brochure (PDF)</a></li><li><a href="{href(root, 'hydroxyapatite')}">Hydroxyapatite</a></li></ul></div>
 <div><h2>Company</h2><ul><li><a href="{href(root, 'about')}">About &amp; quality</a></li><li><a href="{href(root, 'contact')}">Request a quote</a></li><li>Office: {OFFICE}</li></ul></div>
 <div><h2>Contact</h2><ul><li><a href="tel:{PHONE_TEL}">{PHONE_DISPLAY}</a></li><li><a href="{WHATSAPP}">WhatsApp us</a></li><li><a href="mailto:{EMAIL}">{EMAIL}</a></li></ul></div>
 </div>
@@ -549,6 +549,47 @@ def hap_asks_grid():
     return f'<div class="asks">{cards}</div>'
 
 
+# Brochures shown at the top of the home page. Set "file" to a PDF in src/brochures/ to publish one;
+# file None shows a "coming soon" card.
+BROCHURES = {
+    "lime": {"title": "Hydrated Lime Brochure 2026", "file": "Calvara-Hydrated-Lime-Brochure-2026.pdf",
+             "meta": "10 pages · PDF · 1.3 MB", "what": "All 7 grades and specs, plant photos, packing, export loading and CoA format."},
+    "hap": {"title": "Hydroxyapatite Brochure", "file": None,
+            "meta": "Coming soon", "what": "Need details now? Ask Akshay for the TDS and a sample CoA on WhatsApp."},
+}
+
+
+def brochure_href(root, key):
+    f = BROCHURES[key]["file"]
+    return f"{root}brochures/{f}" if f else None
+
+
+def brochure_block(root):
+    lime, hap = BROCHURES["lime"], BROCHURES["hap"]
+    lh = brochure_href(root, "lime")
+    hh = brochure_href(root, "hap")
+    hap_btn = (f'<a class="btn btn-line" href="{hh}" download>Download PDF</a>' if hh else
+               f'<a class="btn btn-line" href="{wa("Hello Akshay, please send the hydroxyapatite TDS and a sample CoA.")}">Ask on WhatsApp</a>')
+    return f'''<div class="brochures" aria-label="Brochures">
+<div class="broch broch-main">
+<a class="broch-cover" href="{lh}" target="_blank" rel="noopener"><img src="photos/brochure-cover.webp" alt="Cover of the Calvara Hydrated Lime Brochure 2026" width="150" height="212"></a>
+<div class="broch-body">
+<p class="broch-kicker">Free download</p>
+<h2 class="broch-title">{lime["title"]}</h2>
+<p class="broch-what">{lime["what"]}</p>
+<div class="btn-row"><a class="btn btn-red btn-big" href="{lh}" download>Download brochure (PDF)</a><a class="btn btn-line" href="{lh}" target="_blank" rel="noopener">View online</a></div>
+<p class="broch-meta">{lime["meta"]}</p>
+</div></div>
+<div class="broch broch-hap">
+<div class="broch-body">
+<p class="broch-kicker">{hap["meta"]}</p>
+<h2 class="broch-title broch-title-sm">{hap["title"]}</h2>
+<p class="broch-what">{hap["what"]}</p>
+<div class="btn-row">{hap_btn}</div>
+</div></div>
+</div>'''
+
+
 # ---------- pages ----------
 def home():
     root = ""
@@ -558,9 +599,13 @@ def home():
 <p class="eyebrow-plain">Hydrated lime · Jodhpur, Rajasthan</p>
 <h1>Hydrated lime, made to the grade you need.</h1>
 <p class="lede">Seven grades from 80 to 95 % Ca(OH)<sub>2</sub>, made at our own plant in Ransigaon, Jodhpur. Every lot is tested in our plant lab and ships with a Certificate of Analysis.</p>
-<div class="btn-row"><a class="btn btn-solid" href="#quote">Get a price</a><a class="btn btn-line" href="{href(root, 'hydrated-lime')}">See all grades</a></div>
+<div class="btn-row"><a class="btn btn-solid" href="#quote">Get a price</a><a class="btn btn-red" href="{brochure_href(root, 'lime')}" download>Download brochure</a></div>
 </div>
 <div class="hero-ladder">{ladder()}</div>
+</div></section>
+
+<section class="broch-band" id="brochure"><div class="wrap">
+{brochure_block(root)}
 </div></section>
 
 <section><div class="wrap">{stats()}</div></section>
@@ -657,7 +702,7 @@ def lime():
 <div class="prose" style="gap:18px">
 <h1>Hydrated lime in seven grades</h1>
 <p class="lede">Calcium hydroxide, Ca(OH)<sub>2</sub>. Fine, dry, high-purity powder from the lime belt of Jodhpur, Rajasthan. Every lot is tested and labelled, and made to the grade you need.</p>
-<div class="btn-row"><a class="btn btn-solid" href="{href(root, 'contact')}">Ask for a sample</a><a class="btn btn-line" href="#spec">Compare grades</a></div>
+<div class="btn-row"><a class="btn btn-red" href="{brochure_href(root, 'lime')}" download>Download brochure (PDF)</a><a class="btn btn-line" href="#spec">Compare grades</a></div>
 </div>
 <div class="mini-tile"><span class="formula">Ca(OH)<sub>2</sub></span><span class="meta">Calcium hydroxide · CAS 1305-62-0 · HSN 2522</span><span class="meta">Grades 95 · 94 · 93 · 92 · 90 · 85 · 80</span></div>
 </div>
@@ -1013,6 +1058,7 @@ def not_found():
 
 def extras():
     shutil.copytree(ROOT / "src" / "assets", OUT / "assets", dirs_exist_ok=True)
+    shutil.copytree(ROOT / "src" / "brochures", OUT / "brochures", dirs_exist_ok=True)
     if (ROOT / "src" / "photos").exists():
         shutil.copytree(ROOT / "src" / "photos", OUT / "assets" / "photos", dirs_exist_ok=True)
     (OUT / "assets" / "brand").mkdir(exist_ok=True)
