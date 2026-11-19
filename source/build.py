@@ -59,7 +59,7 @@ PLANT_STEPS = [
     ("stock", "Raw material stock", "Quicklime from the kiln is stocked under cover and fed to the hydrators by conveyor."),
     ("hydrators", "Hydrators", "Quicklime is slaked with measured water into dry Ca(OH)<sub>2</sub> powder."),
     ("classifier", "Classifier", "Separates fine powder from grit to reach each grade's fineness."),
-    ("smallbag", "Small bag packing", "Powder is fed from hoppers and filled in 25, 30, 40, 45 or 50 kg bags."),
+    ("smallbag", "Small bag packing", "Powder is fed from hoppers and filled in 25, 30, 35 or 40 kg bags."),
     ("jumbo", "Jumbo-bag packing", "900 kg bags filled under a bag-filter dust collector."),
 ]
 PHOTOS = {  # key -> file in src/photos (optional)
@@ -108,8 +108,8 @@ NAV = [("hydrated-lime", "Hydrated lime"), ("export", "Prices &amp; export"), ("
 # link page: a site page key ('', 'export', 'hydroxyapatite', ...) optionally with #anchor, or a full https:// URL.
 ANNOUNCEMENTS = [
     ("Free sample", "Get a free sample of any grade, with its Certificate of Analysis.", "export#quote", "Ask now"),
-    ("Export", "CIF and CFR quotes to your port, palletised or loose.", "export#quote", "Get a price"),
-    ("Ready stock", "Seven grades, 80 to 95 % Ca(OH)₂, in 25 to 50 kg bags and 900 kg jumbo bags.", "hydrated-lime", "See grades"),
+    ("Export", "CIF and CFR quotes to your port, palletised or non-palletised.", "export#quote", "Get a price"),
+    ("Ready stock", "Seven grades, 80 to 95 % Ca(OH)₂, in 25, 30, 35 or 40 kg bags, palletised or non-palletised.", "hydrated-lime", "See grades"),
     ("New", "Hydroxyapatite micro grade: 250 g samples now open.", "hydroxyapatite#quote", "Request"),
 ]
 
@@ -265,7 +265,7 @@ def stats():
 <div><b>7</b><span>purity grades, 80 to 95 %</span></div>
 <div><b>95 %</b><span>top purity, Ca(OH)<sub>2</sub> min.</span></div>
 <div><b>99.5 %</b><span>passes 200 mesh (95 grade)</span></div>
-<div><b>900 kg</b><span>jumbo bags, plus 25 to 50 kg bags</span></div>
+<div><b>25–40 kg</b><span>bags: 25, 30, 35 or 40 kg, palletised or non-palletised</span></div>
 </div>'''
 
 
@@ -360,8 +360,8 @@ def coa_sample():
 
 
 def bags():
-    items = "".join(f'<li><b>{k} kg</b><span>Bag, liner, laminated</span></li>' for k in (25, 30, 40, 45, 50))
-    return f'<ul class="bags">{items}<li class="jumbo"><b>900 kg</b><span>Jumbo bag</span></li></ul>'
+    items = "".join(f'<li><b>{k} kg</b><span>Bag, liner, laminated</span></li>' for k in (25, 30, 35, 40))
+    return f'<ul class="bags">{items}<li class="jumbo"><b>Pallets</b><span>Palletised or non-palletised</span></li></ul>'
 
 
 def start_steps():
@@ -379,7 +379,7 @@ def buy_steps(items):
 
 def wide_photos():
     figs = [("jumbo-front", "900 kg jumbo bags in front of the processing plant"),
-            ("jumbo-vs-bags", "Jumbo bags beside 40 to 45 kg bags"),
+            ("jumbo-vs-bags", "Packed lots at the plant"),
             ("warehouse", "Covered warehouse with packed lots waiting for dispatch")]
     out = "".join(f'<figure><img src="{photo(k)}" alt="{c}" loading="lazy"><figcaption>{c}</figcaption></figure>' for k, c in figs if photo(k))
     return f'<div class="wide-photos">{out}</div>' if out else ""
@@ -411,7 +411,7 @@ def quote_builder(root, heading=True):
     return f'''{head}
 <form class="qb" id="qb" onsubmit="return false">
 <fieldset><legend>Grade</legend><div class="qchips">{chips("grade", grades, "90")}</div></fieldset>
-<fieldset><legend>Packing</legend><div class="qchips">{chips("pack", ["25 kg bags", "50 kg bags", "900 kg jumbo bags", "Other bag size"], "25 kg bags")}</div></fieldset>
+<fieldset><legend>Packing</legend><div class="qchips">{chips("pack", ["25 kg bags", "30 kg bags", "35 kg bags", "40 kg bags"], "25 kg bags")}</div></fieldset>
 <fieldset><legend>Pallets</legend><div class="qchips">{chips("pallet", ["Palletised", "Not palletised", "Not sure"], "Not sure")}</div></fieldset>
 <fieldset><legend>Price basis</legend><div class="qchips">{chips("terms", ["CIF", "CFR", "FOB India", "Ex-works Jodhpur", "Delivered in India"], "CIF")}</div></fieldset>
 <div class="qrow">
@@ -447,7 +447,7 @@ ASKS = [
      "Bags loaded palletised and stretch-wrapped, or loose (non-palletised) for more tonnes per container. Tell us which you need.",
      "Hello Akshay, please quote hydrated lime palletised and non-palletised so I can compare. Grade: ___ Port: ___"),
     ("Bag type and size",
-     "25, 30, 40, 45 or 50 kg laminated bags with liner, PP bags, bags printed with your brand, or 900 kg jumbo bags. Other bag types on request.",
+     "25, 30, 35 or 40 kg laminated bags with liner, PP bags or bags printed with your brand, palletised or non-palletised.",
      "Hello Akshay, which bag options do you have for hydrated lime? I need ___ kg bags."),
     ("Container quantity",
      "How many tonnes fit in a 20 ft or 40 ft container for your packing, and whether part loads are possible.",
@@ -670,7 +670,7 @@ def home():
 {cta_band(root)}
 '''
     page("", root, "", "Hydrated Lime Manufacturer, Jodhpur | Grades 80–95 | Calvara Labs",
-         "Hydrated lime in seven grades, 80 to 95% Ca(OH)2, made at Ransigaon, Jodhpur. Silica as low as 1.0%, 99.5% through 200 mesh, CoA with every lot. 25–50 kg and 900 kg jumbo bags.",
+         "Hydrated lime in seven grades, 80 to 95% Ca(OH)2, made at Ransigaon, Jodhpur. Silica as low as 1.0%, 99.5% through 200 mesh, CoA with every lot. 25, 30, 35 or 40 kg bags, palletised or non-palletised.",
          body)
 
 
@@ -740,7 +740,7 @@ def lime():
 <div class="facts" style="margin-top:24px">
 <div><b>Completely sealed</b><p>Every bag is sealed at the mouth to keep out air and moisture.</p></div>
 <div><b>Laminated packing</b><p>Laminated bags with liners keep the lime dry in handling and storage.</p></div>
-<div><b>Small bags inside a jumbo</b><p>On request, around 20 bags of 25 kg packed in one sealed jumbo.</p></div>
+<div><b>Palletised or non-palletised</b><p>Pallets for faster, cleaner unloading, or loose-loaded bags for more tonnes per container.</p></div>
 <div><b>Your bag, your brand</b><p>Liner, laminated, company-branded or PP bags, with other layering on request.</p></div>
 </div>
 {wide_photos()}
@@ -768,7 +768,7 @@ def lime():
 {cta_band(root, "Get a hydrated lime quote", "Send the grade, monthly quantity and delivery city or port. You hear back directly from our engineer.")}
 '''
     page("hydrated-lime", root, "hydrated-lime", "Hydrated Lime Grades 80–95% | Specifications | Calvara Labs, Jodhpur",
-         "Compare seven hydrated lime grades: Ca(OH)2 80–95%, silica 0.8–8%, moisture 0.5–2.0%, 90–99.5% through 200 mesh. Bags 25–50 kg and 900 kg jumbo, CoA with every lot.",
+         "Compare seven hydrated lime grades: Ca(OH)2 80–95%, silica 0.8–8%, moisture 0.5–2.0%, 90–99.5% through 200 mesh. Bags of 25, 30, 35 or 40 kg, palletised or non-palletised, CoA with every lot.",
          body, faq_ld)
 
 
@@ -1032,7 +1032,7 @@ def export():
 {cta_band(root, "Tell us your port and quantity", "Send the grade, packing and destination. You get price, container quantity, lead time and terms in one reply.")}
 '''
     page("export", root, "export", "Prices & Export: Hydrated Lime CIF/CFR/FOB, Hydroxyapatite Samples | Calvara Labs",
-         "Ask for hydrated lime prices CIF, CFR, FOB India or ex-works Jodhpur. 25–50 kg bags or 900 kg jumbo, palletised or loose, 20 ft and 40 ft containers, TDS, CoA and SDS.",
+         "Ask for hydrated lime prices CIF, CFR, FOB India or ex-works Jodhpur. 25, 30, 35 or 40 kg bags, palletised or non-palletised, 20 ft and 40 ft containers, TDS, CoA and SDS.",
          body, faq_ld)
 
 
