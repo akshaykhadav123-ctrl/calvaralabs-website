@@ -26,10 +26,10 @@ WORKS = "Ransigaon, Tehsil Bilara, District Jodhpur, Rajasthan, India"
 
 # grade, label, Ca(OH)2 min, CaO eq, moisture max, acid insoluble max, passing 200 mesh min
 GRADES = [
-    ("95", "Premium", "95 %", "~72 %", "0.5 %", "1.0 %", "99.5 %"),
-    ("94", "High purity", "94 %", "~71 %", "0.7 %", "1.2 %", "99.2 %"),
-    ("93", "High purity", "93 %", "~70.5 %", "0.8 %", "1.5 %", "99 %"),
-    ("92", "High purity", "92 %", "~69.5 %", "0.8 %", "2.0 %", "98.5 %"),
+    ("95", "Premium", "95 %", "~72 %", "0.5 %", "0.8 %", "99.5 %"),
+    ("94", "High purity", "94 %", "~71 %", "0.7 %", "0.9 %", "99.2 %"),
+    ("93", "High purity", "93 %", "~70.5 %", "0.8 %", "1.0 %", "99 %"),
+    ("92", "High purity", "92 %", "~69.5 %", "0.8 %", "1.06 %", "98.5 %"),
     ("90", "Standard", "90 %", "~68 %", "1.0 %", "3 %", "98 %"),
     ("85", "Standard", "85 %", "~64 %", "1.5 %", "5 %", "95 %"),
     ("80", "Bulk value", "80 %", "~60 %", "2.0 %", "8 %", "90 %"),
@@ -295,7 +295,7 @@ def problems():
         ("Purity lower than promised", "You pay for 90 % and dose for 80 %, so consumption goes up.",
          "The grade is a guaranteed minimum", "The grade number is the minimum Ca(OH)<sub>2</sub> content, and every lot ships with a Certificate of Analysis."),
         ("Grit and silica", "Inert matter wears pumps and dosing lines and adds sludge.",
-         "Silica capped for every grade", "Acid insoluble is held as low as 1.0 % in the 95 grade, and fineness is up to 99.5 % through 200 mesh."),
+         "Silica capped for every grade", "Acid insoluble is held as low as 0.8 % in the 95 grade and 1.06 % in the 92 grade, and fineness is up to 99.5 % through 200 mesh."),
         ("Lumps and moisture", "Damp lime cakes, blocks feeders and loses strength.",
          "Dry powder, sealed bags", "Moisture is limited to 0.5 to 2.0 % by grade, and the packing date is printed on every lot."),
         ("Every truck is different", "One good lot, then the next one upsets your process.",
@@ -723,7 +723,7 @@ def lime():
 {cta_band(root, "Get a hydrated lime quote", "Send the grade, monthly quantity and delivery city or port. You hear back directly from our engineer.")}
 '''
     page("hydrated-lime", root, "hydrated-lime", "Hydrated Lime Grades 80–95% | Specifications | Calvara Labs, Jodhpur",
-         "Compare seven hydrated lime grades: Ca(OH)2 80–95%, silica 1.0–8%, moisture 0.5–2.0%, 90–99.5% through 200 mesh. Bags 25–50 kg and 900 kg jumbo, CoA with every lot.",
+         "Compare seven hydrated lime grades: Ca(OH)2 80–95%, silica 0.8–8%, moisture 0.5–2.0%, 90–99.5% through 200 mesh. Bags 25–50 kg and 900 kg jumbo, CoA with every lot.",
          body, faq_ld)
 
 
