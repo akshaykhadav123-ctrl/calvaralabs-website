@@ -474,3 +474,34 @@ html{scroll-padding-top:64px}
 .broch-main .btn-line:hover{background:#fff;color:var(--ink)}
 @media (max-width:900px){.brochures{grid-template-columns:1fr}}
 @media (max-width:560px){.broch{flex-direction:column;align-items:flex-start;gap:16px}.broch-cover img{width:120px}.broch-main .btn-row .btn{flex:1 1 100%;justify-content:center}}
+
+/* ===== v7: brochure-style hero (red + honeycomb + hexagon slabs) ===== */
+.hero{position:relative;overflow:hidden;isolation:isolate;border-bottom:0;color:#fff;
+  background-color:#C62D24;
+  background-image:url("honeycomb.svg"),radial-gradient(ellipse 70% 90% at 78% 40%,#E9554C 0%,#CF3229 42%,#A8211A 100%);
+  background-size:31.18px 54px,auto}
+.hero::after{content:"";position:absolute;z-index:-1;right:-40px;bottom:-30px;width:min(58vw,720px);aspect-ratio:600/400;
+  background:url("hex-stack.svg") no-repeat center/contain;opacity:.98;pointer-events:none}
+.hero .eyebrow-plain{color:#FFD2CD}
+.hero h1{color:#fff}
+.hero .lede{color:rgba(255,255,255,.9)}
+.hero .btn-solid{background:#fff;border-color:#fff;color:var(--ink)}
+.hero .btn-solid:hover{background:var(--ground);border-color:var(--ground);color:var(--ink)}
+.hero .btn-red{background:var(--ink);border-color:var(--ink);color:#fff}
+.hero .btn-red:hover{background:#26384D;border-color:#26384D}
+.hero :focus-visible{outline-color:#fff}
+.hero .ladder{border:0;box-shadow:0 30px 60px -24px rgba(60,6,3,.6),0 2px 0 rgba(255,255,255,.4) inset}
+.hero .ladder-head{border-bottom-color:var(--line-strong)}
+.hero-ladder{position:relative;z-index:1}
+@media (max-width:820px){
+  .hero{background-image:url("honeycomb.svg"),radial-gradient(ellipse 120% 70% at 70% 15%,#E9554C 0%,#CF3229 45%,#A8211A 100%)}
+  .hero::after{width:300px;right:-70px;bottom:auto;top:10px;opacity:.35}
+}
+
+/* honeycomb on navy bands */
+.cta-band,.site-foot,.broch-main{background-image:url("honeycomb.svg");background-size:31.18px 54px}
+.broch-main{background-color:var(--ink)}
+.hero .ladder{color:var(--ink)}
+.hero::after{right:max(-40px,calc((100vw - 1160px) / 2 - 110px));bottom:-150px;width:660px}
+@media (max-width:1100px){.hero::after{width:520px;bottom:-120px;right:-60px}}
+@media (max-width:820px){.hero::after{display:none}}
