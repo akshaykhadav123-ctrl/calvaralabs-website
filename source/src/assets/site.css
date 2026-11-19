@@ -399,12 +399,6 @@ td.num{font-family:var(--display);font-weight:600;white-space:nowrap}
 .facts-3{grid-template-columns:repeat(3,minmax(0,1fr))}
 @media (max-width:760px){.facts-3{grid-template-columns:1fr}}
 @media (max-width:520px){.form .actions .btn{width:100%;justify-content:center}}
-/* Netlify free plan adds a fixed "Powered by Netlify" badge bottom-right (~34px tall, 16px from edge).
-   Keep the action buttons above it; the badge sits in the bar's lower strip. */
-@media (max-width:760px){
-  body{padding-bottom:132px}
-  .actionbar{padding-bottom:calc(62px + env(safe-area-inset-bottom))}
-}
 
 /* ===== v4: quote builder + buyer questions ===== */
 .btn-wa{background:#1E7E4A;border-color:#1E7E4A;color:#fff}
