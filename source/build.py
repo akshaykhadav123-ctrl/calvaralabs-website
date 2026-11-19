@@ -66,7 +66,7 @@ PHOTOS = {  # key -> file in src/photos (optional)
     "kiln": "kiln.webp", "stock": "stock.webp", "hydrators": "hydrators.webp", "classifier": "classifier.webp",
     "smallbag": "smallbag.webp", "jumbo": "jumbo.webp", "jumbo-front": "jumbo-front.webp",
     "jumbo-vs-bags": "jumbo-vs-bags.webp", "warehouse": "warehouse.webp", "lab-titration": "lab-titration.webp",
-    "lab-balance": "lab-balance.webp", "lab-hotplate": "lab-hotplate.webp", "akshay": "akshay.webp", "brochure-cover": "brochure-cover.webp",
+    "lab-balance": "lab-balance.webp", "lab-hotplate": "lab-hotplate.webp", "akshay": "akshay.webp", "brochure-cover": "brochure-cover.webp", "hap-brochure-cover": "hap-brochure-cover.webp",
 }
 
 
@@ -171,7 +171,7 @@ def footer(root):
     return f'''<footer class="site-foot">
 <div class="wrap foot-grid">
 <div>{brand(root, dark=True)}<p>Hydrated lime in seven grades, made at our own plant in Ransigaon, Jodhpur.</p></div>
-<div><h2>Products</h2><ul><li><a href="{href(root, 'hydrated-lime')}">Hydrated lime grades</a></li><li><a href="{href(root, 'export')}">Prices &amp; export</a></li><li><a href="{brochure_href(root, 'lime')}" download>Hydrated lime brochure (PDF)</a></li><li><a href="{href(root, 'hydroxyapatite')}">Hydroxyapatite</a></li></ul></div>
+<div><h2>Products</h2><ul><li><a href="{href(root, 'hydrated-lime')}">Hydrated lime grades</a></li><li><a href="{href(root, 'export')}">Prices &amp; export</a></li><li><a href="{brochure_href(root, 'lime')}" download>Hydrated lime brochure (PDF)</a></li><li><a href="{href(root, 'hydroxyapatite')}">Hydroxyapatite</a></li><li><a href="{brochure_href(root, 'hap')}" download>Hydroxyapatite brochure (PDF)</a></li></ul></div>
 <div><h2>Company</h2><ul><li><a href="{href(root, 'about')}">About &amp; quality</a></li><li><a href="{href(root, 'contact')}">Request a quote</a></li><li>Office: {OFFICE}</li></ul></div>
 <div><h2>Contact</h2><ul><li><a href="tel:{PHONE_TEL}">{PHONE_DISPLAY}</a></li><li><a href="{WHATSAPP}">WhatsApp us</a></li><li><a href="mailto:{EMAIL}">{EMAIL}</a></li></ul></div>
 </div>
@@ -554,8 +554,8 @@ def hap_asks_grid():
 BROCHURES = {
     "lime": {"title": "Hydrated Lime Brochure 2026", "file": "Calvara-Hydrated-Lime-Brochure-2026.pdf",
              "meta": "10 pages · PDF · 1.3 MB", "what": "All 7 grades and specs, plant photos, packing, export loading and CoA format."},
-    "hap": {"title": "Hydroxyapatite Brochure", "file": None,
-            "meta": "Coming soon", "what": "Need details now? Ask Akshay for the TDS and a sample CoA on WhatsApp."},
+    "hap": {"title": "Hydroxyapatite Brochure 2026", "file": "Calvara-Hydroxyapatite-Brochure-2026.pdf",
+            "meta": "6 pages · PDF · 0.8 MB", "what": "Micro and nano grades, full specification, how we make it, and how to start with a 250 g sample."},
 }
 
 
@@ -568,7 +568,7 @@ def brochure_block(root):
     lime, hap = BROCHURES["lime"], BROCHURES["hap"]
     lh = brochure_href(root, "lime")
     hh = brochure_href(root, "hap")
-    hap_btn = (f'<a class="btn btn-line" href="{hh}" download>Download PDF</a>' if hh else
+    hap_btn = (f'<a class="btn btn-solid" href="{hh}" download>Download PDF</a><a class="btn btn-line" href="{hh}" target="_blank" rel="noopener">View online</a>' if hh else
                f'<a class="btn btn-line" href="{wa("Hello Akshay, please send the hydroxyapatite TDS and a sample CoA.")}">Ask on WhatsApp</a>')
     return f'''<div class="brochures" aria-label="Brochures">
 <div class="broch broch-main">
@@ -580,12 +580,14 @@ def brochure_block(root):
 <div class="btn-row"><a class="btn btn-red btn-big" href="{lh}" download>Download brochure (PDF)</a><a class="btn btn-line" href="{lh}" target="_blank" rel="noopener">View online</a></div>
 <p class="broch-meta">{lime["meta"]}</p>
 </div></div>
-<div class="broch broch-hap">
+<div class="broch broch-hap{' broch-hap-live' if hh else ''}">
+{f'<a class="broch-cover" href="{hh}" target="_blank" rel="noopener"><img src="photos/hap-brochure-cover.webp" alt="Cover of the Calvara Hydroxyapatite Brochure 2026" width="96" height="136"></a>' if hh else ''}
 <div class="broch-body">
-<p class="broch-kicker">{hap["meta"]}</p>
+<p class="broch-kicker">{'Free download' if hh else hap["meta"]}</p>
 <h2 class="broch-title broch-title-sm">{hap["title"]}</h2>
 <p class="broch-what">{hap["what"]}</p>
 <div class="btn-row">{hap_btn}</div>
+{f'<p class="broch-meta">{hap["meta"]}</p>' if hh else ''}
 </div></div>
 </div>'''
 
@@ -796,7 +798,7 @@ def hap():
 <div class="prose" style="gap:18px">
 <h1>Hydroxyapatite powder, made in India</h1>
 <p class="lede">Synthetic, animal-free hydroxyapatite made from our own purified calcium. Micro grade samples are available now for toothpaste, tooth powder, tablets, cosmetics and research.</p>
-<div class="btn-row"><a class="btn btn-solid" href="#quote">Ask for a 250 g sample</a><a class="btn btn-line" href="#spec">See the specification</a></div>
+<div class="btn-row"><a class="btn btn-solid" href="#quote">Ask for a 250 g sample</a><a class="btn btn-red" href="{brochure_href(root, 'hap')}" download>Download brochure (PDF)</a><a class="btn btn-line" href="#spec">See the specification</a></div>
 </div>
 <div class="mini-tile"><span class="formula">Ca<sub>10</sub>(PO<sub>4</sub>)<sub>6</sub>(OH)<sub>2</sub></span><span class="meta">Hydroxyapatite (HAp) · CAS 1306-06-5</span><span class="meta">Molar mass 1004.6 g/mol · Ca/P 1.67</span></div>
 </div>
