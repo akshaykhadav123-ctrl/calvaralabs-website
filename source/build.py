@@ -129,7 +129,25 @@ def brand(root, dark=False):
     return f'<a class="brand" href="{href(root, "")}" aria-label="Calvara Labs &amp; Minerals, home">{svg}</a>'
 
 
-NAV = [("hydrated-lime", "Hydrated lime"), ("export", "Prices &amp; export"), ("hydroxyapatite", "Hydroxyapatite"), ("about", "About &amp; quality"), ("contact", "Contact")]
+NAV = [("hydrated-lime", "Hydrated lime"), ("export", "Export"), ("hydroxyapatite", "Hydroxyapatite"), ("documents", "Documents"), ("about", "About"), ("contact", "Contact")]
+HINDI_READY = False  # switch on once the Hindi pages are complete
+GSTIN = "08ETMPK7731R1ZN"
+# Documents page. Only real documents supplied by Akshay; files live in src/documents/.
+DOCUMENTS = [
+    {"title": "GST registration certificate", "file": "Calvara-GST-Registration-Certificate.pdf", "thumb": "doc-gst",
+     "what": f"Form GST REG-06, Government of India. GSTIN {GSTIN}, trade name Calvara Labs and Minerals, Jodhpur, Rajasthan. Issued 28 October 2026.",
+     "meta": "1 page · PDF · 0.3 MB",
+     "verify": ("Verify on the GST portal: Search Taxpayer › Search by GSTIN/UIN", "https://www.gst.gov.in/")},
+    {"title": "Importer-Exporter Code (IEC)", "file": "Calvara-IEC-Certificate.pdf", "thumb": "doc-iec",
+     "what": "Issued by the Directorate General of Foreign Trade, Government of India. IEC ETMPK7731R, firm name Calvara Labs and Minerals, Jodhpur. Issued 17 November 2026.",
+     "meta": "1 page · PDF · 0.1 MB",
+     "verify": ("Verify on the DGFT website: Services › View Any IEC Details", "https://dgft.gov.in")},
+]
+DOCS_ON_REQUEST = [
+    ("Technical data sheet (TDS)", "Specification for each hydrated lime grade and for hydroxyapatite.", "Hello Akshay, please send the TDS for ___."),
+    ("Safety data sheet (SDS)", "Handling, storage and transport safety information.", "Hello Akshay, please send the SDS for hydrated lime."),
+    ("Sample Certificate of Analysis", "The CoA format that ships with every lot, with measured values.", "Hello Akshay, please send a sample CoA for grade ___."),
+]
 
 
 # Announcement bar: edit this list to change the rotating messages (tag, text, link page, link label).
@@ -173,7 +191,7 @@ if(reduce)pause();else play();}})();
 </script>'''
 
 
-def header(root, current):
+def header(root, current, alt=None):
     cur = ' aria-current="page"'
     links = "".join(f'<a href="{href(root, p)}"{cur if p == current else ""}>{t}</a>' for p, t in NAV)
     burger = lic("menu")
@@ -183,7 +201,8 @@ def header(root, current):
 <header class="site-head">
 <div class="wrap head-row">
 {brand(root)}
-<nav class="nav" aria-label="Main">{links}<a class="btn btn-solid" href="{href(root, 'contact')}">Request a quote</a></nav>
+<nav class="nav" aria-label="Main">{links}{f'<a class="lang-switch" href="{root}{alt or "hi/"}" hreflang="hi" lang="hi">हिंदी</a>' if HINDI_READY else ''}<a class="btn btn-solid" href="{href(root, 'contact')}">Request a quote</a></nav>
+{f'<a class="lang-switch lang-mob" href="{root}{alt or "hi/"}" hreflang="hi" lang="hi">हिंदी</a>' if HINDI_READY else ''}
 <details class="menu"><summary aria-label="Open menu">{burger}Menu</summary><nav class="menu-panel" aria-label="Menu">
 <a href="{href(root, '')}"{cur if current in ('', 'home') else ''}>Home</a>{links}<a href="{href(root, '')}#brochure">Brochures (PDF)</a>
 <div class="menu-contact"><a class="btn btn-line" href="tel:{PHONE_TEL}">{lic("phone")}Call</a><a class="btn btn-wa" href="{WHATSAPP}">{lic("message-circle")}WhatsApp</a></div>
@@ -198,10 +217,10 @@ def footer(root):
 <div class="wrap foot-grid">
 <div>{brand(root, dark=True)}<p>Hydrated lime in four grades, made at our own plant in Ransigaon, Jodhpur.</p></div>
 <div><h2>Products</h2><ul><li><a href="{href(root, 'hydrated-lime')}">Hydrated lime grades</a></li><li><a href="{href(root, 'export')}">Prices &amp; export</a></li><li><a href="{brochure_href(root, 'lime')}" download>Hydrated lime brochure (PDF)</a></li><li><a href="{href(root, 'hydroxyapatite')}">Hydroxyapatite</a></li><li><a href="{brochure_href(root, 'hap')}" download>Hydroxyapatite brochure (PDF)</a></li></ul></div>
-<div><h2>Company</h2><ul><li><a href="{href(root, 'about')}">About &amp; quality</a></li><li><a href="{href(root, 'contact')}">Request a quote</a></li><li>Office: {OFFICE}</li></ul></div>
+<div><h2>Company</h2><ul><li><a href="{href(root, 'about')}">About &amp; quality</a></li><li><a href="{href(root, 'documents')}">Documents</a></li><li><a href="{href(root, 'contact')}">Request a quote</a></li><li>Office: {OFFICE}</li></ul></div>
 <div><h2>Contact</h2><ul><li><a href="tel:{PHONE_TEL}">{PHONE_DISPLAY}</a></li><li><a href="{WHATSAPP}">WhatsApp us</a></li><li><a href="mailto:{EMAIL}">{EMAIL}</a></li></ul></div>
 </div>
-<div class="wrap foot-base">© 2026 Calvara Labs &amp; Minerals · HSN 2522 · CAS 1305-62-0</div>
+<div class="wrap foot-base">© 2026 Calvara Labs &amp; Minerals · GSTIN {GSTIN} · HSN 2522 · CAS 1305-62-0</div>
 </footer>'''
 
 
@@ -221,17 +240,31 @@ ORG_LD = {
 }
 
 
-def page(path, root, current, title, desc, body, extra_ld=None, noindex=False):
+HI_ALT = {"": "hi/", "hydrated-lime": "hi/hydrated-lime/", "contact": "hi/contact/"}  # English page -> Hindi page
+
+
+def page(path, root, current, title, desc, body, extra_ld=None, noindex=False, lang="en", alt=None, head_html=None, foot_html=None, ui=None):
     canonical = SITE + "/" + (path + "/" if path and not path.endswith(".html") else "")
+    ui = ui or {"wa": "Chat with Akshay on WhatsApp", "top": "Top", "top_label": "Back to top"}
+    if lang == "en" and alt is None and path in HI_ALT and HINDI_READY:
+        alt = HI_ALT[path]
+    if alt:
+        en_url = SITE + "/" + (path + "/" if path else "") if lang == "en" else SITE + "/" + alt
+        hi_url = SITE + "/" + alt if lang == "en" else canonical
+        alts = (f'<link rel="alternate" hreflang="en" href="{en_url}">\n<link rel="alternate" hreflang="hi" href="{hi_url}">\n'
+                f'<link rel="alternate" hreflang="x-default" href="{en_url}">')
+    else:
+        alts = ""
     ld = [ORG_LD] + (extra_ld if isinstance(extra_ld, list) else [extra_ld] if extra_ld else [])
     html = f'''<!doctype html>
-<html lang="en">
+<html lang="{lang}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>{title}</title>
 <meta name="description" content="{desc}">
 <link rel="canonical" href="{canonical}">
+{alts}
 {'<meta name="robots" content="noindex">' if noindex else ''}
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Calvara Labs &amp; Minerals">
@@ -250,13 +283,13 @@ def page(path, root, current, title, desc, body, extra_ld=None, noindex=False):
 <script type="application/ld+json">{json.dumps(ld if len(ld) > 1 else ld[0], ensure_ascii=False)}</script>
 </head>
 <body>
-{header(root, current)}
+{head_html or header(root, current, alt)}
 <main id="main">
 {body}
 </main>
-{footer(root)}
-<a class="wa-float" href="{WHATSAPP}" aria-label="Chat with Akshay on WhatsApp">{lic("message-circle")}</a>
-<button class="to-top" type="button" aria-label="Back to top" hidden>{lic("arrow-up")}<span>Top</span></button>
+{foot_html or footer(root)}
+<a class="wa-float" href="{WHATSAPP}" aria-label="{ui['wa']}">{lic("message-circle")}</a>
+<button class="to-top" type="button" aria-label="{ui['top_label']}" hidden>{lic("arrow-up")}<span>{ui['top']}</span></button>
 <script>
 (function(){{
   var top=document.querySelector('.site-top'), btn=document.querySelector('.to-top'), menu=document.querySelector('.menu');
@@ -800,7 +833,40 @@ def product_ld(name, desc, url, category, extra=None):
 
 
 
+def documents():
+    root = "../"
+    cards = ""
+    for d in DOCUMENTS:
+        f = f"{root}documents/{d['file']}"
+        ver = f'<a class="doc-verify" href="{d["verify"][1]}" target="_blank" rel="noopener">{d["verify"][0]}</a>' if d.get("verify") else ""
+        cards += f'''<article class="doc">
+<a class="doc-thumb" href="{f}" target="_blank" rel="noopener"><img src="photos/{d['thumb']}.webp" alt="{d['title']}, first page" loading="lazy" width="360" height="466"></a>
+<div class="doc-body"><h3>{d['title']}</h3><p>{d['what']}</p>
+<div class="btn-row"><a class="btn btn-solid" href="{f}" download>{lic("download")}Download PDF</a><a class="btn btn-line" href="{f}" target="_blank" rel="noopener">View</a></div>
+<p class="doc-meta">{d['meta']}</p>{ver}</div></article>'''
+    req = "".join(f'<article class="ask">{lic("file-text", "ic ask-ic")}<h3>{t}</h3><p>{w}</p><a class="ask-cta" href="{wa(m)}">{lic("message-circle", "ic")}Ask Akshay on WhatsApp</a></article>' for t, w, m in DOCS_ON_REQUEST)
+    body = f'''
+<section class="page-head"><div class="wrap">
+{crumbs(root, "Documents")}
+<h1>Documents</h1>
+<p class="lede">Company and product documents your purchase or quality team may ask for. Download them here, or ask Akshay for anything not listed.</p>
+</div></section>
+<section class="section"><div class="wrap">
+<div class="section-head"><h2>Company registration</h2><p class="lede">Calvara Labs and Minerals is registered for GST and holds an Importer-Exporter Code for export.</p></div>
+<div class="docs">{cards}</div>
+</div></section>
+<section class="section section-tint"><div class="wrap">
+<div class="section-head"><h2>Product documents on request</h2><p class="lede">Sent the same day on WhatsApp or email, matched to your grade.</p></div>
+<div class="asks">{req}</div>
+</div></section>
+{cta_band(root)}'''
+    page("documents", root, "documents", "Documents: GST, IEC, TDS, SDS, CoA | Calvara Labs &amp; Minerals",
+         f"Calvara Labs and Minerals company documents: GST registration (GSTIN {GSTIN}) and Importer-Exporter Code (IEC ETMPK7731R). TDS, SDS and sample CoA on request.", body)
+
+
+
 # ---------- pages ----------
+import hindi  # noqa: E402  (Hindi pages; uses the helpers above)
 def home():
     root = ""
     body = f'''
@@ -1280,6 +1346,7 @@ def not_found():
 def extras():
     shutil.copytree(ROOT / "src" / "assets", OUT / "assets", dirs_exist_ok=True)
     shutil.copytree(ROOT / "src" / "brochures", OUT / "brochures", dirs_exist_ok=True)
+    shutil.copytree(ROOT / "src" / "documents", OUT / "documents", dirs_exist_ok=True)
     shutil.copytree(ROOT / "src" / "icons", OUT / "assets" / "icons", dirs_exist_ok=True)
     if (ROOT / "src" / "photos").exists():
         shutil.copytree(ROOT / "src" / "photos", OUT / "assets" / "photos", dirs_exist_ok=True)
@@ -1290,7 +1357,7 @@ def extras():
         shutil.copy(ROOT / "src" / f, OUT / f)
     (OUT / ".htaccess").write_text("ErrorDocument 404 /404.html\nDirectoryIndex index.html\n")
     (OUT / "robots.txt").write_text(f"User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n")
-    urls = ["", "hydrated-lime/", "export/", "hydroxyapatite/", "about/", "contact/"]
+    urls = ["", "hydrated-lime/", "export/", "hydroxyapatite/", "documents/", "about/", "contact/"] + (["hi/", "hi/hydrated-lime/", "hi/contact/"] if HINDI_READY else [])
     items = "".join(f"<url><loc>{SITE}/{u}</loc><lastmod>{datetime.date.today().isoformat()}</lastmod></url>" for u in urls)
     (OUT / "sitemap.xml").write_text(f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{items}</urlset>\n')
 
@@ -1299,5 +1366,5 @@ if __name__ == "__main__":
     if OUT.exists():
         shutil.rmtree(OUT)
     OUT.mkdir(parents=True)
-    home(); lime(); export(); hap(); about(); contact(); thanks(); not_found(); extras()
+    home(); lime(); export(); hap(); about(); contact(); documents(); thanks(); not_found(); hindi.build(sys.modules[__name__]); extras()
     print("built", OUT)
