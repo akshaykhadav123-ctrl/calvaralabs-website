@@ -839,3 +839,5 @@ html[lang="hi"] .hero-copy h1{max-width:16ch}
 html[lang="hi"] .ticker-top li,html[lang="hi"] .nav a,html[lang="hi"] .btn{letter-spacing:0}
 html[lang="hi"] .mq li{letter-spacing:0;line-height:1.35}
 html[lang="hi"] .mq-lg li:nth-child(even){-webkit-text-stroke:1px var(--ink)}
+.doc-note{margin-top:20px;font-size:14.5px;color:var(--ink-soft);max-width:70ch}
+.section-tint .doc{background:var(--paper)}

@@ -188,10 +188,10 @@ def build(B):
 
     def engineer(root):
         img = B.photo("akshay")
-        av = f'<img class="avatar" src="{img}" alt="Akshay Khadav" loading="lazy" width="84" height="84" style="padding:0">' if img else ""
+        av = f'<img class="avatar" src="{img}" alt="अक्षय खदाव" loading="lazy" width="84" height="84" style="padding:0">' if img else ""
         return f'''<div class="engineer">{av}<div>
 <blockquote>“अपनी प्रक्रिया के बारे में बताइए। मैं सही ग्रेड सुझाऊँगा, और सैंपल भेजकर दिखाऊँगा कि वह काम करता है।”</blockquote>
-<p><b>Akshay Khadav</b>, बी.टेक केमिकल इंजीनियरिंग, IIT बॉम्बे</p>
+<p><b>अक्षय खदाव</b>, बी.टेक केमिकल इंजीनियरिंग, IIT बॉम्बे</p>
 <p>आप हमें लिखते हैं तो सीधे मुझसे बात होती है: केमिस्ट्री, ग्रेड और डिस्पैच, किसी कॉल सेंटर से नहीं।</p>
 <div class="btn-row"><a class="btn btn-red" href="{B.WHATSAPP}">अक्षय को व्हाट्सऐप करें</a><a class="btn btn-ghost-light" href="tel:{B.PHONE_TEL}">कॉल करें {B.PHONE_DISPLAY}</a></div>
 </div></div>'''
@@ -309,7 +309,7 @@ def build(B):
 
     # ---------- /hi/contact/ ----------
     grade_opts = "".join(f"<option>ग्रेड {g[0]}</option>" for g in B.GRADES)
-    auto = ("Calvara Labs & Minerals से संपर्क करने के लिए धन्यवाद। हमारे केमिकल इंजीनियर Akshay Khadav को आपकी पूछताछ मिल गई है "
+    auto = ("Calvara Labs & Minerals से संपर्क करने के लिए धन्यवाद। हमारे केमिकल इंजीनियर अक्षय खदाव को आपकी पूछताछ मिल गई है "
             "और वे भाव, स्पेसिफ़िकेशन और डिलीवरी समय के साथ जल्द जवाब देंगे, अक्सर उसी दिन।\n\n"
             "तब तक हमारे ब्रोशर देखें (अंग्रेज़ी में):\n"
             "हाइड्रेटेड लाइम: https://calvaralabs.com/brochures/Calvara-Hydrated-Lime-Brochure-2026.pdf\n"
@@ -350,7 +350,7 @@ def build(B):
 <aside style="display:flex;flex-direction:column;gap:20px">
 <div class="side-card dark">
 <h2 style="font-size:22px">आपके इंजीनियर</h2>
-<p><b style="color:#fff">Akshay Khadav</b><br>बी.टेक केमिकल इंजीनियरिंग, IIT बॉम्बे</p>
+<p><b style="color:#fff">अक्षय खदाव</b><br>बी.टेक केमिकल इंजीनियरिंग, IIT बॉम्बे</p>
 <div class="contact-line"><span>कॉल या व्हाट्सऐप</span><a href="tel:{B.PHONE_TEL}">{B.PHONE_DISPLAY}</a></div>
 <div class="contact-line"><span>ईमेल</span><a href="mailto:{B.EMAIL}">{B.EMAIL}</a></div>
 <div class="contact-line"><span>ऑफ़िस</span><p>{B.OFFICE}</p></div>

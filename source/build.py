@@ -23,6 +23,8 @@ WHATSAPP = "https://wa.me/919892727068?text=Hello%20Calvara%2C%20I%20would%20lik
 EMAIL = "sales@calvaralabs.com"
 # Enquiry log: Google Apps Script web-app URL (see tools/enquiry-log.gs). Empty = logging off.
 LOG_URL = ""
+# Visitor stats: Cloudflare Web Analytics token (no cookies, no personal data). Empty = off.
+CF_BEACON_TOKEN = ""
 AUTORESPONSE = ("Thank you for contacting Calvara Labs & Minerals. Akshay Khadav, our chemical engineer, has your enquiry "
                 "and will reply with price, specification and lead time, usually the same day.\n\n"
                 "While you wait, our brochures:\n"
@@ -142,6 +144,16 @@ DOCUMENTS = [
      "what": "Issued by the Directorate General of Foreign Trade, Government of India. IEC ETMPK7731R, firm name Calvara Labs and Minerals, Jodhpur. Issued 17 November 2026.",
      "meta": "1 page · PDF · 0.1 MB",
      "verify": ("Verify on the DGFT website: Services › View Any IEC Details", "https://dgft.gov.in")},
+]
+LAB_REPORTS = [
+    {"title": "Hydrated lime test report RKC/742", "file": "Calvara-Hydrated-Lime-Test-Report-RKC-742.pdf", "thumb": "doc-rk742",
+     "what": "Tested by R.K. Consultants (Chemical Analysis Division), Jodhpur. Report RKC/2026-27/742, 14 November 2026. "
+             "Page 1, with the lab's NABL mark and ULR number: insoluble matter including SiO<sub>2</sub>, Ca(OH)<sub>2</sub>, MgO and free water (IS 1514:1990). "
+             "Page 2: fineness at 75 and 600 micron, basicity factor (ASTM C400) and heavy metals.",
+     "meta": "2 pages · scanned PDF · 0.8 MB"},
+    {"title": "Hydrated lime test report RKC/745", "file": "Calvara-Hydrated-Lime-Test-Report-RKC-745.pdf", "thumb": "doc-rk745",
+     "what": "Tested by R.K. Consultants (Chemical Analysis Division), Jodhpur. Report RKC/2026-27/745, 19 November 2026: appearance and nickel.",
+     "meta": "1 page · scanned PDF · 0.8 MB"},
 ]
 DOCS_ON_REQUEST = [
     ("Technical data sheet (TDS)", "Specification for each hydrated lime grade and for hydroxyapatite.", "Hello Akshay, please send the TDS for ___."),
@@ -281,6 +293,7 @@ def page(path, root, current, title, desc, body, extra_ld=None, noindex=False, l
 <link rel="preload" href="{root}assets/fonts/jost.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="{root}assets/site.css">
 <script type="application/ld+json">{json.dumps(ld if len(ld) > 1 else ld[0], ensure_ascii=False)}</script>
+{f"""<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{{"token": "{CF_BEACON_TOKEN}"}}'></script>""" if CF_BEACON_TOKEN else ""}
 </head>
 <body>
 {head_html or header(root, current, alt)}
@@ -835,15 +848,19 @@ def product_ld(name, desc, url, category, extra=None):
 
 def documents():
     root = "../"
-    cards = ""
-    for d in DOCUMENTS:
-        f = f"{root}documents/{d['file']}"
-        ver = f'<a class="doc-verify" href="{d["verify"][1]}" target="_blank" rel="noopener">{d["verify"][0]}</a>' if d.get("verify") else ""
-        cards += f'''<article class="doc">
-<a class="doc-thumb" href="{f}" target="_blank" rel="noopener"><img src="photos/{d['thumb']}.webp" alt="{d['title']}, first page" loading="lazy" width="360" height="466"></a>
-<div class="doc-body"><h3>{d['title']}</h3><p>{d['what']}</p>
-<div class="btn-row"><a class="btn btn-solid" href="{f}" download>{lic("download")}Download PDF</a><a class="btn btn-line" href="{f}" target="_blank" rel="noopener">View</a></div>
-<p class="doc-meta">{d['meta']}</p>{ver}</div></article>'''
+    def doc_cards(docs):
+        cards = ""
+        for d in docs:
+            f = f"{root}documents/{d['file']}"
+            ver = f'<a class="doc-verify" href="{d["verify"][1]}" target="_blank" rel="noopener">{d["verify"][0]}</a>' if d.get("verify") else ""
+            cards += f'''<article class="doc">
+    <a class="doc-thumb" href="{f}" target="_blank" rel="noopener"><img src="photos/{d['thumb']}.webp" alt="{d['title']}, first page" loading="lazy" width="360" height="466"></a>
+    <div class="doc-body"><h3>{d['title']}</h3><p>{d['what']}</p>
+    <div class="btn-row"><a class="btn btn-solid" href="{f}" download>{lic("download")}Download PDF</a><a class="btn btn-line" href="{f}" target="_blank" rel="noopener">View</a></div>
+    <p class="doc-meta">{d['meta']}</p>{ver}</div></article>'''
+        return cards
+    cards = doc_cards(DOCUMENTS)
+    labs = doc_cards(LAB_REPORTS)
     req = "".join(f'<article class="ask">{lic("file-text", "ic ask-ic")}<h3>{t}</h3><p>{w}</p><a class="ask-cta" href="{wa(m)}">{lic("message-circle", "ic")}Ask Akshay on WhatsApp</a></article>' for t, w, m in DOCS_ON_REQUEST)
     body = f'''
 <section class="page-head"><div class="wrap">
@@ -855,12 +872,17 @@ def documents():
 <div class="section-head"><h2>Company registration</h2><p class="lede">Calvara Labs and Minerals is registered for GST and holds an Importer-Exporter Code for export.</p></div>
 <div class="docs">{cards}</div>
 </div></section>
-<section class="section section-tint"><div class="wrap">
+<section class="section section-tint" id="lab-reports"><div class="wrap">
+<div class="section-head"><h2>Independent lab test reports</h2><p class="lede">Hydrated lime samples we sent to an outside laboratory in Jodhpur. Each report is shown in full, exactly as issued. The lab's contact details are printed on it if you want to confirm it with them.</p></div>
+<div class="docs">{labs}</div>
+<p class="doc-note">As the lab states on each report: results refer only to the sample tested, and no endorsement of products is implied. Every lot you buy ships with its own Certificate of Analysis.</p>
+</div></section>
+<section class="section"><div class="wrap">
 <div class="section-head"><h2>Product documents on request</h2><p class="lede">Sent the same day on WhatsApp or email, matched to your grade.</p></div>
 <div class="asks">{req}</div>
 </div></section>
 {cta_band(root)}'''
-    page("documents", root, "documents", "Documents: GST, IEC, TDS, SDS, CoA | Calvara Labs &amp; Minerals",
+    page("documents", root, "documents", "Documents: GST, IEC, Lab Test Reports | Calvara Labs &amp; Minerals",
          f"Calvara Labs and Minerals company documents: GST registration (GSTIN {GSTIN}) and Importer-Exporter Code (IEC ETMPK7731R). TDS, SDS and sample CoA on request.", body)
 
 
