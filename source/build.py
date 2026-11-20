@@ -30,7 +30,7 @@ AUTORESPONSE = ("Thank you for contacting Calvara Labs & Minerals. Akshay Khadav
                 "Hydroxyapatite: https://calvaralabs.com/brochures/Calvara-Hydroxyapatite-Brochure-2026.pdf\n\n"
                 "For a faster reply, WhatsApp +91 98927 27068.\n\n"
                 "Calvara Labs & Minerals, Jodhpur, Rajasthan, India · calvaralabs.com")
-OFFICE = "54 Patrakar Colony, Section 7, New Power House Road, Jodhpur, Rajasthan 342001, India"
+OFFICE = "54 Patrakar Colony, Section 7, New Power House Road, Jodhpur, Rajasthan 342003, India"
 WORKS = "Ransigaon, Tehsil Bilara, District Jodhpur, Rajasthan, India"
 
 # grade, label, Ca(OH)2 min, CaO eq, moisture max, acid insoluble max, passing 200 mesh min
@@ -130,7 +130,7 @@ def brand(root, dark=False):
 
 
 NAV = [("hydrated-lime", "Hydrated lime"), ("export", "Export"), ("hydroxyapatite", "Hydroxyapatite"), ("documents", "Documents"), ("about", "About"), ("contact", "Contact")]
-HINDI_READY = False  # switch on once the Hindi pages are complete
+HINDI_READY = True  # switch on once the Hindi pages are complete
 GSTIN = "08ETMPK7731R1ZN"
 # Documents page. Only real documents supplied by Akshay; files live in src/documents/.
 DOCUMENTS = [
@@ -235,7 +235,7 @@ ORG_LD = {
     "@context": "https://schema.org", "@type": "Organization", "name": "Calvara Labs & Minerals",
     "url": SITE + "/", "logo": SITE + "/assets/logo-512.png", "email": EMAIL, "telephone": PHONE_TEL,
     "address": {"@type": "PostalAddress", "streetAddress": "54 Patrakar Colony, Section 7, New Power House Road",
-                "addressLocality": "Jodhpur", "addressRegion": "Rajasthan", "postalCode": "342001", "addressCountry": "IN"},
+                "addressLocality": "Jodhpur", "addressRegion": "Rajasthan", "postalCode": "342003", "addressCountry": "IN"},
     "description": "Hydrated lime (calcium hydroxide) in four grades, 80 to 92% Ca(OH)2, made at Ransigaon, Jodhpur, Rajasthan, India.",
 }
 
