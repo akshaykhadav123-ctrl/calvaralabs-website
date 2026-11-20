@@ -1,8 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 16" fill="none">
-<g stroke="#B5271F" stroke-width="1.1" stroke-linecap="round">
-<path d="M14 8 H44 c5 0 7 -4.5 11.5 -4.5 c3 0 4.5 2.3 2.6 4.2 c-1.5 1.5 -3.8 0 -2.6 -1.5"/>
-<path d="M1.5 8 L8 1.5 L14.5 8 L8 14.5 Z"/>
-<path d="M57.5 8 H118"/>
-</g>
-<path d="M8 5.2 L10.8 8 L8 10.8 L5.2 8 Z" fill="#13202E"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 12" fill="none"><path d="M6 1.5 L10.5 6 L6 10.5 L1.5 6 Z" stroke="#B5271F" stroke-width="1"/><path d="M6 4.3 L7.7 6 L6 7.7 L4.3 6 Z" fill="#B5271F"/><path d="M14 6 H95" stroke="#13202E" stroke-opacity=".28" stroke-width="1"/></svg>

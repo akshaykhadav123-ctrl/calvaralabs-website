@@ -7,7 +7,7 @@
 Content follows the Calvara Hydrated Lime Brochure (2026). Plant photos are optional:
 drop them into src/photos/ with the names in PHOTOS and rebuild.
 """
-import json, shutil, sys
+import json, re, shutil, sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent / "tools"))
 from logo_parts import lockup, mark_svg
@@ -81,6 +81,31 @@ def href(root, page):
     return f"{root}{page + '/' if page else ''}index.html"
 
 
+# ---------- line icons (Lucide, ISC licence: src/icons/LICENSE-lucide.txt) ----------
+def lic(name, cls="ic"):
+    raw = (ROOT / "src" / "icons" / f"{name}.svg").read_text()
+    inner = re.search(r"<svg[^>]*>(.*)</svg>", raw, re.S).group(1)
+    inner = re.sub(r"\s+", " ", inner).strip()
+    return (f'<svg class="{cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" '
+            f'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{inner}</svg>')
+
+
+ASK_ICON = {"Prices on your terms": "indian-rupee", "Palletised or not": "layers", "Bag type and size": "package",
+            "Container quantity": "container", "MOQ, capacity and lead time": "clock", "Payment terms": "landmark",
+            "Spec sheet, CoA and SDS": "file-text", "Export documents": "ship", "Supplier registration": "clipboard-check",
+            "Your standard or spec": "ruler", "Free sample": "test-tube", "Plant visit or video call": "video",
+            "Price per kg": "indian-rupee", "250 g sample": "test-tube", "TDS and test reports": "file-text",
+            "Packs and capacity": "package", "Nano grade": "hexagon", "Regulatory documents": "shield-check"}
+IND_ICON = {"Water and wastewater": "droplets", "Chemicals": "flask-conical", "Sugar industry": "candy",
+            "Ceramics and glass": "amphora", "Flue gas treatment": "factory", "Construction": "building-2",
+            "Steel and metallurgy": "anvil", "Paper, leather and textile": "scroll-text", "Agriculture": "sprout"}
+
+
+def ask_card(t, d, m):
+    return (f'<article class="ask">{lic(ASK_ICON.get(t, "file-text"), "ic ask-ic")}<h3>{t}</h3><p>{d}</p>'
+            f'<a class="ask-cta" href="{wa(m)}">{lic("message-circle", "ic")}Ask Akshay on WhatsApp</a></article>')
+
+
 # ---------- icons ----------
 ICON = {
     "flame": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M12 3c1 4 5 5.5 5 10a5 5 0 0 1-10 0c0-2.5 1.5-3.5 2.5-5 .5 1.5 1.5 2 2.5 2-.5-2.5-.5-4.5 0-7z"/></svg>',
@@ -148,7 +173,7 @@ if(reduce)pause();else play();}})();
 def header(root, current):
     cur = ' aria-current="page"'
     links = "".join(f'<a href="{href(root, p)}"{cur if p == current else ""}>{t}</a>' for p, t in NAV)
-    burger = '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>'
+    burger = lic("menu")
     return f'''<a class="skip" href="#main">Skip to content</a>
 <div class="site-top">
 {announce_bar(root)}
@@ -158,7 +183,7 @@ def header(root, current):
 <nav class="nav" aria-label="Main">{links}<a class="btn btn-solid" href="{href(root, 'contact')}">Request a quote</a></nav>
 <details class="menu"><summary aria-label="Open menu">{burger}Menu</summary><nav class="menu-panel" aria-label="Menu">
 <a href="{href(root, '')}"{cur if current in ('', 'home') else ''}>Home</a>{links}<a href="{href(root, '')}#brochure">Brochures (PDF)</a>
-<div class="menu-contact"><a class="btn btn-line" href="tel:{PHONE_TEL}">{ICON["phone"]}Call</a><a class="btn btn-wa" href="{WHATSAPP}">{ICON["wa"]}WhatsApp</a></div>
+<div class="menu-contact"><a class="btn btn-line" href="tel:{PHONE_TEL}">{lic("phone")}Call</a><a class="btn btn-wa" href="{WHATSAPP}">{lic("message-circle")}WhatsApp</a></div>
 <a class="btn btn-solid" href="{href(root, 'contact')}">Request a quote</a></nav></details>
 </div>
 </header>
@@ -227,7 +252,7 @@ def page(path, root, current, title, desc, body, extra_ld=None, noindex=False):
 {body}
 </main>
 {footer(root)}
-<button class="to-top" type="button" aria-label="Back to top" hidden><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 16V4M4.5 9.5 10 4l5.5 5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Top</span></button>
+<button class="to-top" type="button" aria-label="Back to top" hidden>{lic("arrow-up")}<span>Top</span></button>
 <script>
 (function(){{
   var top=document.querySelector('.site-top'), btn=document.querySelector('.to-top'), menu=document.querySelector('.menu');
@@ -335,7 +360,7 @@ def industries():
     out = ""
     for name, use, gs in INDUSTRIES:
         chips = "".join(f'<li class="chip{" first" if i == 0 else ""}">{g}</li>' for i, g in enumerate(gs))
-        out += f'<div><h3>{name}</h3><p>{use}</p><ul class="chips" aria-label="Suggested grades, first is the starting grade">{chips}</ul></div>'
+        out += f'<div>{lic(IND_ICON.get(name, "factory"), "ic ind-ic")}<h3>{name}</h3><p>{use}</p><ul class="chips" aria-label="Suggested grades, first is the starting grade">{chips}</ul></div>'
     return f'<div class="inds">{out}</div>'
 
 
@@ -497,7 +522,7 @@ ASKS = [
 def asks_grid(limit=None):
     items = ASKS[:limit] if limit else ASKS
     cards = "".join(
-        f'<article class="ask"><h3>{t}</h3><p>{d}</p><a class="ask-cta" href="{wa(m)}">Ask Akshay on WhatsApp</a></article>' for t, d, m in items)
+        ask_card(t, d, m) for t, d, m in items)
     return f'<div class="asks">{cards}</div>'
 
 
@@ -560,7 +585,7 @@ HAP_ASKS = [
 
 def hap_asks_grid():
     cards = "".join(
-        f'<article class="ask"><h3>{t}</h3><p>{d}</p><a class="ask-cta" href="{wa(m)}">Ask Akshay on WhatsApp</a></article>' for t, d, m in HAP_ASKS)
+        ask_card(t, d, m) for t, d, m in HAP_ASKS)
     return f'<div class="asks">{cards}</div>'
 
 
@@ -583,7 +608,7 @@ def brochure_block(root):
     lime, hap = BROCHURES["lime"], BROCHURES["hap"]
     lh = brochure_href(root, "lime")
     hh = brochure_href(root, "hap")
-    hap_btn = (f'<a class="btn btn-solid" href="{hh}" download>Download PDF</a><a class="btn btn-line" href="{hh}" target="_blank" rel="noopener">View online</a>' if hh else
+    hap_btn = (f'<a class="btn btn-solid" href="{hh}" download>{lic("download")}Download PDF</a><a class="btn btn-line" href="{hh}" target="_blank" rel="noopener">View online</a>' if hh else
                f'<a class="btn btn-line" href="{wa("Hello Akshay, please send the hydroxyapatite TDS and a sample CoA.")}">Ask on WhatsApp</a>')
     return f'''<div class="brochures" aria-label="Brochures">
 <div class="broch broch-main">
@@ -592,7 +617,7 @@ def brochure_block(root):
 <p class="broch-kicker">Free download</p>
 <h2 class="broch-title">{lime["title"]}</h2>
 <p class="broch-what">{lime["what"]}</p>
-<div class="btn-row"><a class="btn btn-red btn-big" href="{lh}" download>Download brochure (PDF)</a><a class="btn btn-line" href="{lh}" target="_blank" rel="noopener">View online</a></div>
+<div class="btn-row"><a class="btn btn-red btn-big" href="{lh}" download>{lic("download")}Download brochure (PDF)</a><a class="btn btn-line" href="{lh}" target="_blank" rel="noopener">View online</a></div>
 <p class="broch-meta">{lime["meta"]}</p>
 </div></div>
 <div class="broch broch-hap{' broch-hap-live' if hh else ''}">
@@ -619,7 +644,7 @@ def ticker():
     items = "".join(f'<li>{t}</li>' for t in TICKER)
     return f'''<div class="ticker" aria-label="Calvara at a glance">
 <div class="ticker-view"><div class="ticker-track"><ul>{items}</ul><ul aria-hidden="true">{items}</ul></div></div>
-<button class="ticker-btn" type="button" aria-pressed="false" aria-label="Pause moving text"><svg viewBox="0 0 16 16" aria-hidden="true"><path class="i-pause" d="M4 3h3v10H4zM9 3h3v10H9z" fill="currentColor"/><path class="i-play" d="M5 3l8 5-8 5z" fill="currentColor"/></svg></button>
+<button class="ticker-btn" type="button" aria-pressed="false" aria-label="Pause moving text">{lic("pause", "ic i-pause")}{lic("play", "ic i-play")}</button>
 </div>'''
 
 
@@ -629,13 +654,13 @@ def motion_section(root):
         m = f"{root}assets/media/{key}"
         return f'''<figure class="reel">
 <div class="reel-media"><video muted loop playsinline preload="none" poster="{m}-poster.jpg" aria-label="{title}"><source src="{m}.webm" type="video/webm"><source src="{m}.mp4" type="video/mp4"></video>
-<button class="reel-btn" type="button" aria-label="Pause {title.lower()}"><svg viewBox="0 0 16 16" aria-hidden="true"><path class="i-pause" d="M4 3h3v10H4zM9 3h3v10H9z" fill="currentColor"/><path class="i-play" d="M5 3l8 5-8 5z" fill="currentColor"/></svg></button></div>
+<button class="reel-btn" type="button" aria-label="Pause {title.lower()}">{lic("pause", "ic i-pause")}{lic("play", "ic i-play")}</button></div>
 <figcaption><b>{title}</b>{text}</figcaption></figure>'''
     return f'''<section class="section motion"><div class="wrap">
 <div class="section-head"><h2>See how your lime is made</h2><p class="lede">From quicklime to a sealed bag at our plant in Ransigaon, Jodhpur. Plant visits are welcome by appointment.</p></div>
 <div class="reels">
 <figure class="reel reel-svg"><div class="reel-media">{svg}
-<button class="reel-btn" type="button" aria-label="Pause process animation"><svg viewBox="0 0 16 16" aria-hidden="true"><path class="i-pause" d="M4 3h3v10H4zM9 3h3v10H9z" fill="currentColor"/><path class="i-play" d="M5 3l8 5-8 5z" fill="currentColor"/></svg></button></div>
+<button class="reel-btn" type="button" aria-label="Pause process animation">{lic("pause", "ic i-pause")}{lic("play", "ic i-play")}</button></div>
 <figcaption><b>The process</b>Quicklime and measured water become dry hydrated lime.</figcaption></figure>
 {vid("plant-tour", "Inside the plant", "Kiln, hydrators, classifier, packing and the plant lab.")}
 {vid("packing-dispatch", "Packing and dispatch", "25 to 40 kg bags and 900 kg jumbo bags, ready stock.")}
@@ -675,7 +700,7 @@ def home():
 <p class="eyebrow-plain">Hydrated lime · Jodhpur, Rajasthan</p>
 <h1>Hydrated lime, made to the grade you need.</h1>
 <p class="lede">Seven grades from 80 to 95 % Ca(OH)<sub>2</sub>, made at our own plant in Ransigaon, Jodhpur. Every lot is tested in our plant lab and ships with a Certificate of Analysis.</p>
-<div class="btn-row"><a class="btn btn-solid" href="#quote">Get a price</a><a class="btn btn-red" href="{brochure_href(root, 'lime')}" download>Download brochure</a></div>
+<div class="btn-row"><a class="btn btn-solid" href="#quote">Get a price</a><a class="btn btn-red" href="{brochure_href(root, 'lime')}" download>{lic("download")}Download brochure</a></div>
 </div>
 <div class="hero-ladder">{ladder()}</div>
 </div></section>
@@ -781,7 +806,7 @@ def lime():
 <div class="prose" style="gap:18px">
 <h1>Hydrated lime in seven grades</h1>
 <p class="lede">Calcium hydroxide, Ca(OH)<sub>2</sub>. Fine, dry, high-purity powder from the lime belt of Jodhpur, Rajasthan. Every lot is tested and labelled, and made to the grade you need.</p>
-<div class="btn-row"><a class="btn btn-red" href="{brochure_href(root, 'lime')}" download>Download brochure (PDF)</a><a class="btn btn-line" href="#spec">Compare grades</a></div>
+<div class="btn-row"><a class="btn btn-red" href="{brochure_href(root, 'lime')}" download>{lic("download")}Download brochure (PDF)</a><a class="btn btn-line" href="#spec">Compare grades</a></div>
 </div>
 <div class="mini-tile"><span class="formula">Ca(OH)<sub>2</sub></span><span class="meta">Calcium hydroxide · CAS 1305-62-0 · HSN 2522</span><span class="meta">Grades 95 · 94 · 93 · 92 · 90 · 85 · 80</span></div>
 </div>
@@ -875,7 +900,7 @@ def hap():
 <div class="prose" style="gap:18px">
 <h1>Hydroxyapatite powder, made in India</h1>
 <p class="lede">Synthetic, animal-free hydroxyapatite made from our own purified calcium. Micro grade samples are available now for toothpaste, tooth powder, tablets, cosmetics and research.</p>
-<div class="btn-row"><a class="btn btn-solid" href="#quote">Ask for a 250 g sample</a><a class="btn btn-red" href="{brochure_href(root, 'hap')}" download>Download brochure (PDF)</a><a class="btn btn-line" href="#spec">See the specification</a></div>
+<div class="btn-row"><a class="btn btn-solid" href="#quote">Ask for a 250 g sample</a><a class="btn btn-red" href="{brochure_href(root, 'hap')}" download>{lic("download")}Download brochure (PDF)</a><a class="btn btn-line" href="#spec">See the specification</a></div>
 </div>
 <div class="mini-tile"><span class="formula">Ca<sub>10</sub>(PO<sub>4</sub>)<sub>6</sub>(OH)<sub>2</sub></span><span class="meta">Hydroxyapatite (HAp) · CAS 1306-06-5</span><span class="meta">Molar mass 1004.6 g/mol · Ca/P 1.67</span></div>
 </div>
@@ -1138,6 +1163,7 @@ def not_found():
 def extras():
     shutil.copytree(ROOT / "src" / "assets", OUT / "assets", dirs_exist_ok=True)
     shutil.copytree(ROOT / "src" / "brochures", OUT / "brochures", dirs_exist_ok=True)
+    shutil.copytree(ROOT / "src" / "icons", OUT / "assets" / "icons", dirs_exist_ok=True)
     if (ROOT / "src" / "photos").exists():
         shutil.copytree(ROOT / "src" / "photos", OUT / "assets" / "photos", dirs_exist_ok=True)
     (OUT / "assets" / "brand").mkdir(exist_ok=True)
