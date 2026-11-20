@@ -561,3 +561,112 @@ html{scroll-padding-top:140px}
 @media (prefers-reduced-motion:reduce){.to-top{transition:none}}
 .menu-panel a.btn{border:2px solid var(--ink);padding:12px 16px}
 .menu-panel a.btn-wa{border-color:#1E7E4A}
+
+/* ===================================================================
+   v11: calm & elegant
+   White paper, navy type in lighter weights, red only on the main
+   action and small markers, hairlines instead of boxes, more air.
+   =================================================================== */
+:root{--ground:#F6F7F8;--line:#E7E9EC;--line-strong:#CDD2D8;--ink-soft:#56616D;--radius:14px}
+body{font-size:17px;line-height:1.65}
+h1,h2,h3{letter-spacing:-0.02em}
+h1{font-weight:500;line-height:1.05}
+h2{font-weight:500;font-size:clamp(28px,3.2vw,40px)}
+h3{font-weight:500}
+.section{padding:clamp(64px,9vw,128px) 0}
+.section-tint{background:var(--ground);border:0}
+.section-head{margin-bottom:clamp(28px,4vw,48px)}
+.lede{color:var(--ink-soft)}
+
+/* buttons: quieter borders, one strong colour */
+.btn{border-width:1.5px;font-weight:500;border-radius:10px}
+.btn-line{border-color:var(--line-strong)}
+.btn-line:hover{background:transparent;border-color:var(--ink);color:var(--ink)}
+.btn-solid:hover{background:#26384D}
+
+/* header */
+.site-head{border-bottom:1px solid var(--line)}
+.site-top{box-shadow:none;border-bottom:0}
+.nav a{font-weight:400;color:var(--ink-soft)}
+.nav a:hover{background:transparent;color:var(--ink)}
+.nav a[aria-current="page"]{color:var(--ink);text-decoration-color:var(--red);text-decoration-thickness:1.5px}
+.menu summary{border-color:var(--line);font-weight:500}
+.announce-item b{background:transparent;color:#FF8A82;padding:0;border-radius:0;font-weight:600}
+
+/* hero: white, no texture, no slab */
+.hero{background:var(--paper);background-image:none;color:var(--ink);border-bottom:0;isolation:auto}
+.hero::after{content:none;display:none}
+.hero .eyebrow-plain{color:var(--red-deep);font-weight:500}
+.hero h1{color:var(--ink)}
+.hero .lede{color:var(--ink-soft)}
+.hero .btn-solid{background:var(--ink);border-color:var(--ink);color:#fff}
+.hero .btn-solid:hover{background:#26384D;border-color:#26384D;color:#fff}
+.hero .btn-red{background:transparent;border-color:var(--line-strong);color:var(--ink)}
+.hero .btn-red:hover{background:transparent;border-color:var(--ink);color:var(--ink)}
+.hero :focus-visible{outline-color:var(--ink)}
+.hero-grid{padding-block:clamp(48px,8vw,112px)}
+.ladder,.hero .ladder{border:1px solid var(--line);box-shadow:none;background:var(--paper)}
+.hero .ladder-head{border-bottom-color:var(--line)}
+@media (max-width:820px){.hero{background:var(--paper);background-image:none}}
+
+/* moving text: light band, quiet type */
+.ticker{background:var(--ground);color:var(--ink-soft);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.ticker li{font-weight:400;font-size:clamp(15px,1.4vw,17px);padding:13px 0}
+.ticker li::after{width:5px;height:5px;margin:0 22px;border-radius:50%;clip-path:none;background:var(--red)}
+.ticker-track{animation-duration:60s}
+.ticker-btn{color:var(--ink-soft)}
+.ticker-btn:hover{background:var(--line);color:var(--ink)}
+
+/* animations: borderless tiles */
+.reel-media{border:0;background:var(--ground)}
+.reel figcaption b{font-weight:500}
+
+/* brochures: one calm surface, no texture */
+.broch-band{background:var(--paper);border:0;padding-block:clamp(40px,6vw,72px)}
+.broch,.broch-main,.broch-hap,.broch-hap-live{background:var(--ground);background-image:none;color:var(--ink);border:0}
+.broch-main .broch-title,.broch-title{color:var(--ink);font-weight:500}
+.broch-main .broch-kicker,.broch-kicker{color:var(--red-deep);font-family:var(--body);font-weight:500;font-size:14px}
+.broch-main .broch-what{color:var(--ink-soft)}
+.broch-main .btn-line{border-color:var(--line-strong);color:var(--ink)}
+.broch-main .btn-line:hover{background:transparent;border-color:var(--ink);color:var(--ink)}
+.broch-cover{box-shadow:0 14px 30px -14px rgba(19,32,46,.45)}
+.broch-meta{color:#7B8591}
+
+/* figures and cards: hairlines, lighter numbers */
+.stats{border-color:var(--line)}
+.stats b{font-weight:500}
+.facts b{font-weight:500}
+.ask{border:0;border-top:1px solid var(--line);border-radius:0;padding:20px 0 4px;background:transparent}
+.asks{column-gap:clamp(24px,3vw,40px)}
+.ask-cta{color:var(--ink);font-weight:500;border-top:0;padding-top:0}
+.ask-cta::before{border-color:#1E7E4A}
+.ask-cta:hover{color:var(--ink);text-decoration:underline}
+.qb{border:1px solid var(--line);box-shadow:none}
+.qchip span{border:1px solid var(--line-strong);font-weight:400;border-radius:999px}
+.engineer{background:var(--ground);color:var(--ink)}
+.engineer blockquote{color:var(--ink);font-weight:400}
+.engineer p{color:var(--ink-soft)}
+.engineer a{color:var(--ink)}
+.engineer .btn-ghost-light{color:var(--ink);border-color:var(--line-strong)}
+.engineer .btn-ghost-light:hover{background:transparent;border-color:var(--ink);color:var(--ink)}
+.promise{border:0;border-left:3px solid var(--red);border-radius:0;padding:6px 0 6px 18px}
+.page-head{background:var(--paper);border-bottom:1px solid var(--line)}
+
+/* closing band and footer: flat navy, no texture */
+.cta-band,.site-foot{background-image:none}
+.cta-band{background:var(--ink)}
+.site-foot{background:var(--ink);border-top:1px solid #22344A}
+
+/* back to top: lighter */
+.to-top{background:rgba(19,32,46,.86);box-shadow:0 6px 16px -8px rgba(19,32,46,.5);height:44px;font-weight:500;font-size:14px}
+.to-top:hover{background:var(--ink)}
+
+/* ===== v12: Calvara ornaments (drawn in-house: rule, divider, corners) ===== */
+.section-head h2::after,.page-head h1::after{content:"";display:block;width:120px;height:16px;margin-top:16px;background:url("rule.svg") no-repeat left center/contain}
+.broch-band::before{content:"";display:block;width:min(240px,60%);height:24px;margin:0 auto clamp(28px,4vw,40px);background:url("divider.svg") no-repeat center/contain}
+.broch{position:relative}
+.broch::before,.broch::after{content:"";position:absolute;width:44px;height:44px;background:url("corner.svg") no-repeat center/contain;pointer-events:none}
+.broch::before{left:10px;top:10px}
+.broch::after{right:10px;bottom:10px;transform:scale(-1)}
+.engineer b{color:var(--ink)}
+@media (max-width:560px){.broch::before,.broch::after{width:34px;height:34px}.broch::before{left:auto;right:10px;transform:scaleX(-1)}}

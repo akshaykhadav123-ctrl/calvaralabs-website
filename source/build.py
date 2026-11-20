@@ -290,7 +290,7 @@ def engineer(root, short=False):
     more = "" if short else "<p>I am a chemical engineer from IIT Bombay and I lead Calvara Labs &amp; Minerals. When you write to us, you speak directly with me about chemistry, grades and dispatch, not with a call centre.</p>"
     return f'''<div class="engineer">{av}<div>
 <blockquote>“Tell me about your process. I'll suggest the grade that fits, and send you a sample to prove it.”</blockquote>
-<p><b style="color:#fff">Akshay Khadav</b>, B.Tech Chemical Engineering, IIT Bombay</p>
+<p><b>Akshay Khadav</b>, B.Tech Chemical Engineering, IIT Bombay</p>
 {more}
 <div class="btn-row"><a class="btn btn-red" href="{WHATSAPP}">WhatsApp Akshay</a><a class="btn btn-ghost-light" href="tel:{PHONE_TEL}">Call {PHONE_DISPLAY}</a></div>
 </div></div>'''
