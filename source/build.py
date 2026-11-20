@@ -144,6 +144,11 @@ DOCUMENTS = [
      "what": "Issued by the Directorate General of Foreign Trade, Government of India. IEC ETMPK7731R, firm name Calvara Labs and Minerals, Jodhpur. Issued 17 November 2026.",
      "meta": "1 page · PDF · 0.1 MB",
      "verify": ("Verify on the DGFT website: Services › View Any IEC Details", "https://dgft.gov.in")},
+    {"title": "Udyam registration certificate (MSME)", "file": "Calvara-Udyam-Registration-Certificate.pdf", "thumb": "doc-udyam",
+     "what": "Ministry of Micro, Small and Medium Enterprises, Government of India. UDYAM-RJ-22-0227773, Calvara Labs and Minerals, micro enterprise, manufacturing. "
+             "Activities: manufacture of quicklime and slaked (hydrated) lime, and of cosmetics and toiletries. Registered 30 October 2026.",
+     "meta": "2 pages · PDF · 1 MB",
+     "verify": ("Verify on the Udyam Registration portal", "https://udyamregistration.gov.in")},
 ]
 LAB_REPORTS = [
     {"title": "Hydrated lime test report RKC/742", "file": "Calvara-Hydrated-Lime-Test-Report-RKC-742.pdf", "thumb": "doc-rk742",
@@ -869,7 +874,7 @@ def documents():
 <p class="lede">Company and product documents your purchase or quality team may ask for. Download them here, or ask Akshay for anything not listed.</p>
 </div></section>
 <section class="section"><div class="wrap">
-<div class="section-head"><h2>Company registration</h2><p class="lede">Calvara Labs and Minerals is registered for GST and holds an Importer-Exporter Code for export.</p></div>
+<div class="section-head"><h2>Company registration</h2><p class="lede">Calvara Labs and Minerals is registered for GST, holds an Importer-Exporter Code for export, and is a registered MSME (Udyam).</p></div>
 <div class="docs">{cards}</div>
 </div></section>
 <section class="section section-tint" id="lab-reports"><div class="wrap">
@@ -882,8 +887,8 @@ def documents():
 <div class="asks">{req}</div>
 </div></section>
 {cta_band(root)}'''
-    page("documents", root, "documents", "Documents: GST, IEC, Lab Test Reports | Calvara Labs &amp; Minerals",
-         f"Calvara Labs and Minerals company documents: GST registration (GSTIN {GSTIN}) and Importer-Exporter Code (IEC ETMPK7731R). TDS, SDS and sample CoA on request.", body)
+    page("documents", root, "documents", "Documents: GST, IEC, Udyam MSME, Lab Reports | Calvara Labs &amp; Minerals",
+         f"Calvara Labs and Minerals company documents: GST registration (GSTIN {GSTIN}), Importer-Exporter Code (IEC ETMPK7731R), Udyam MSME registration and lab test reports.", body)
 
 
 
