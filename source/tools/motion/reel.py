@@ -30,7 +30,7 @@ REELS = {
      ("p3_x37.jpeg", "Jumbo-bag packing", "900 kg bags under a dust collector", (0.5, 0.5)),
      ("p8_x62.jpeg", "Plant lab", "Every lot tested, CoA with every dispatch", (0.6, 0.6)),
    ],
-   "end": ("Seven grades, 80–95 % Ca(OH)₂", "Free sample with its CoA"),
+   "end": ("Four grades, 80–92 % Ca(OH)₂", "Free sample with its CoA"),
  },
  "packing-dispatch": {
    "label": "Packing & dispatch · Ransigaon, Jodhpur",

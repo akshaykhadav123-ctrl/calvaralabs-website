@@ -26,18 +26,12 @@ WORKS = "Ransigaon, Tehsil Bilara, District Jodhpur, Rajasthan, India"
 
 # grade, label, Ca(OH)2 min, CaO eq, moisture max, acid insoluble max, passing 200 mesh min
 GRADES = [
-    ("95", "Premium", "95 %", "~72 %", "0.5 %", "0.8 %", "99.5 %"),
-    ("94", "High purity", "94 %", "~71 %", "0.7 %", "0.9 %", "99.2 %"),
-    ("93", "High purity", "93 %", "~70.5 %", "0.8 %", "1.0 %", "99 %"),
     ("92", "High purity", "92 %", "~69.5 %", "0.8 %", "1.06 %", "98.5 %"),
     ("90", "Standard", "90 %", "~68 %", "1.0 %", "3 %", "98 %"),
     ("85", "Standard", "85 %", "~64 %", "1.5 %", "5 %", "95 %"),
     ("80", "Bulk value", "80 %", "~60 %", "2.0 %", "8 %", "90 %"),
 ]
 GRADE_USES = {
-    "95": "Chemicals, ceramics and glass, drinking water, sugar refining",
-    "94": "Chemicals, ceramics and glass, drinking water, sugar refining",
-    "93": "Chemicals, ceramics and glass, drinking water, sugar refining",
     "92": "Chemicals, ceramics and glass, drinking water, sugar refining",
     "90": "Water and wastewater, sugar, flue gas, chemicals",
     "85": "Water and wastewater, sugar, flue gas, chemicals",
@@ -45,9 +39,9 @@ GRADE_USES = {
 }
 INDUSTRIES = [
     ("Water and wastewater", "pH correction, softening, heavy-metal and phosphate removal", ["92", "90", "85"]),
-    ("Chemicals", "Calcium salts, bleaching powder, caustic soda production", ["95", "93", "90"]),
+    ("Chemicals", "Calcium salts, bleaching powder, caustic soda production", ["92", "90"]),
     ("Sugar industry", "Juice clarification and purification", ["90", "92", "85"]),
-    ("Ceramics and glass", "Raw material and process additive", ["93", "95", "90"]),
+    ("Ceramics and glass", "Raw material and process additive", ["92", "90"]),
     ("Flue gas treatment", "Scrubbing and neutralisation of SO<sub>2</sub> and HCl", ["85", "90"]),
     ("Construction", "Lime plaster, mortar, putty, soil stabilisation, AAC blocks", ["80", "85"]),
     ("Steel and metallurgy", "Flux, slag conditioning, acid neutralisation", ["80", "85"]),
@@ -134,7 +128,7 @@ NAV = [("hydrated-lime", "Hydrated lime"), ("export", "Prices &amp; export"), ("
 ANNOUNCEMENTS = [
     ("Free sample", "Get a free sample of any grade, with its Certificate of Analysis.", "export#quote", "Ask now"),
     ("Export", "CIF and CFR quotes to your port, palletised or non-palletised.", "export#quote", "Get a price"),
-    ("Ready stock", "Seven grades, 80 to 95 % Ca(OH)₂, in 25, 30, 35 or 40 kg bags, palletised or non-palletised.", "hydrated-lime", "See grades"),
+    ("Ready stock", "Four grades, 80 to 92 % Ca(OH)₂, in 25, 30, 35 or 40 kg bags, palletised or non-palletised.", "hydrated-lime", "See grades"),
     ("New", "Hydroxyapatite micro grade: 250 g samples now open.", "hydroxyapatite#quote", "Request"),
 ]
 
@@ -193,7 +187,7 @@ def header(root, current):
 def footer(root):
     return f'''<footer class="site-foot">
 <div class="wrap foot-grid">
-<div>{brand(root, dark=True)}<p>Hydrated lime in seven grades, made at our own plant in Ransigaon, Jodhpur.</p></div>
+<div>{brand(root, dark=True)}<p>Hydrated lime in four grades, made at our own plant in Ransigaon, Jodhpur.</p></div>
 <div><h2>Products</h2><ul><li><a href="{href(root, 'hydrated-lime')}">Hydrated lime grades</a></li><li><a href="{href(root, 'export')}">Prices &amp; export</a></li><li><a href="{brochure_href(root, 'lime')}" download>Hydrated lime brochure (PDF)</a></li><li><a href="{href(root, 'hydroxyapatite')}">Hydroxyapatite</a></li><li><a href="{brochure_href(root, 'hap')}" download>Hydroxyapatite brochure (PDF)</a></li></ul></div>
 <div><h2>Company</h2><ul><li><a href="{href(root, 'about')}">About &amp; quality</a></li><li><a href="{href(root, 'contact')}">Request a quote</a></li><li>Office: {OFFICE}</li></ul></div>
 <div><h2>Contact</h2><ul><li><a href="tel:{PHONE_TEL}">{PHONE_DISPLAY}</a></li><li><a href="{WHATSAPP}">WhatsApp us</a></li><li><a href="mailto:{EMAIL}">{EMAIL}</a></li></ul></div>
@@ -214,7 +208,7 @@ ORG_LD = {
     "url": SITE + "/", "logo": SITE + "/assets/logo-512.png", "email": EMAIL, "telephone": PHONE_TEL,
     "address": {"@type": "PostalAddress", "streetAddress": "54 Patrakar Colony, Section 7, New Power House Road",
                 "addressLocality": "Jodhpur", "addressRegion": "Rajasthan", "postalCode": "342001", "addressCountry": "IN"},
-    "description": "Hydrated lime (calcium hydroxide) in seven grades, 80 to 95% Ca(OH)2, made at Ransigaon, Jodhpur, Rajasthan, India.",
+    "description": "Hydrated lime (calcium hydroxide) in four grades, 80 to 92% Ca(OH)2, made at Ransigaon, Jodhpur, Rajasthan, India.",
 }
 
 
@@ -258,13 +252,21 @@ def page(path, root, current, title, desc, body, extra_ld=None, noindex=False):
   var top=document.querySelector('.site-top'), btn=document.querySelector('.to-top'), menu=document.querySelector('.menu');
   var t=document.querySelector('.ticker');
   if(t){{ var tb=t.querySelector('.ticker-btn');
-    function tset(p){{ t.classList.toggle('is-paused',p); document.documentElement.classList.toggle('motion-paused',p); tb.classList.toggle('is-paused',p); tb.setAttribute('aria-pressed',p); tb.setAttribute('aria-label',p?'Play moving text':'Pause moving text'); }}
+    function tset(p){{ t.classList.toggle('is-paused',p); document.documentElement.classList.toggle('motion-paused',p); document.querySelectorAll('video.hero-bg').forEach(function(v){{ if(p) v.pause(); else if(v.dataset.ok) v.play().catch(function(){{}}); }}); tb.classList.toggle('is-paused',p); tb.setAttribute('aria-pressed',p); tb.setAttribute('aria-label',p?'Play moving text':'Pause moving text'); }}
     tb.addEventListener('click',function(){{ tset(!t.classList.contains('is-paused')); }});
     if(matchMedia('(prefers-reduced-motion: reduce)').matches) tset(true);
   }}
   var smooth=!matchMedia('(prefers-reduced-motion: reduce)').matches;
   function pad(){{ if(top) document.documentElement.style.scrollPaddingTop=(top.offsetHeight+12)+'px'; }}
   pad(); addEventListener('resize',pad);
+  var hv=document.querySelector('video.hero-bg');
+  if(hv && !matchMedia('(prefers-reduced-motion: reduce)').matches && !(navigator.connection && navigator.connection.saveData)){{
+    hv.dataset.ok='1';
+    var go=function(){{ hv.preload='auto'; hv.play().catch(function(){{}}); }};
+    if(document.readyState==='complete') setTimeout(go,300); else addEventListener('load',function(){{ setTimeout(go,300); }});
+    if('IntersectionObserver' in window) new IntersectionObserver(function(es){{ if(document.documentElement.classList.contains('motion-paused')) return; es[0].isIntersecting ? hv.play().catch(function(){{}}) : hv.pause(); }}).observe(hv);
+    hv.addEventListener('playing',function(){{ hv.classList.add('is-on'); }});
+  }}
   btn.hidden=false;
   function onScroll(){{ btn.classList.toggle('is-on', scrollY>600); }}
   addEventListener('scroll',onScroll,{{passive:true}}); onScroll();
@@ -333,10 +335,10 @@ def crumbs(root, name):
 def ladder():
     rows = ""
     for g, label, ca, _, _, si, _ in GRADES:
-        pct = (int(g) - 70) / 25 * 100
-        rows += f'<li><span class="g">{g}</span><span class="bar" aria-hidden="true"><i style="width:{pct:.0f}%"></i></span><span class="si">silica ≤ {si}</span></li>'
-    return f'''<div class="ladder" role="group" aria-label="Seven hydrated lime grades">
-<div class="ladder-head">Seven grades<span>min. % Ca(OH)<sub>2</sub></span></div>
+        pct = (int(g) - 70) / 22 * 100
+        rows += f'<li><span class="g">{g}</span><span class="bar" aria-hidden="true"><i style="width:{pct:.0f}%;--row:{len(rows) and rows.count("<li>")}"></i></span><span class="si">silica ≤ {si}</span></li>'
+    return f'''<div class="ladder" role="group" aria-label="Four hydrated lime grades">
+<div class="ladder-head">Four grades<span>min. % Ca(OH)<sub>2</sub></span></div>
 <ol>{rows}</ol>
 <div class="ladder-foot">A higher grade means more active lime and less silica, so you dose less.</div>
 </div>'''
@@ -344,9 +346,9 @@ def ladder():
 
 def stats():
     return '''<div class="stats">
-<div><b>7</b><span>purity grades, 80 to 95 %</span></div>
-<div><b>95 %</b><span>top purity, Ca(OH)<sub>2</sub> min.</span></div>
-<div><b>99.5 %</b><span>passes 200 mesh (95 grade)</span></div>
+<div><b>4</b><span>purity grades, 80 to 92 %</span></div>
+<div><b>92 %</b><span>top purity, Ca(OH)<sub>2</sub> min.</span></div>
+<div><b>98.5 %</b><span>passes 200 mesh (92 grade)</span></div>
 <div><b>25–40 kg</b><span>bags: 25, 30, 35 or 40 kg, palletised or non-palletised</span></div>
 </div>'''
 
@@ -377,7 +379,7 @@ def problems():
         ("Purity lower than promised", "You pay for 90 % and dose for 80 %, so consumption goes up.",
          "The grade is a guaranteed minimum", "The grade number is the minimum Ca(OH)<sub>2</sub> content, and every lot ships with a Certificate of Analysis."),
         ("Grit and silica", "Inert matter wears pumps and dosing lines and adds sludge.",
-         "Silica capped for every grade", "Acid insoluble is held as low as 0.8 % in the 95 grade and 1.06 % in the 92 grade, and fineness is up to 99.5 % through 200 mesh."),
+         "Silica capped for every grade", "Acid insoluble is held to 1.06 % in the 92 grade and capped for every grade, and fineness is up to 98.5 % through 200 mesh."),
         ("Lumps and moisture", "Damp lime cakes, blocks feeders and loses strength.",
          "Dry powder, sealed bags", "Moisture is limited to 0.5 to 2.0 % by grade, and the packing date is printed on every lot."),
         ("Every truck is different", "One good lot, then the next one upsets your process.",
@@ -392,7 +394,7 @@ def problems():
 
 def ranges():
     return '''<div class="ranges">
-<div><span class="nums">95 · 94 · 93 · 92</span><h3>High-purity range</h3><p>Chemicals, ceramics and glass, drinking water and sugar refining.</p></div>
+<div><span class="nums">92</span><h3>High-purity range</h3><p>Chemicals, ceramics and glass, drinking water and sugar refining.</p></div>
 <div><span class="nums">90 · 85</span><h3>Standard range</h3><p>Water and wastewater, sugar, flue gas and chemicals.</p></div>
 <div><span class="nums">80</span><h3>Bulk value</h3><p>Construction, steel, agriculture, paper and leather.</p></div>
 </div>'''
@@ -417,7 +419,7 @@ def spec_table():
         cards += f'''<article class="gcard"><div class="gcard-top"><b>{g}</b><span>{label} grade</span></div>
 <dl><div><dt>Ca(OH)<sub>2</sub>, min.</dt><dd>{ca}</dd></div><div><dt>Equivalent CaO</dt><dd>{cao}</dd></div><div><dt>Moisture, max.</dt><dd>{moist}</dd></div><div><dt>Silica (acid insoluble), max.</dt><dd>{si}</dd></div><div><dt>Passing 200 mesh, min.</dt><dd>{mesh}</dd></div></dl>
 <p class="uses-line">{GRADE_USES[g]}</p></article>'''
-    return table + f'<div class="grade-cards" aria-label="Grade specifications, swipe for more">{cards}</div><p class="swipe-hint">Swipe across to compare all seven grades.</p>'
+    return table + f'<div class="grade-cards" aria-label="Grade specifications, swipe for more">{cards}</div><p class="swipe-hint">Swipe across to compare all four grades.</p>'
 
 
 def common_props():
@@ -491,7 +493,7 @@ def wa(text):
 
 
 def quote_builder(root, heading=True):
-    grades = ["95", "94", "93", "92", "90", "85", "80", "Not sure"]
+    grades = ["92", "90", "85", "80", "Not sure"]
     def chips(name, opts, checked):
         return "".join(
             f'<label class="qchip"><input type="radio" name="{name}" value="{o}"{" checked" if o == checked else ""}><span>{o}</span></label>' for o in opts)
@@ -641,7 +643,7 @@ def hap_asks_grid():
 # file None shows a "coming soon" card.
 BROCHURES = {
     "lime": {"title": "Hydrated Lime Brochure 2026", "file": "Calvara-Hydrated-Lime-Brochure-2026.pdf",
-             "meta": "10 pages · PDF · 1.3 MB", "what": "All 7 grades and specs, plant photos, packing, export loading and CoA format."},
+             "meta": "10 pages · PDF · 1.3 MB", "what": "All 4 grades and specs, plant photos, packing, export loading and CoA format."},
     "hap": {"title": "Hydroxyapatite Brochure 2026", "file": "Calvara-Hydroxyapatite-Brochure-2026.pdf",
             "meta": "6 pages · PDF · 0.8 MB", "what": "Micro and nano grades, full specification, how we make it, and how to start with a 250 g sample."},
 }
@@ -746,7 +748,7 @@ def motion_section(root):
 
 
 # ---------- large moving text bands (decorative; the same facts are in the page text) ----------
-MQ_HOME = ["Seven grades", "80 to 95 % Ca(OH)<sub>2</sub>", "Tested every lot", "CoA with every dispatch", "Made in Jodhpur, Rajasthan", "Sample first"]
+MQ_HOME = ["Four grades", "80 to 92 % Ca(OH)<sub>2</sub>", "Tested every lot", "CoA with every dispatch", "Made in Jodhpur, Rajasthan", "Sample first"]
 MQ_IND = [n for n, _, _ in INDUSTRIES]
 MQ_EXPORT = ["CIF", "CFR", "FOB India", "Ex-works Jodhpur", "Delivered in India", "20 ft and 40 ft containers", "Palletised or non-palletised", "25, 30, 35 or 40 kg bags"]
 MQ_HAP = ["Animal-free", "Toothpaste", "Tooth powder", "Toothpaste tablets", "Cosmetics", "Laboratory and research", "Micro grade, D50 3–8 µm", "Nano grade in development"]
@@ -776,11 +778,11 @@ def product_ld(name, desc, url, category, extra=None):
 def home():
     root = ""
     body = f'''
-<section class="hero"><div class="wrap hero-grid">
+<section class="hero hero-video"><video class="hero-bg" muted loop playsinline preload="none" poster="assets/media/hero-bg-poster.jpg" aria-hidden="true"><source src="assets/media/hero-bg.webm" type="video/webm"><source src="assets/media/hero-bg.mp4" type="video/mp4"></video><div class="wrap hero-grid">
 <div class="hero-copy">
 <p class="eyebrow-plain">Hydrated lime · Jodhpur, Rajasthan</p>
 <h1>Hydrated lime, made to the grade you need.</h1>
-<p class="lede">Seven grades from 80 to 95 % Ca(OH)<sub>2</sub>, made at our own plant in Ransigaon, Jodhpur. Every lot is tested in our plant lab and ships with a Certificate of Analysis.</p>
+<p class="lede">Four grades from 80 to 92 % Ca(OH)<sub>2</sub>, made at our own plant in Ransigaon, Jodhpur. Every lot is tested in our plant lab and ships with a Certificate of Analysis.</p>
 <div class="btn-row"><a class="btn btn-solid" href="#quote">Get a price</a><a class="btn btn-red" href="{brochure_href(root, 'lime')}" download>{lic("download")}Download brochure</a></div>
 </div>
 <div class="hero-ladder">{ladder()}</div>
@@ -826,9 +828,9 @@ def home():
 </div></section>
 
 <section class="section section-tint"><div class="wrap">
-<div class="section-head"><h2>Seven grades. Pick your purity.</h2><p class="lede">The grade number is the minimum Ca(OH)<sub>2</sub> content. A higher grade gives more active lime, less silica and a finer, whiter powder.</p></div>
+<div class="section-head"><h2>Four grades. Pick your purity.</h2><p class="lede">The grade number is the minimum Ca(OH)<sub>2</sub> content. A higher grade gives more active lime, less silica and a finer, whiter powder.</p></div>
 {ranges()}
-<p style="margin-top:24px"><a class="btn btn-solid" href="{href(root, 'hydrated-lime')}#spec">Compare all seven grades</a></p>
+<p style="margin-top:24px"><a class="btn btn-solid" href="{href(root, 'hydrated-lime')}#spec">Compare all four grades</a></p>
 </div></section>
 
 <section class="section"><div class="wrap">
@@ -855,8 +857,8 @@ def home():
 
 {cta_band(root)}
 '''
-    page("", root, "", "Hydrated Lime Manufacturer, Jodhpur | Grades 80–95 | Calvara Labs",
-         "Hydrated lime in seven grades, 80 to 95% Ca(OH)2, made at our plant near Jodhpur. Silica from 0.8%, up to 99.5% through 200 mesh, CoA with every lot.",
+    page("", root, "", "Hydrated Lime Manufacturer, Jodhpur | Grades 80–92 | Calvara Labs",
+         "Hydrated lime in four grades, 80 to 92% Ca(OH)2, made at our plant near Jodhpur. Silica from 1.06%, up to 98.5% through 200 mesh, CoA with every lot.",
          body)
 
 
@@ -886,11 +888,11 @@ def lime():
 {crumbs(root, "Hydrated lime")}
 <div class="page-head-grid">
 <div class="prose" style="gap:18px">
-<h1>Hydrated lime in seven grades</h1>
+<h1>Hydrated lime in four grades</h1>
 <p class="lede">Calcium hydroxide, Ca(OH)<sub>2</sub>. Fine, dry, high-purity powder from the lime belt of Jodhpur, Rajasthan. Every lot is tested and labelled, and made to the grade you need.</p>
 <div class="btn-row"><a class="btn btn-red" href="{brochure_href(root, 'lime')}" download>{lic("download")}Download brochure (PDF)</a><a class="btn btn-line" href="#spec">Compare grades</a></div>
 </div>
-<div class="mini-tile"><span class="formula">Ca(OH)<sub>2</sub></span><span class="meta">Calcium hydroxide · CAS 1305-62-0 · HSN 2522</span><span class="meta">Grades 95 · 94 · 93 · 92 · 90 · 85 · 80</span></div>
+<div class="mini-tile"><span class="formula">Ca(OH)<sub>2</sub></span><span class="meta">Calcium hydroxide · CAS 1305-62-0 · HSN 2522</span><span class="meta">Grades 92 · 90 · 85 · 80</span></div>
 </div>
 </div></section>
 {marquee([f"Grade {g[0]}" for g in GRADES], "lg", speed=40)}
@@ -954,9 +956,9 @@ def lime():
 
 {cta_band(root, "Get a hydrated lime quote", "Send the grade, monthly quantity and delivery city or port. You hear back directly from our engineer.")}
 '''
-    page("hydrated-lime", root, "hydrated-lime", "Hydrated Lime Grades 80–95% | Specifications | Calvara Labs, Jodhpur",
-         "Compare seven hydrated lime grades: Ca(OH)2 80–95%, silica 0.8–8%, moisture 0.5–2.0%, 90–99.5% through 200 mesh. 25 to 40 kg bags, CoA with every lot.",
-         body, [faq_ld, product_ld("Hydrated lime (calcium hydroxide)", "Hydrated lime in seven grades, 80 to 95% Ca(OH)2, made at our plant near Jodhpur, Rajasthan. Packed in 25, 30, 35 or 40 kg bags or 900 kg jumbo bags, with a Certificate of Analysis for every lot.",
+    page("hydrated-lime", root, "hydrated-lime", "Hydrated Lime Grades 80–92% | Specifications | Calvara Labs, Jodhpur",
+         "Compare four hydrated lime grades: Ca(OH)2 80–92%, silica 1.06–8%, moisture 0.8–2.0%, 90–98.5% through 200 mesh. 25 to 40 kg bags, CoA with every lot.",
+         body, [faq_ld, product_ld("Hydrated lime (calcium hydroxide)", "Hydrated lime in four grades, 80 to 92% Ca(OH)2, made at our plant near Jodhpur, Rajasthan. Packed in 25, 30, 35 or 40 kg bags or 900 kg jumbo bags, with a Certificate of Analysis for every lot.",
                                    "hydrated-lime/", "Industrial chemicals", {"additionalProperty": [{"@type": "PropertyValue", "name": "CAS", "value": "1305-62-0"}, {"@type": "PropertyValue", "name": "HSN", "value": "2522"}]})])
 
 
@@ -1071,7 +1073,7 @@ def about():
 <section class="section"><div class="wrap split">
 <div class="prose">
 <h2>Who we are</h2>
-<p>Our hydrated lime comes in seven grades, from 80 to 95 % Ca(OH)<sub>2</sub>, each with a published specification. You test a sample first, and we supply to the sample you approve.</p>
+<p>Our hydrated lime comes in four grades, from 80 to 92 % Ca(OH)<sub>2</sub>, each with a published specification. You test a sample first, and we supply to the sample you approve.</p>
 <p>We also use our calcium to make finer chemicals, starting with <a href="{href(root, 'hydroxyapatite')}">hydroxyapatite</a>.</p>
 <div class="addr"><b>Office</b><span class="muted">{OFFICE}</span></div>
 <div class="addr"><b>Works</b><span class="muted">{WORKS}. Plant visits welcome by appointment.</span></div>
