@@ -24,7 +24,7 @@ EMAIL = "sales@calvaralabs.com"
 # Enquiry log: Google Apps Script web-app URL (see tools/enquiry-log.gs). Empty = logging off.
 LOG_URL = ""
 # Visitor stats: Cloudflare Web Analytics token (no cookies, no personal data). Empty = off.
-CF_BEACON_TOKEN = ""
+CF_BEACON_TOKEN = "f048cc9ae2604bbdb4b2fbd74435211c"
 AUTORESPONSE = ("Thank you for contacting Calvara Labs & Minerals. Akshay Khadav, our chemical engineer, has your enquiry "
                 "and will reply with price, specification and lead time, usually the same day.\n\n"
                 "While you wait, our brochures:\n"
@@ -293,7 +293,7 @@ def page(path, root, current, title, desc, body, extra_ld=None, noindex=False, l
 <link rel="preload" href="{root}assets/fonts/jost.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="{root}assets/site.css">
 <script type="application/ld+json">{json.dumps(ld if len(ld) > 1 else ld[0], ensure_ascii=False)}</script>
-{f"""<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{{"token": "{CF_BEACON_TOKEN}"}}'></script>""" if CF_BEACON_TOKEN else ""}
+{f"""<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{{"token": "{CF_BEACON_TOKEN}"}}'></script>""" if CF_BEACON_TOKEN else ""}
 </head>
 <body>
 {head_html or header(root, current, alt)}
