@@ -176,7 +176,7 @@ def header(root, current):
     burger = lic("menu")
     return f'''<a class="skip" href="#main">Skip to content</a>
 <div class="site-top">
-{announce_bar(root)}
+{ticker(root)}
 <header class="site-head">
 <div class="wrap head-row">
 {brand(root)}
@@ -256,6 +256,12 @@ def page(path, root, current, title, desc, body, extra_ld=None, noindex=False):
 <script>
 (function(){{
   var top=document.querySelector('.site-top'), btn=document.querySelector('.to-top'), menu=document.querySelector('.menu');
+  var t=document.querySelector('.ticker');
+  if(t){{ var tb=t.querySelector('.ticker-btn');
+    function tset(p){{ t.classList.toggle('is-paused',p); document.documentElement.classList.toggle('motion-paused',p); tb.classList.toggle('is-paused',p); tb.setAttribute('aria-pressed',p); tb.setAttribute('aria-label',p?'Play moving text':'Pause moving text'); }}
+    tb.addEventListener('click',function(){{ tset(!t.classList.contains('is-paused')); }});
+    if(matchMedia('(prefers-reduced-motion: reduce)').matches) tset(true);
+  }}
   var smooth=!matchMedia('(prefers-reduced-motion: reduce)').matches;
   function pad(){{ if(top) document.documentElement.style.scrollPaddingTop=(top.offsetHeight+12)+'px'; }}
   pad(); addEventListener('resize',pad);
@@ -633,17 +639,18 @@ def brochure_block(root):
 
 
 # ---------- moving ticker and plant motion (home) ----------
-TICKER = [
-    "Hydrated lime 80–95 % Ca(OH)<sub>2</sub>", "Free sample with its CoA", "25, 30, 35 or 40 kg bags",
-    "900 kg jumbo bags", "Palletised or non-palletised", "CIF and CFR export quotes",
-    "Ready stock at Ransigaon, Jodhpur", "Hydroxyapatite: 250 g samples", "Talk directly to the engineer",
-]
+TICKER_EXTRA = ["900 kg jumbo bags", "Talk directly to the engineer"]
 
 
-def ticker():
-    items = "".join(f'<li>{t}</li>' for t in TICKER)
-    return f'''<div class="ticker" aria-label="Calvara at a glance">
-<div class="ticker-view"><div class="ticker-track"><ul>{items}</ul><ul aria-hidden="true">{items}</ul></div></div>
+def ticker(root):
+    def link(target):
+        pg, _, anchor = target.partition("#")
+        return href(root, pg) + (f"#{anchor}" if anchor else "")
+    items = "".join(f'<li><a href="{link(t)}"><b>{tag}</b> {txt} <span class="tk-go">{lbl}</span></a></li>'
+                    for tag, txt, t, lbl in ANNOUNCEMENTS)
+    items += "".join(f"<li>{t}</li>" for t in TICKER_EXTRA)
+    return f'''<div class="ticker ticker-top" role="region" aria-label="Announcements">
+<div class="ticker-view"><div class="ticker-track"><ul>{items}</ul><ul aria-hidden="true" inert>{items}</ul></div></div>
 <button class="ticker-btn" type="button" aria-pressed="false" aria-label="Pause moving text">{lic("pause", "ic i-pause")}{lic("play", "ic i-play")}</button>
 </div>'''
 
@@ -681,14 +688,24 @@ def motion_section(root):
       new IntersectionObserver(function(es){{ es.forEach(function(e){{ if(user) return; if(e.isIntersecting) play(); else stop(); }}); }}, {{threshold:.35}}).observe(r);
     }} else play();
   }});
-  var t = document.querySelector('.ticker');
-  if(t){{ var tb = t.querySelector('.ticker-btn');
-    function tset(p){{ t.classList.toggle('is-paused', p); tb.classList.toggle('is-paused', p); tb.setAttribute('aria-pressed', p); tb.setAttribute('aria-label', p ? 'Play moving text' : 'Pause moving text'); }}
-    tb.addEventListener('click', function(){{ tset(!t.classList.contains('is-paused')); }});
-    if(reduce) tset(true);
-  }}
 }})();
 </script>'''
+
+
+# ---------- large moving text bands (decorative; the same facts are in the page text) ----------
+MQ_HOME = ["Seven grades", "80 to 95 % Ca(OH)<sub>2</sub>", "Tested every lot", "CoA with every dispatch", "Made in Jodhpur, Rajasthan", "Sample first"]
+MQ_IND = [n for n, _, _ in INDUSTRIES]
+MQ_EXPORT = ["CIF", "CFR", "FOB India", "Ex-works Jodhpur", "Delivered in India", "20 ft and 40 ft containers", "Palletised or non-palletised", "25, 30, 35 or 40 kg bags"]
+MQ_HAP = ["Animal-free", "Toothpaste", "Tooth powder", "Toothpaste tablets", "Cosmetics", "Laboratory and research", "Micro grade, D50 3–8 µm", "Nano grade in development"]
+MQ_ABOUT = ["Our own plant", "Ransigaon, Jodhpur", "Kiln", "Hydrators", "Classifier", "Plant lab", "CoA every lot", "Run by an engineer"]
+
+
+def marquee(items, size="lg", reverse=False, speed=None):
+    lis = "".join(f"<li>{t}</li>" for t in items) * 2
+    cls = f"mq mq-{size}" + (" mq-rev" if reverse else "")
+    sty = f' style="--d:{speed}s"' if speed else ""
+    return f'<div class="{cls}" aria-hidden="true"{sty}><div class="mq-track"><ul>{lis}</ul><ul>{lis}</ul></div></div>'
+
 
 
 # ---------- pages ----------
@@ -704,7 +721,7 @@ def home():
 </div>
 <div class="hero-ladder">{ladder()}</div>
 </div></section>
-{ticker()}
+{marquee(MQ_HOME, "lg", speed=55)}
 
 {motion_section(root)}
 
@@ -754,6 +771,7 @@ def home():
 <div class="section-head"><h2>One powder, nine industries</h2><p class="lede">Start with the grade in red. The right final grade depends on how much silica and inert matter your process can tolerate.</p></div>
 {industries()}
 </div></section>
+{marquee(MQ_IND, "sm", reverse=True, speed=45)}
 
 <section class="section section-tint"><div class="wrap">
 <div class="section-head"><h2>Packed your way</h2><p class="lede">Sealed, laminated bags with liners, held in covered storage until loaded onto your truck. Part or full loads, ex-works or delivered.</p></div>
@@ -811,6 +829,7 @@ def lime():
 <div class="mini-tile"><span class="formula">Ca(OH)<sub>2</sub></span><span class="meta">Calcium hydroxide · CAS 1305-62-0 · HSN 2522</span><span class="meta">Grades 95 · 94 · 93 · 92 · 90 · 85 · 80</span></div>
 </div>
 </div></section>
+{marquee([f"Grade {g[0]}" for g in GRADES], "lg", speed=40)}
 
 <section class="section" id="spec"><div class="wrap">
 <div class="section-head"><h2>Typical specification by grade</h2><p class="lede">The grade number is the minimum Ca(OH)<sub>2</sub> content. Higher grades carry less silica and are finer.</p></div>
@@ -905,6 +924,7 @@ def hap():
 <div class="mini-tile"><span class="formula">Ca<sub>10</sub>(PO<sub>4</sub>)<sub>6</sub>(OH)<sub>2</sub></span><span class="meta">Hydroxyapatite (HAp) · CAS 1306-06-5</span><span class="meta">Molar mass 1004.6 g/mol · Ca/P 1.67</span></div>
 </div>
 </div></section>
+{marquee(MQ_HAP, "lg", speed=60)}
 
 <section class="section"><div class="wrap">
 <div class="section-head"><h2>Grades</h2></div>
@@ -980,6 +1000,7 @@ def about():
 <p class="lede">Calvara Labs &amp; Minerals makes hydrated lime at its own plant in Ransigaon, in the limestone belt of Jodhpur. Limestone, kilns and lab testing are everyday work for us.</p>
 </div>
 </div></section>
+{marquee(MQ_ABOUT, "lg", speed=55)}
 
 <section class="section"><div class="wrap split">
 <div class="prose">
@@ -1103,6 +1124,7 @@ def export():
 <div class="btn-row"><a class="btn btn-solid" href="#quote">Hydrated lime quote</a><a class="btn btn-line" href="#hap">Hydroxyapatite sample or price</a></div>
 </div>
 </div></section>
+{marquee(MQ_EXPORT, "lg", speed=60)}
 
 <section class="section" id="quote"><div class="wrap">
 {quote_builder(root)}

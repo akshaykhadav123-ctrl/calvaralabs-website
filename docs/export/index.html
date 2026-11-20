@@ -26,25 +26,10 @@
 <body>
 <a class="skip" href="#main">Skip to content</a>
 <div class="site-top">
-<div class="announce" role="region" aria-label="Announcements"><div class="wrap">
-<div class="announce-track"><a class="announce-item is-on" href="../export/#quote"><b>Free sample</b><span>Get a free sample of any grade, with its Certificate of Analysis.</span><i>Ask now</i></a><a class="announce-item" href="../export/#quote"><b>Export</b><span>CIF and CFR quotes to your port, palletised or non-palletised.</span><i>Get a price</i></a><a class="announce-item" href="../hydrated-lime/"><b>Ready stock</b><span>Seven grades, 80 to 95 % Ca(OH)₂, in 25, 30, 35 or 40 kg bags, palletised or non-palletised.</span><i>See grades</i></a><a class="announce-item" href="../hydroxyapatite/#quote"><b>New</b><span>Hydroxyapatite micro grade: 250 g samples now open.</span><i>Request</i></a></div>
-<button class="announce-btn" type="button" aria-label="Pause announcements" data-paused="false"><svg viewBox="0 0 14 14" aria-hidden="true"><rect x="3" y="2" width="3" height="10" fill="currentColor"/><rect x="8" y="2" width="3" height="10" fill="currentColor"/></svg></button>
-</div></div>
-<script>
-(function(){var it=document.querySelectorAll(".announce-item"),b=document.querySelector(".announce-btn");if(it.length<2){if(b)b.hidden=true;return;}
-var i=0,t=null,reduce=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
-var P='<svg viewBox="0 0 14 14" aria-hidden="true"><rect x="3" y="2" width="3" height="10" fill="currentColor"/><rect x="8" y="2" width="3" height="10" fill="currentColor"/></svg>',
-    G='<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 2l9 5-9 5z" fill="currentColor"/></svg>';
-function show(n){it[i].classList.remove("is-on");i=(n+it.length)%it.length;it[i].classList.add("is-on");}
-function play(){stop();t=setInterval(function(){show(i+1);},5000);b.dataset.paused="false";b.setAttribute("aria-label","Pause announcements");b.innerHTML=P;}
-function stop(){if(t)clearInterval(t);t=null;}
-function pause(){stop();b.dataset.paused="true";b.setAttribute("aria-label","Play announcements");b.innerHTML=G;}
-b.addEventListener("click",function(){b.dataset.paused==="true"?play():pause();});
-var r=document.querySelector(".announce");r.addEventListener("mouseenter",function(){if(b.dataset.paused!=="true")stop();});
-r.addEventListener("mouseleave",function(){if(b.dataset.paused!=="true")play();});
-r.addEventListener("focusin",function(){if(b.dataset.paused!=="true")stop();});
-if(reduce)pause();else play();})();
-</script>
+<div class="ticker ticker-top" role="region" aria-label="Announcements">
+<div class="ticker-view"><div class="ticker-track"><ul><li><a href="../export/#quote"><b>Free sample</b> Get a free sample of any grade, with its Certificate of Analysis. <span class="tk-go">Ask now</span></a></li><li><a href="../export/#quote"><b>Export</b> CIF and CFR quotes to your port, palletised or non-palletised. <span class="tk-go">Get a price</span></a></li><li><a href="../hydrated-lime/"><b>Ready stock</b> Seven grades, 80 to 95 % Ca(OH)₂, in 25, 30, 35 or 40 kg bags, palletised or non-palletised. <span class="tk-go">See grades</span></a></li><li><a href="../hydroxyapatite/#quote"><b>New</b> Hydroxyapatite micro grade: 250 g samples now open. <span class="tk-go">Request</span></a></li><li>900 kg jumbo bags</li><li>Talk directly to the engineer</li></ul><ul aria-hidden="true" inert><li><a href="../export/#quote"><b>Free sample</b> Get a free sample of any grade, with its Certificate of Analysis. <span class="tk-go">Ask now</span></a></li><li><a href="../export/#quote"><b>Export</b> CIF and CFR quotes to your port, palletised or non-palletised. <span class="tk-go">Get a price</span></a></li><li><a href="../hydrated-lime/"><b>Ready stock</b> Seven grades, 80 to 95 % Ca(OH)₂, in 25, 30, 35 or 40 kg bags, palletised or non-palletised. <span class="tk-go">See grades</span></a></li><li><a href="../hydroxyapatite/#quote"><b>New</b> Hydroxyapatite micro grade: 250 g samples now open. <span class="tk-go">Request</span></a></li><li>900 kg jumbo bags</li><li>Talk directly to the engineer</li></ul></div></div>
+<button class="ticker-btn" type="button" aria-pressed="false" aria-label="Pause moving text"><svg class="ic i-pause" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="14" y="4" width="4" height="16" rx="1" /> <rect x="6" y="4" width="4" height="16" rx="1" /></svg><svg class="ic i-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3" /></svg></button>
+</div>
 <header class="site-head">
 <div class="wrap head-row">
 <a class="brand" href="../" aria-label="Calvara Labs &amp; Minerals, home"><svg class="lockup" xmlns="http://www.w3.org/2000/svg" viewBox="-122 440 856 186" role="img" aria-label=""><title></title><g transform="translate(-352.7 312) scale(0.78)"><path fill="#D9342D" d="M310 279 L400 181 L490 279 L460.5 279 L400 212 L339.5 279 Z"/><path fill="#D9342D" d="M311 292 L400 388 L489 292 L459.5 292 L400 357 L340.5 292 Z"/><path fill="#13202E" d="M400 268 L417 284.5 L400 301 L383 284.5 Z"/></g><path fill="#D9342D" fill-rule="evenodd" d="M147.2 465 A42 42 0 1 0 147.2 519 L137.2 510.6 A29 29 0 1 1 137.2 473.4 Z M178 534 L215.5 452 L253 534 L239 534 L215.5 483 L192 534 Z M281 450 H294 V521 H331 V534 H281 Z M461 534 L498.5 452 L536 534 L522 534 L498.5 483 L475 534 Z M563 450 H585 A25 25 0 0 1 585 500 H576 V534 H563 Z M576 464 V486 H585 A11 11 0 0 0 585 464 Z M586 497 H603 L623 534 H607 Z M651 534 L688.5 452 L726 534 L712 534 L688.5 483 L665 534 Z"/><path fill="#13202E" d="M358 450 H372 L395.5 502.5 L419 450 H433 L395.5 534.5 Z"/><rect x="73" y="566" width="653" height="5" fill="#13202E"/><text x="75" y="619" textLength="649" lengthAdjust="spacing" font-family="Jost, Futura, Arial, sans-serif" font-size="33" font-weight="500" fill="#D9342D">LABS &amp; MINERALS</text></svg></a>
@@ -66,6 +51,7 @@ if(reduce)pause();else play();})();
 <div class="btn-row"><a class="btn btn-solid" href="#quote">Hydrated lime quote</a><a class="btn btn-line" href="#hap">Hydroxyapatite sample or price</a></div>
 </div>
 </div></section>
+<div class="mq mq-lg" aria-hidden="true" style="--d:60s"><div class="mq-track"><ul><li>CIF</li><li>CFR</li><li>FOB India</li><li>Ex-works Jodhpur</li><li>Delivered in India</li><li>20 ft and 40 ft containers</li><li>Palletised or non-palletised</li><li>25, 30, 35 or 40 kg bags</li><li>CIF</li><li>CFR</li><li>FOB India</li><li>Ex-works Jodhpur</li><li>Delivered in India</li><li>20 ft and 40 ft containers</li><li>Palletised or non-palletised</li><li>25, 30, 35 or 40 kg bags</li></ul><ul><li>CIF</li><li>CFR</li><li>FOB India</li><li>Ex-works Jodhpur</li><li>Delivered in India</li><li>20 ft and 40 ft containers</li><li>Palletised or non-palletised</li><li>25, 30, 35 or 40 kg bags</li><li>CIF</li><li>CFR</li><li>FOB India</li><li>Ex-works Jodhpur</li><li>Delivered in India</li><li>20 ft and 40 ft containers</li><li>Palletised or non-palletised</li><li>25, 30, 35 or 40 kg bags</li></ul></div></div>
 
 <section class="section" id="quote"><div class="wrap">
 <div class="section-head"><h2>Get a full quote in one message</h2><p class="lede">Tap your choices and send. Akshay replies with price, specification, container quantity, lead time and payment terms together.</p></div>
@@ -170,6 +156,12 @@ f.addEventListener("change",build);f.addEventListener("input",build);build();})(
 <script>
 (function(){
   var top=document.querySelector('.site-top'), btn=document.querySelector('.to-top'), menu=document.querySelector('.menu');
+  var t=document.querySelector('.ticker');
+  if(t){ var tb=t.querySelector('.ticker-btn');
+    function tset(p){ t.classList.toggle('is-paused',p); document.documentElement.classList.toggle('motion-paused',p); tb.classList.toggle('is-paused',p); tb.setAttribute('aria-pressed',p); tb.setAttribute('aria-label',p?'Play moving text':'Pause moving text'); }
+    tb.addEventListener('click',function(){ tset(!t.classList.contains('is-paused')); });
+    if(matchMedia('(prefers-reduced-motion: reduce)').matches) tset(true);
+  }
   var smooth=!matchMedia('(prefers-reduced-motion: reduce)').matches;
   function pad(){ if(top) document.documentElement.style.scrollPaddingTop=(top.offsetHeight+12)+'px'; }
   pad(); addEventListener('resize',pad);

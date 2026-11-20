@@ -694,3 +694,34 @@ h3{font-weight:500}
 .faq summary::after{border:0;width:16px;height:16px;transform:translateY(-50%);background:var(--ink-soft);
   -webkit-mask:url("icons/chevron-down.svg") no-repeat center/contain;mask:url("icons/chevron-down.svg") no-repeat center/contain;transition:transform .2s}
 .faq details[open] summary::after,.faq [open] > summary::after{transform:translateY(-50%) rotate(180deg)}
+
+/* ===== v14: moving text is the top bar (replaces rotating announcements) ===== */
+.ticker-top{background:var(--ink);color:#DCE2E8;border:0}
+.ticker-top .ticker-view{-webkit-mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent);mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent)}
+.ticker-top li{font-family:var(--body);font-size:14.5px;padding:10px 0}
+.ticker-top li::after{width:4px;height:4px;margin:0 24px;background:#FF8A82}
+.ticker-top a{color:inherit;text-decoration:none}
+.ticker-top a:hover{color:#fff}
+.ticker-top a:hover .tk-go{text-decoration:underline}
+.ticker-top b{color:#FF8A82;font-weight:600;margin-right:4px}
+.ticker-top .tk-go{color:#fff;font-weight:500;margin-left:6px}
+.ticker-top .tk-go::after{content:" ›"}
+.ticker-top .ticker-btn{color:#AEB8C2;width:40px;height:40px}
+.ticker-top .ticker-btn:hover{background:#26384D;color:#fff}
+.ticker-top .ticker-track{animation-duration:70s}
+@media (max-width:620px){.ticker-top li{font-size:13.5px;padding:9px 0}}
+
+/* ===== v15: large moving text bands ===== */
+.mq{overflow:hidden;background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding-block:clamp(16px,2.6vw,30px);
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.mq-track{display:flex;width:max-content;animation:ticker-ltr var(--d,60s) linear infinite}
+.mq-rev .mq-track{animation-direction:reverse}
+.mq ul{display:flex;margin:0;padding:0;list-style:none}
+.mq li{display:flex;align-items:center;white-space:nowrap;font-family:var(--display);font-weight:400;letter-spacing:-0.02em;color:var(--ink);line-height:1.1}
+.mq-lg li{font-size:clamp(30px,5.4vw,64px)}
+.mq-sm li{font-size:clamp(19px,2.4vw,28px);color:var(--ink-soft)}
+.mq-lg li:nth-child(even){color:transparent;-webkit-text-stroke:1px var(--ink)}
+.mq li::after{content:"";flex:none;width:.22em;height:.22em;margin:0 .7em;border:1.5px solid var(--red);transform:rotate(45deg)}
+.mq-sm li::after{width:.3em;height:.3em;border-width:1px}
+.mq:hover .mq-track,:root.motion-paused .mq-track,:root.motion-paused .ticker-track{animation-play-state:paused}
+@media (prefers-reduced-motion:reduce){.mq-track{animation:none}}
