@@ -148,23 +148,21 @@ if(reduce)pause();else play();}})();
 def header(root, current):
     cur = ' aria-current="page"'
     links = "".join(f'<a href="{href(root, p)}"{cur if p == current else ""}>{t}</a>' for p, t in NAV)
+    burger = '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>'
     return f'''<a class="skip" href="#main">Skip to content</a>
+<div class="site-top">
 {announce_bar(root)}
 <header class="site-head">
 <div class="wrap head-row">
 {brand(root)}
 <nav class="nav" aria-label="Main">{links}<a class="btn btn-solid" href="{href(root, 'contact')}">Request a quote</a></nav>
-<details class="menu"><summary aria-label="Open menu">Menu</summary><div class="menu-panel">{links}<a href="tel:{PHONE_TEL}">Call {PHONE_DISPLAY}</a><a class="btn btn-solid" href="{href(root, 'contact')}">Request a quote</a></div></details>
+<details class="menu"><summary aria-label="Open menu">{burger}Menu</summary><nav class="menu-panel" aria-label="Menu">
+<a href="{href(root, '')}"{cur if current in ('', 'home') else ''}>Home</a>{links}<a href="{href(root, '')}#brochure">Brochures (PDF)</a>
+<div class="menu-contact"><a class="btn btn-line" href="tel:{PHONE_TEL}">{ICON["phone"]}Call</a><a class="btn btn-wa" href="{WHATSAPP}">{ICON["wa"]}WhatsApp</a></div>
+<a class="btn btn-solid" href="{href(root, 'contact')}">Request a quote</a></nav></details>
 </div>
-</header>'''
-
-
-def actionbar(root):
-    return f'''<nav class="actionbar" aria-label="Quick contact">
-<a href="tel:{PHONE_TEL}">{ICON["phone"]}Call</a>
-<a class="wa" href="{WHATSAPP}">{ICON["wa"]}WhatsApp</a>
-<a class="q" href="{href(root, 'export')}#quote">Get a quote</a>
-</nav>'''
+</header>
+</div>'''
 
 
 def footer(root):
@@ -229,7 +227,24 @@ def page(path, root, current, title, desc, body, extra_ld=None, noindex=False):
 {body}
 </main>
 {footer(root)}
-{actionbar(root)}
+<button class="to-top" type="button" aria-label="Back to top" hidden><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 16V4M4.5 9.5 10 4l5.5 5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Top</span></button>
+<script>
+(function(){{
+  var top=document.querySelector('.site-top'), btn=document.querySelector('.to-top'), menu=document.querySelector('.menu');
+  var smooth=!matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function pad(){{ if(top) document.documentElement.style.scrollPaddingTop=(top.offsetHeight+12)+'px'; }}
+  pad(); addEventListener('resize',pad);
+  btn.hidden=false;
+  function onScroll(){{ btn.classList.toggle('is-on', scrollY>600); }}
+  addEventListener('scroll',onScroll,{{passive:true}}); onScroll();
+  btn.addEventListener('click',function(){{ scrollTo({{top:0,behavior:smooth?'smooth':'auto'}}); var s=document.querySelector('.skip'); }});
+  if(menu){{
+    menu.addEventListener('click',function(e){{ if(e.target.closest('.menu-panel a')) menu.open=false; }});
+    document.addEventListener('click',function(e){{ if(menu.open && !menu.contains(e.target)) menu.open=false; }});
+    document.addEventListener('keydown',function(e){{ if(e.key==='Escape' && menu.open){{ menu.open=false; menu.querySelector('summary').focus(); }} }});
+  }}
+}})();
+</script>
 </body>
 </html>
 '''
