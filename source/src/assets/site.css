@@ -725,3 +725,29 @@ h3{font-weight:500}
 .mq-sm li::after{width:.3em;height:.3em;border-width:1px}
 .mq:hover .mq-track,:root.motion-paused .mq-track,:root.motion-paused .ticker-track{animation-play-state:paused}
 @media (prefers-reduced-motion:reduce){.mq-track{animation:none}}
+
+/* ===== v16: QA fixes after the calm restyle ===== */
+.compound{border:1px solid var(--line-strong)}
+.bags li{border:1px solid var(--line-strong)}
+.bags li.jumbo{background:var(--ground);color:var(--ink);border-color:var(--ink)}
+.bags li.jumbo span{color:var(--ink-soft)}
+.reaction{font-weight:500;overflow:visible;display:flex;flex-wrap:wrap;column-gap:.35em;row-gap:4px;line-height:1.5}
+.reaction span{white-space:nowrap}
+
+/* ===== v17: brochure opens like a book on download hover ===== */
+.broch-cover.book{overflow:visible;transform:none;box-shadow:none;border-radius:0;width:var(--w);flex:none;display:block}
+.book-in{position:relative;display:block;width:100%;aspect-ratio:320/453;perspective:1100px;transform-origin:left center;transform:rotate(-3deg);
+  transition:transform .6s cubic-bezier(.4,0,.2,1) .95s}
+.broch.is-open .book-in{transform:translateX(calc(var(--w) * .6 - 18px)) scale(.6);transition-delay:0s}
+.book-base{position:absolute;inset:0;width:100%;height:100%;border-radius:1px 4px 4px 1px;box-shadow:0 14px 30px -14px rgba(19,32,46,.5)}
+.leaf{position:absolute;inset:0;transform-style:preserve-3d;transform-origin:left center;z-index:calc(10 - var(--i));
+  transition:transform .65s cubic-bezier(.55,.05,.3,1) calc((2 - var(--i)) * .2s),z-index 0s linear calc((2 - var(--i)) * .2s + .32s)}
+.broch.is-open .leaf{transform:rotateY(-180deg);z-index:calc(20 + var(--i));
+  transition:transform .75s cubic-bezier(.55,.05,.3,1) calc(.4s + var(--i) * .3s),z-index 0s linear calc(.77s + var(--i) * .3s)}
+.leaf img{position:absolute;inset:0;width:100%;height:100%;display:block;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:1px 4px 4px 1px}
+.leaf .b{transform:rotateY(180deg);border-radius:4px 1px 1px 4px}
+.leaf::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(0,0,0,.12),rgba(0,0,0,0) 12%);backface-visibility:hidden}
+.leaf[style*="--i:0"] .f{box-shadow:0 14px 30px -14px rgba(19,32,46,.5)}
+@keyframes dl-drop{0%{transform:translateY(-6px);opacity:0}30%{opacity:1}70%{transform:translateY(1px);opacity:1}100%{transform:translateY(3px);opacity:0}}
+a[download]:hover .ic polyline,a[download]:hover .ic line,a[download]:focus-visible .ic polyline,a[download]:focus-visible .ic line{animation:dl-drop .95s cubic-bezier(.5,0,.5,1) infinite}
+@media (prefers-reduced-motion:reduce){.book-in,.leaf{transition:none}a[download] .ic *{animation:none!important}}

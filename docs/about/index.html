@@ -81,7 +81,7 @@
 <div><b>Acid insoluble</b><p>Silica and grit that wear pumps and add sludge.</p></div>
 <div><b>200-mesh fineness</b><p>Finer powder reacts faster and stays in suspension.</p></div>
 </div>
-<div class="wide-photos"><figure><img src="../assets/photos/lab-titration.webp" alt="Titration: available Ca(OH)₂ content" loading="lazy"><figcaption>Titration: available Ca(OH)₂ content</figcaption></figure><figure><img src="../assets/photos/lab-balance.webp" alt="Precision balance for the lime sugar test" loading="lazy"><figcaption>Precision balance for the lime sugar test</figcaption></figure><figure><img src="../assets/photos/lab-hotplate.webp" alt="Hot plate: sample digestion and drying" loading="lazy"><figcaption>Hot plate: sample digestion and drying</figcaption></figure></div>
+<div class="wide-photos"><figure><img src="../assets/photos/lab-titration.webp" alt="Titration: available Ca(OH)₂ content" loading="lazy" width="494" height="431"><figcaption>Titration: available Ca(OH)₂ content</figcaption></figure><figure><img src="../assets/photos/lab-balance.webp" alt="Precision balance for the lime sugar test" loading="lazy" width="524" height="432"><figcaption>Precision balance for the lime sugar test</figcaption></figure><figure><img src="../assets/photos/lab-hotplate.webp" alt="Hot plate: sample digestion and drying" loading="lazy" width="452" height="393"><figcaption>Hot plate: sample digestion and drying</figcaption></figure></div>
 </div></section>
 
 <section class="section section-tint"><div class="wrap split">
@@ -137,6 +137,42 @@
     document.addEventListener('click',function(e){ if(menu.open && !menu.contains(e.target)) menu.open=false; });
     document.addEventListener('keydown',function(e){ if(e.key==='Escape' && menu.open){ menu.open=false; menu.querySelector('summary').focus(); } });
   }
+})();
+</script>
+<script>
+(function(){
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  document.querySelectorAll('.broch').forEach(function(c){
+    if(!c.querySelector('.book')) return;
+    var t=null;
+    function on(){ clearTimeout(t); c.classList.add('is-open'); }
+    function off(){ c.classList.remove('is-open'); }
+    c.querySelectorAll('a[download], .book').forEach(function(el){
+      el.addEventListener('mouseenter',on); el.addEventListener('mouseleave',off);
+      el.addEventListener('focus',on); el.addEventListener('blur',off);
+      el.addEventListener('click',function(){ on(); t=setTimeout(off,3000); });
+    });
+    if(matchMedia('(hover: none)').matches && 'IntersectionObserver' in window){
+      var io=new IntersectionObserver(function(es){ if(es[0].isIntersecting){ on(); t=setTimeout(off,3400); io.disconnect(); } },{threshold:.6});
+      io.observe(c);
+    }
+  });
+})();
+</script>
+<script>
+(function(){
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) return;
+  var els=[].slice.call(document.querySelectorAll('.stats b, .facts b')).filter(function(e){ return !e.children.length && /\d/.test(e.textContent); });
+  els.forEach(function(e){
+    var txt=e.textContent, parts=txt.split(/(\d+(?:\.\d+)?)/);
+    e.style.minWidth=e.offsetWidth+'px';
+    function frame(k){ e.textContent=parts.map(function(x,i){ if(i%2===0) return x; var v=parseFloat(x), d=(x.split('.')[1]||'').length; return (v*k).toFixed(d); }).join(''); }
+    frame(0);
+    var io=new IntersectionObserver(function(es){ if(!es[0].isIntersecting) return; io.disconnect();
+      var t0=null; function step(ts){ if(!t0) t0=ts; var k=Math.min(1,(ts-t0)/1300); frame(1-Math.pow(1-k,3)); if(k<1) requestAnimationFrame(step); else e.textContent=txt; }
+      requestAnimationFrame(step); },{threshold:.6});
+    io.observe(e);
+  });
 })();
 </script>
 </body>

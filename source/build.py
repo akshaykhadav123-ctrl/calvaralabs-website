@@ -7,7 +7,7 @@
 Content follows the Calvara Hydrated Lime Brochure (2026). Plant photos are optional:
 drop them into src/photos/ with the names in PHOTOS and rebuild.
 """
-import json, re, shutil, sys
+import datetime, json, re, shutil, sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent / "tools"))
 from logo_parts import lockup, mark_svg
@@ -220,7 +220,7 @@ ORG_LD = {
 
 def page(path, root, current, title, desc, body, extra_ld=None, noindex=False):
     canonical = SITE + "/" + (path + "/" if path and not path.endswith(".html") else "")
-    ld = [ORG_LD] + ([extra_ld] if extra_ld else [])
+    ld = [ORG_LD] + (extra_ld if isinstance(extra_ld, list) else [extra_ld] if extra_ld else [])
     html = f'''<!doctype html>
 <html lang="en">
 <head>
@@ -274,6 +274,42 @@ def page(path, root, current, title, desc, body, extra_ld=None, noindex=False):
     document.addEventListener('click',function(e){{ if(menu.open && !menu.contains(e.target)) menu.open=false; }});
     document.addEventListener('keydown',function(e){{ if(e.key==='Escape' && menu.open){{ menu.open=false; menu.querySelector('summary').focus(); }} }});
   }}
+}})();
+</script>
+<script>
+(function(){{
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  document.querySelectorAll('.broch').forEach(function(c){{
+    if(!c.querySelector('.book')) return;
+    var t=null;
+    function on(){{ clearTimeout(t); c.classList.add('is-open'); }}
+    function off(){{ c.classList.remove('is-open'); }}
+    c.querySelectorAll('a[download], .book').forEach(function(el){{
+      el.addEventListener('mouseenter',on); el.addEventListener('mouseleave',off);
+      el.addEventListener('focus',on); el.addEventListener('blur',off);
+      el.addEventListener('click',function(){{ on(); t=setTimeout(off,3000); }});
+    }});
+    if(matchMedia('(hover: none)').matches && 'IntersectionObserver' in window){{
+      var io=new IntersectionObserver(function(es){{ if(es[0].isIntersecting){{ on(); t=setTimeout(off,3400); io.disconnect(); }} }},{{threshold:.6}});
+      io.observe(c);
+    }}
+  }});
+}})();
+</script>
+<script>
+(function(){{
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) return;
+  var els=[].slice.call(document.querySelectorAll('.stats b, .facts b')).filter(function(e){{ return !e.children.length && /\\d/.test(e.textContent); }});
+  els.forEach(function(e){{
+    var txt=e.textContent, parts=txt.split(/(\\d+(?:\\.\\d+)?)/);
+    e.style.minWidth=e.offsetWidth+'px';
+    function frame(k){{ e.textContent=parts.map(function(x,i){{ if(i%2===0) return x; var v=parseFloat(x), d=(x.split('.')[1]||'').length; return (v*k).toFixed(d); }}).join(''); }}
+    frame(0);
+    var io=new IntersectionObserver(function(es){{ if(!es[0].isIntersecting) return; io.disconnect();
+      var t0=null; function step(ts){{ if(!t0) t0=ts; var k=Math.min(1,(ts-t0)/1300); frame(1-Math.pow(1-k,3)); if(k<1) requestAnimationFrame(step); else e.textContent=txt; }}
+      requestAnimationFrame(step); }},{{threshold:.6}});
+    io.observe(e);
+  }});
 }})();
 </script>
 </body>
@@ -423,18 +459,24 @@ def buy_steps(items):
         f'<li><span class="n">{n}</span><h3>{t}</h3><p>{p}</p></li>' for n, (t, p) in enumerate(items, 1)) + "</ol>"
 
 
+def img_size(k):
+    from PIL import Image
+    with Image.open(ROOT / "src" / "photos" / PHOTOS[k]) as im:
+        return im.size
+
+
 def wide_photos():
     figs = [("jumbo-front", "900 kg jumbo bags in front of the processing plant"),
             ("jumbo-vs-bags", "Packed lots at the plant"),
             ("warehouse", "Covered warehouse with packed lots waiting for dispatch")]
-    out = "".join(f'<figure><img src="{photo(k)}" alt="{c}" loading="lazy"><figcaption>{c}</figcaption></figure>' for k, c in figs if photo(k))
+    out = "".join(f'<figure><img src="{photo(k)}" alt="{c}" loading="lazy" width="{img_size(k)[0]}" height="{img_size(k)[1]}"><figcaption>{c}</figcaption></figure>' for k, c in figs if photo(k))
     return f'<div class="wide-photos">{out}</div>' if out else ""
 
 
 def lab_photos():
     figs = [("lab-titration", "Titration: available Ca(OH)₂ content"), ("lab-balance", "Precision balance for the lime sugar test"),
             ("lab-hotplate", "Hot plate: sample digestion and drying")]
-    out = "".join(f'<figure><img src="{photo(k)}" alt="{c}" loading="lazy"><figcaption>{c}</figcaption></figure>' for k, c in figs if photo(k))
+    out = "".join(f'<figure><img src="{photo(k)}" alt="{c}" loading="lazy" width="{img_size(k)[0]}" height="{img_size(k)[1]}"><figcaption>{c}</figcaption></figure>' for k, c in figs if photo(k))
     return f'<div class="wide-photos">{out}</div>' if out else ""
 
 
@@ -610,6 +652,17 @@ def brochure_href(root, key):
     return f"{root}brochures/{f}" if f else None
 
 
+def book(key, link, title, width, pages=7):
+    """Brochure cover that opens like a book and flips through real pages (pages rendered from the PDF)."""
+    p = lambda n: f"photos/book/{key}-p{n}.webp"
+    n = (pages - 1) // 2  # number of leaves; the last odd page lies under them
+    leaves = [(2 * k + 1, 2 * k + 2) for k in reversed(range(n))]  # bottom to top: (front, back); the cover is on top
+    lv = "".join(f'<span class="leaf" style="--i:{n - 1 - i}"><img class="f" src="{p(f)}" alt="" loading="lazy"><img class="b" src="{p(b)}" alt="" loading="lazy"></span>'
+                 for i, (f, b) in enumerate(leaves))
+    return (f'<a class="broch-cover book" href="{link}" target="_blank" rel="noopener" style="--w:{width}px" aria-label="View the {title} online">'
+            f'<span class="book-in"><img class="book-base" src="{p(2 * n + 1)}" alt="" loading="lazy">{lv}</span></a>')
+
+
 def brochure_block(root):
     lime, hap = BROCHURES["lime"], BROCHURES["hap"]
     lh = brochure_href(root, "lime")
@@ -618,7 +671,7 @@ def brochure_block(root):
                f'<a class="btn btn-line" href="{wa("Hello Akshay, please send the hydroxyapatite TDS and a sample CoA.")}">Ask on WhatsApp</a>')
     return f'''<div class="brochures" aria-label="Brochures">
 <div class="broch broch-main">
-<a class="broch-cover" href="{lh}" target="_blank" rel="noopener"><img src="photos/brochure-cover.webp" alt="Cover of the Calvara Hydrated Lime Brochure 2026" width="150" height="212"></a>
+{book("lime", lh, "Hydrated Lime Brochure", 150)}
 <div class="broch-body">
 <p class="broch-kicker">Free download</p>
 <h2 class="broch-title">{lime["title"]}</h2>
@@ -627,7 +680,7 @@ def brochure_block(root):
 <p class="broch-meta">{lime["meta"]}</p>
 </div></div>
 <div class="broch broch-hap{' broch-hap-live' if hh else ''}">
-{f'<a class="broch-cover" href="{hh}" target="_blank" rel="noopener"><img src="photos/hap-brochure-cover.webp" alt="Cover of the Calvara Hydroxyapatite Brochure 2026" width="96" height="136"></a>' if hh else ''}
+{book("hap", hh, "Hydroxyapatite Brochure", 112, pages=5) if hh else ''}
 <div class="broch-body">
 <p class="broch-kicker">{'Free download' if hh else hap["meta"]}</p>
 <h2 class="broch-title broch-title-sm">{hap["title"]}</h2>
@@ -705,6 +758,17 @@ def marquee(items, size="lg", reverse=False, speed=None):
     cls = f"mq mq-{size}" + (" mq-rev" if reverse else "")
     sty = f' style="--d:{speed}s"' if speed else ""
     return f'<div class="{cls}" aria-hidden="true"{sty}><div class="mq-track"><ul>{lis}</ul><ul>{lis}</ul></div></div>'
+
+
+
+def product_ld(name, desc, url, category, extra=None):
+    d = {"@context": "https://schema.org", "@type": "Product", "name": name, "description": desc, "category": category,
+         "brand": {"@type": "Brand", "name": "Calvara Labs & Minerals"},
+         "manufacturer": {"@type": "Organization", "name": "Calvara Labs & Minerals", "url": SITE},
+         "url": f"{SITE}/{url}"}
+    if extra:
+        d.update(extra)
+    return d
 
 
 
@@ -792,7 +856,7 @@ def home():
 {cta_band(root)}
 '''
     page("", root, "", "Hydrated Lime Manufacturer, Jodhpur | Grades 80–95 | Calvara Labs",
-         "Hydrated lime in seven grades, 80 to 95% Ca(OH)2, made at Ransigaon, Jodhpur. Silica as low as 1.0%, 99.5% through 200 mesh, CoA with every lot. 25, 30, 35 or 40 kg bags, palletised or non-palletised.",
+         "Hydrated lime in seven grades, 80 to 95% Ca(OH)2, made at our plant near Jodhpur. Silica from 0.8%, up to 99.5% through 200 mesh, CoA with every lot.",
          body)
 
 
@@ -891,8 +955,9 @@ def lime():
 {cta_band(root, "Get a hydrated lime quote", "Send the grade, monthly quantity and delivery city or port. You hear back directly from our engineer.")}
 '''
     page("hydrated-lime", root, "hydrated-lime", "Hydrated Lime Grades 80–95% | Specifications | Calvara Labs, Jodhpur",
-         "Compare seven hydrated lime grades: Ca(OH)2 80–95%, silica 0.8–8%, moisture 0.5–2.0%, 90–99.5% through 200 mesh. Bags of 25, 30, 35 or 40 kg, palletised or non-palletised, CoA with every lot.",
-         body, faq_ld)
+         "Compare seven hydrated lime grades: Ca(OH)2 80–95%, silica 0.8–8%, moisture 0.5–2.0%, 90–99.5% through 200 mesh. 25 to 40 kg bags, CoA with every lot.",
+         body, [faq_ld, product_ld("Hydrated lime (calcium hydroxide)", "Hydrated lime in seven grades, 80 to 95% Ca(OH)2, made at our plant near Jodhpur, Rajasthan. Packed in 25, 30, 35 or 40 kg bags or 900 kg jumbo bags, with a Certificate of Analysis for every lot.",
+                                   "hydrated-lime/", "Industrial chemicals", {"additionalProperty": [{"@type": "PropertyValue", "name": "CAS", "value": "1305-62-0"}, {"@type": "PropertyValue", "name": "HSN", "value": "2522"}]})])
 
 
 def hap():
@@ -948,7 +1013,7 @@ def hap():
 <li>The precipitate is aged and washed until the wash water is below 100 µS/cm.</li>
 <li>It is dried at 105 °C, milled and sieved to size.</li></ul></div>
 <div class="prose"><h2>The reaction</h2>
-<p class="reaction">10 Ca(OH)<sub>2</sub> + 6 H<sub>3</sub>PO<sub>4</sub> → Ca<sub>10</sub>(PO<sub>4</sub>)<sub>6</sub>(OH)<sub>2</sub> + 18 H<sub>2</sub>O</p>
+<p class="reaction"><span>10 Ca(OH)<sub>2</sub> + 6 H<sub>3</sub>PO<sub>4</sub></span> <span>→ Ca<sub>10</sub>(PO<sub>4</sub>)<sub>6</sub>(OH)<sub>2</sub> + 18 H<sub>2</sub>O</span></p>
 <p>Phase purity is confirmed by X-ray diffraction.</p></div>
 </div></section>
 
@@ -987,7 +1052,8 @@ def hap():
 '''
     page("hydroxyapatite", root, "hydroxyapatite", "Hydroxyapatite Powder Manufacturer India | Animal-Free | Calvara Labs",
          "Synthetic, animal-free hydroxyapatite (micro grade, D50 3–8 µm) for toothpaste, tablets, cosmetics and labs. HAp ≥95% by XRD, Ca/P 1.67. Free 250 g sample.",
-         body, faq_ld)
+         body, [faq_ld, product_ld("Hydroxyapatite (synthetic)", "Synthetic, animal-free hydroxyapatite, micro grade D50 3 to 8 µm, made from purified calcium near Jodhpur, India. 250 g samples with a Certificate of Analysis.",
+                                   "hydroxyapatite/", "Calcium phosphates", {"additionalProperty": [{"@type": "PropertyValue", "name": "CAS", "value": "1306-06-5"}]})])
 
 
 def about():
@@ -1157,8 +1223,8 @@ def export():
 
 {cta_band(root, "Tell us your port and quantity", "Send the grade, packing and destination. You get price, container quantity, lead time and terms in one reply.")}
 '''
-    page("export", root, "export", "Prices & Export: Hydrated Lime CIF/CFR/FOB, Hydroxyapatite Samples | Calvara Labs",
-         "Ask for hydrated lime prices CIF, CFR, FOB India or ex-works Jodhpur. 25, 30, 35 or 40 kg bags, palletised or non-palletised, 20 ft and 40 ft containers, TDS, CoA and SDS.",
+    page("export", root, "export", "Hydrated Lime Prices CIF, CFR, FOB & Export | Calvara Labs",
+         "Hydrated lime prices CIF, CFR, FOB India or ex-works Jodhpur. 25 to 40 kg bags, palletised or not, 20 and 40 ft containers, TDS, CoA and SDS.",
          body, faq_ld)
 
 
@@ -1196,7 +1262,7 @@ def extras():
     (OUT / ".htaccess").write_text("ErrorDocument 404 /404.html\nDirectoryIndex index.html\n")
     (OUT / "robots.txt").write_text(f"User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n")
     urls = ["", "hydrated-lime/", "export/", "hydroxyapatite/", "about/", "contact/"]
-    items = "".join(f"<url><loc>{SITE}/{u}</loc><lastmod>2026-11-10</lastmod></url>" for u in urls)
+    items = "".join(f"<url><loc>{SITE}/{u}</loc><lastmod>{datetime.date.today().isoformat()}</lastmod></url>" for u in urls)
     (OUT / "sitemap.xml").write_text(f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{items}</urlset>\n')
 
 
