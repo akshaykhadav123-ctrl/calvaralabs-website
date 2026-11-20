@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 360" fill="none">
+<defs><pattern id="j" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M12 0L24 12L12 24L0 12Z M0 0H24V24H0Z" stroke="#2F5D8C" stroke-opacity=".16" stroke-width=".8"/><circle cx="12" cy="12" r="3.5" stroke="#2F5D8C" stroke-opacity=".16" stroke-width=".8"/></pattern>
+<clipPath id="c"><path d="M28 360V150c0-8 6-12 12-14c-2-14 8-26 20-26c0-16 14-28 30-26c4-18 22-30 40-28c4-14 12-22 20-26c8 4 16 12 20 26c18-2 36 10 40 28c16-2 30 10 30 26c12 0 22 12 20 26c6 2 12 6 12 14v210z"/></clipPath></defs>
+<rect width="300" height="360" fill="url(#j)" clip-path="url(#c)"/>
+<path d="M28 360V150c0-8 6-12 12-14c-2-14 8-26 20-26c0-16 14-28 30-26c4-18 22-30 40-28c4-14 12-22 20-26c8 4 16 12 20 26c18-2 36 10 40 28c16-2 30 10 30 26c12 0 22 12 20 26c6 2 12 6 12 14v210" stroke="#2F5D8C" stroke-opacity=".55" stroke-width="1.2"/>
+<path d="M16 360V146c0-12 8-18 16-20c0-16 12-28 26-28c2-18 18-32 36-30c6-20 26-34 46-32c4-16 10-24 14-28c4 4 10 12 14 28c20-2 40 12 46 32c18-2 34 12 36 30c14 0 26 12 26 28c8 2 16 8 16 20v214" stroke="#2F5D8C" stroke-opacity=".25" stroke-width=".8"/>
+<path d="M150 42l4 6-4 6-4-6z" fill="#B5271F"/>
+</svg>

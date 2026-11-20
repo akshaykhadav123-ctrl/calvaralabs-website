@@ -654,14 +654,14 @@ def brochure_href(root, key):
     return f"{root}brochures/{f}" if f else None
 
 
-def book(key, link, title, width, pages=7):
+def book(key, link, title, width=None, pages=7):
     """Brochure cover that opens like a book and flips through real pages (pages rendered from the PDF)."""
     p = lambda n: f"photos/book/{key}-p{n}.webp"
     n = (pages - 1) // 2  # number of leaves; the last odd page lies under them
     leaves = [(2 * k + 1, 2 * k + 2) for k in reversed(range(n))]  # bottom to top: (front, back); the cover is on top
     lv = "".join(f'<span class="leaf" style="--i:{n - 1 - i}"><img class="f" src="{p(f)}" alt="" loading="lazy"><img class="b" src="{p(b)}" alt="" loading="lazy"></span>'
                  for i, (f, b) in enumerate(leaves))
-    return (f'<a class="broch-cover book" href="{link}" target="_blank" rel="noopener" style="--w:{width}px" aria-label="View the {title} online">'
+    return (f'<a class="broch-cover book" href="{link}" target="_blank" rel="noopener"{f' style="--w:{width}px"' if width else ''} aria-label="View the {title} online">'
             f'<span class="book-in"><img class="book-base" src="{p(2 * n + 1)}" alt="" loading="lazy">{lv}</span></a>')
 
 
@@ -669,11 +669,11 @@ def brochure_block(root):
     lime, hap = BROCHURES["lime"], BROCHURES["hap"]
     lh = brochure_href(root, "lime")
     hh = brochure_href(root, "hap")
-    hap_btn = (f'<a class="btn btn-solid" href="{hh}" download>{lic("download")}Download PDF</a><a class="btn btn-line" href="{hh}" target="_blank" rel="noopener">View online</a>' if hh else
+    hap_btn = (f'<a class="btn btn-solid btn-big" href="{hh}" download>{lic("download")}Download brochure (PDF)</a><a class="btn btn-line" href="{hh}" target="_blank" rel="noopener">View online</a>' if hh else
                f'<a class="btn btn-line" href="{wa("Hello Akshay, please send the hydroxyapatite TDS and a sample CoA.")}">Ask on WhatsApp</a>')
     return f'''<div class="brochures" aria-label="Brochures">
 <div class="broch broch-main">
-{book("lime", lh, "Hydrated Lime Brochure", 150)}
+<div class="broch-stage">{book("lime", lh, "Hydrated Lime Brochure")}</div>
 <div class="broch-body">
 <p class="broch-kicker">Free download</p>
 <h2 class="broch-title">{lime["title"]}</h2>
@@ -682,10 +682,10 @@ def brochure_block(root):
 <p class="broch-meta">{lime["meta"]}</p>
 </div></div>
 <div class="broch broch-hap{' broch-hap-live' if hh else ''}">
-{book("hap", hh, "Hydroxyapatite Brochure", 112, pages=5) if hh else ''}
+{f'<div class="broch-stage">{book("hap", hh, "Hydroxyapatite Brochure", pages=5)}</div>' if hh else ''}
 <div class="broch-body">
 <p class="broch-kicker">{'Free download' if hh else hap["meta"]}</p>
-<h2 class="broch-title broch-title-sm">{hap["title"]}</h2>
+<h2 class="broch-title">{hap["title"]}</h2>
 <p class="broch-what">{hap["what"]}</p>
 <div class="btn-row">{hap_btn}</div>
 {f'<p class="broch-meta">{hap["meta"]}</p>' if hh else ''}
