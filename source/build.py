@@ -22,7 +22,7 @@ PHONE_TEL = "+919892727068"
 WHATSAPP = "https://wa.me/919892727068?text=Hello%20Calvara%2C%20I%20would%20like%20to%20ask%20about%20hydrated%20lime."
 EMAIL = "sales@calvaralabs.com"
 # Enquiry log: Google Apps Script web-app URL (see tools/enquiry-log.gs). Empty = logging off.
-LOG_URL = ""
+LOG_URL = "https://script.google.com/macros/s/AKfycbwYzj1wyqzpThGc3z7qytT6tjOkUOjp6gHbqKECsrldlyrpWpXs1wqo8OkgGxIA7UCl/exec"
 # Visitor stats: Cloudflare Web Analytics token (no cookies, no personal data). Empty = off.
 CF_BEACON_TOKEN = "f048cc9ae2604bbdb4b2fbd74435211c"
 AUTORESPONSE = ("Thank you for contacting Calvara Labs & Minerals. Akshay Khadav, our chemical engineer, has your enquiry "

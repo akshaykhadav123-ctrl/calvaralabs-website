@@ -189,7 +189,7 @@
 </script>
 <script>
 (function(){
-  var LOG='';
+  var LOG='https://script.google.com/macros/s/AKfycbwYzj1wyqzpThGc3z7qytT6tjOkUOjp6gHbqKECsrldlyrpWpXs1wqo8OkgGxIA7UCl/exec';
   function logE(o){ if(!LOG) return; try{ o.page=location.pathname; o.lang=document.documentElement.lang||'en';
     var b=new URLSearchParams(o); if(navigator.sendBeacon) navigator.sendBeacon(LOG,b); else fetch(LOG,{method:'POST',body:b,mode:'no-cors',keepalive:true}); }catch(e){} }
   document.addEventListener('click',function(e){
