@@ -57,6 +57,7 @@
 </div>
 <div class="wrap foot-base">© 2026 Calvara Labs &amp; Minerals · HSN 2522 · CAS 1305-62-0</div>
 </footer>
+<a class="wa-float" href="https://wa.me/919892727068?text=Hello%20Calvara%2C%20I%20would%20like%20to%20ask%20about%20hydrated%20lime." aria-label="Chat with Akshay on WhatsApp"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" /></svg></a>
 <button class="to-top" type="button" aria-label="Back to top" hidden><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 7-7 7 7" /> <path d="M12 19V5" /></svg><span>Top</span></button>
 <script>
 (function(){
@@ -122,6 +123,22 @@
       var t0=null; function step(ts){ if(!t0) t0=ts; var k=Math.min(1,(ts-t0)/1300); frame(1-Math.pow(1-k,3)); if(k<1) requestAnimationFrame(step); else e.textContent=txt; }
       requestAnimationFrame(step); },{threshold:.6});
     io.observe(e);
+  });
+})();
+</script>
+<script>
+(function(){
+  var LOG='';
+  function logE(o){ if(!LOG) return; try{ o.page=location.pathname; o.lang=document.documentElement.lang||'en';
+    var b=new URLSearchParams(o); if(navigator.sendBeacon) navigator.sendBeacon(LOG,b); else fetch(LOG,{method:'POST',body:b,mode:'no-cors',keepalive:true}); }catch(e){} }
+  document.addEventListener('click',function(e){
+    var a=e.target.closest && e.target.closest('a'); if(!a) return; var h=a.getAttribute('href')||'';
+    var isWa=h.indexOf('wa.me/')>-1, isMail=h.indexOf('mailto:')===0; if(!isWa && !isMail) return;
+    var m=''; try{ m=decodeURIComponent(((h.split(/[?&](?:text|body)=/)[1])||'').split('&')[0]); }catch(_){}
+    var where=a.id||a.className||'link'; logE({source:(isWa?'WhatsApp click':'Email click')+' · '+where, message:m});
+  });
+  document.querySelectorAll('form.form').forEach(function(f){
+    f.addEventListener('submit',function(){ var o={source:'Contact form'}; new FormData(f).forEach(function(v,k){ if(k.charAt(0)!=='_') o[k]=v; }); logE(o); });
   });
 })();
 </script>

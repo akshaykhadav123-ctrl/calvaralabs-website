@@ -21,6 +21,15 @@ PHONE_DISPLAY = "+91 98927 27068"
 PHONE_TEL = "+919892727068"
 WHATSAPP = "https://wa.me/919892727068?text=Hello%20Calvara%2C%20I%20would%20like%20to%20ask%20about%20hydrated%20lime."
 EMAIL = "sales@calvaralabs.com"
+# Enquiry log: Google Apps Script web-app URL (see tools/enquiry-log.gs). Empty = logging off.
+LOG_URL = ""
+AUTORESPONSE = ("Thank you for contacting Calvara Labs & Minerals. Akshay Khadav, our chemical engineer, has your enquiry "
+                "and will reply with price, specification and lead time, usually the same day.\n\n"
+                "While you wait, our brochures:\n"
+                "Hydrated lime: https://calvaralabs.com/brochures/Calvara-Hydrated-Lime-Brochure-2026.pdf\n"
+                "Hydroxyapatite: https://calvaralabs.com/brochures/Calvara-Hydroxyapatite-Brochure-2026.pdf\n\n"
+                "For a faster reply, WhatsApp +91 98927 27068.\n\n"
+                "Calvara Labs & Minerals, Jodhpur, Rajasthan, India · calvaralabs.com")
 OFFICE = "54 Patrakar Colony, Section 7, New Power House Road, Jodhpur, Rajasthan 342001, India"
 WORKS = "Ransigaon, Tehsil Bilara, District Jodhpur, Rajasthan, India"
 
@@ -246,6 +255,7 @@ def page(path, root, current, title, desc, body, extra_ld=None, noindex=False):
 {body}
 </main>
 {footer(root)}
+<a class="wa-float" href="{WHATSAPP}" aria-label="Chat with Akshay on WhatsApp">{lic("message-circle")}</a>
 <button class="to-top" type="button" aria-label="Back to top" hidden>{lic("arrow-up")}<span>Top</span></button>
 <script>
 (function(){{
@@ -311,6 +321,22 @@ def page(path, root, current, title, desc, body, extra_ld=None, noindex=False):
       var t0=null; function step(ts){{ if(!t0) t0=ts; var k=Math.min(1,(ts-t0)/1300); frame(1-Math.pow(1-k,3)); if(k<1) requestAnimationFrame(step); else e.textContent=txt; }}
       requestAnimationFrame(step); }},{{threshold:.6}});
     io.observe(e);
+  }});
+}})();
+</script>
+<script>
+(function(){{
+  var LOG='{LOG_URL}';
+  function logE(o){{ if(!LOG) return; try{{ o.page=location.pathname; o.lang=document.documentElement.lang||'en';
+    var b=new URLSearchParams(o); if(navigator.sendBeacon) navigator.sendBeacon(LOG,b); else fetch(LOG,{{method:'POST',body:b,mode:'no-cors',keepalive:true}}); }}catch(e){{}} }}
+  document.addEventListener('click',function(e){{
+    var a=e.target.closest && e.target.closest('a'); if(!a) return; var h=a.getAttribute('href')||'';
+    var isWa=h.indexOf('wa.me/')>-1, isMail=h.indexOf('mailto:')===0; if(!isWa && !isMail) return;
+    var m=''; try{{ m=decodeURIComponent(((h.split(/[?&](?:text|body)=/)[1])||'').split('&')[0]); }}catch(_){{}}
+    var where=a.id||a.className||'link'; logE({{source:(isWa?'WhatsApp click':'Email click')+' · '+where, message:m}});
+  }});
+  document.querySelectorAll('form.form').forEach(function(f){{
+    f.addEventListener('submit',function(){{ var o={{source:'Contact form'}}; new FormData(f).forEach(function(v,k){{ if(k.charAt(0)!=='_') o[k]=v; }}); logE(o); }});
   }});
 }})();
 </script>
@@ -1133,6 +1159,7 @@ def contact():
 <input type="hidden" name="_next" value="{SITE}/thanks/">
 <input type="hidden" name="_template" value="table">
 <input type="hidden" name="_captcha" value="false">
+<input type="hidden" name="_autoresponse" value="{AUTORESPONSE}">
 <input class="hp" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true">
 <div class="field"><label for="f-name">Your name</label><input id="f-name" name="name" type="text" autocomplete="name" required></div>
 <div class="field"><label for="f-company">Company</label><input id="f-company" name="company" type="text" autocomplete="organization" required></div>
