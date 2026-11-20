@@ -592,6 +592,65 @@ def brochure_block(root):
 </div>'''
 
 
+# ---------- moving ticker and plant motion (home) ----------
+TICKER = [
+    "Hydrated lime 80–95 % Ca(OH)<sub>2</sub>", "Free sample with its CoA", "25, 30, 35 or 40 kg bags",
+    "900 kg jumbo bags", "Palletised or non-palletised", "CIF and CFR export quotes",
+    "Ready stock at Ransigaon, Jodhpur", "Hydroxyapatite: 250 g samples", "Talk directly to the engineer",
+]
+
+
+def ticker():
+    items = "".join(f'<li>{t}</li>' for t in TICKER)
+    return f'''<div class="ticker" aria-label="Calvara at a glance">
+<div class="ticker-view"><div class="ticker-track"><ul>{items}</ul><ul aria-hidden="true">{items}</ul></div></div>
+<button class="ticker-btn" type="button" aria-pressed="false" aria-label="Pause moving text"><svg viewBox="0 0 16 16" aria-hidden="true"><path class="i-pause" d="M4 3h3v10H4zM9 3h3v10H9z" fill="currentColor"/><path class="i-play" d="M5 3l8 5-8 5z" fill="currentColor"/></svg></button>
+</div>'''
+
+
+def motion_section(root):
+    svg = (ROOT / "src" / "assets" / "media" / "process.svg").read_text()
+    def vid(key, title, text):
+        m = f"{root}assets/media/{key}"
+        return f'''<figure class="reel">
+<div class="reel-media"><video muted loop playsinline preload="none" poster="{m}-poster.jpg" aria-label="{title}"><source src="{m}.webm" type="video/webm"><source src="{m}.mp4" type="video/mp4"></video>
+<button class="reel-btn" type="button" aria-label="Pause {title.lower()}"><svg viewBox="0 0 16 16" aria-hidden="true"><path class="i-pause" d="M4 3h3v10H4zM9 3h3v10H9z" fill="currentColor"/><path class="i-play" d="M5 3l8 5-8 5z" fill="currentColor"/></svg></button></div>
+<figcaption><b>{title}</b>{text}</figcaption></figure>'''
+    return f'''<section class="section motion"><div class="wrap">
+<div class="section-head"><h2>See how your lime is made</h2><p class="lede">From quicklime to a sealed bag at our plant in Ransigaon, Jodhpur. Plant visits are welcome by appointment.</p></div>
+<div class="reels">
+<figure class="reel reel-svg"><div class="reel-media">{svg}
+<button class="reel-btn" type="button" aria-label="Pause process animation"><svg viewBox="0 0 16 16" aria-hidden="true"><path class="i-pause" d="M4 3h3v10H4zM9 3h3v10H9z" fill="currentColor"/><path class="i-play" d="M5 3l8 5-8 5z" fill="currentColor"/></svg></button></div>
+<figcaption><b>The process</b>Quicklime and measured water become dry hydrated lime.</figcaption></figure>
+{vid("plant-tour", "Inside the plant", "Kiln, hydrators, classifier, packing and the plant lab.")}
+{vid("packing-dispatch", "Packing and dispatch", "25 to 40 kg bags and 900 kg jumbo bags, ready stock.")}
+</div>
+<p class="swipe-hint">Swipe to see all three.</p>
+</div></section>
+<script>
+(function(){{
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function setBtn(b, paused){{ b.classList.toggle('is-paused', paused); b.setAttribute('aria-label', (paused ? 'Play ' : 'Pause ') + b.getAttribute('aria-label').replace(/^(Play|Pause) /,'')); }}
+  document.querySelectorAll('.reel').forEach(function(r){{
+    var v = r.querySelector('video'), s = r.querySelector('.reel-media > svg'), b = r.querySelector('.reel-btn'), user = false;
+    function play(){{ if(v){{ var p=v.play(); if(p&&p.catch)p.catch(function(){{}}); }} if(s) s.unpauseAnimations(); setBtn(b,false); }}
+    function stop(){{ if(v) v.pause(); if(s) s.pauseAnimations(); setBtn(b,true); }}
+    b.addEventListener('click', function(){{ user = true; if(b.classList.contains('is-paused')) play(); else stop(); }});
+    if(reduce){{ stop(); return; }}
+    if('IntersectionObserver' in window){{
+      new IntersectionObserver(function(es){{ es.forEach(function(e){{ if(user) return; if(e.isIntersecting) play(); else stop(); }}); }}, {{threshold:.35}}).observe(r);
+    }} else play();
+  }});
+  var t = document.querySelector('.ticker');
+  if(t){{ var tb = t.querySelector('.ticker-btn');
+    function tset(p){{ t.classList.toggle('is-paused', p); tb.classList.toggle('is-paused', p); tb.setAttribute('aria-pressed', p); tb.setAttribute('aria-label', p ? 'Play moving text' : 'Pause moving text'); }}
+    tb.addEventListener('click', function(){{ tset(!t.classList.contains('is-paused')); }});
+    if(reduce) tset(true);
+  }}
+}})();
+</script>'''
+
+
 # ---------- pages ----------
 def home():
     root = ""
@@ -605,10 +664,13 @@ def home():
 </div>
 <div class="hero-ladder">{ladder()}</div>
 </div></section>
+{ticker()}
 
 <section class="broch-band" id="brochure"><div class="wrap">
 {brochure_block(root)}
 </div></section>
+
+{motion_section(root)}
 
 <section><div class="wrap">{stats()}</div></section>
 

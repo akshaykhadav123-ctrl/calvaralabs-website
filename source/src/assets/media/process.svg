@@ -1,0 +1,136 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 900" class="proc-svg" role="img" aria-labelledby="procT procD">
+<title id="procT">How quicklime becomes hydrated lime</title>
+<desc id="procD">Animated diagram: quicklime and measured water feed a hydrator, the classifier separates fine powder from grit, and the powder is packed in 25 to 40 kg bags and 900 kg jumbo bags.</desc>
+<defs>
+  <clipPath id="pc-drum"><rect x="150" y="392" width="400" height="92" rx="46"/></clipPath>
+  <clipPath id="pc-bag"><path d="M118 778 h76 l8 92 h-92 z"/></clipPath>
+  <clipPath id="pc-jumbo"><rect x="250" y="752" width="128" height="118" rx="10"/></clipPath>
+  <linearGradient id="pc-drumg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E9ECEF"/><stop offset=".5" stop-color="#FFFFFF"/><stop offset="1" stop-color="#D5DAE0"/></linearGradient>
+  <linearGradient id="pc-cone" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#D5DAE0"/><stop offset=".55" stop-color="#FFFFFF"/><stop offset="1" stop-color="#C9CFD6"/></linearGradient>
+  <path id="pc-p-lime" d="M160 236 L160 262 L360 348 L360 392"/>
+  <path id="pc-p-water" d="M560 226 L560 300 L430 300 L430 392"/>
+  <path id="pc-p-out" d="M550 438 L604 438 L604 560"/>
+  <path id="pc-p-grit" d="M604 668 L604 712"/>
+</defs>
+<style>
+  .pc-t{font-family:Jost,'Jost Var',system-ui,sans-serif;font-weight:600;fill:#13202E}
+  .pc-s{font-family:'IBM Plex Sans',system-ui,sans-serif;fill:#4A5764}
+  .pc-n{font-family:Jost,system-ui,sans-serif;font-weight:600;fill:#fff;font-size:20px}
+</style>
+<rect width="720" height="900" fill="#F4F5F6"/>
+<!-- faint honeycomb texture -->
+<g opacity=".07" stroke="#13202E" fill="none" stroke-width="1">
+  <path d="M0 60 l17 -10 l17 10 v20 l-17 10 l-17 -10z M34 60 l17 -10 l17 10 v20 l-17 10 l-17 -10z M17 90 l17 -10 l17 10 v20 l-17 10 l-17 -10z" transform="translate(600 0)"/>
+</g>
+
+<text x="40" y="64" class="pc-t" font-size="40">How quicklime becomes</text>
+<text x="40" y="110" class="pc-t" font-size="40">hydrated lime</text>
+<text x="40" y="142" class="pc-s" font-size="20">Indicative process at our plant in Ransigaon, Jodhpur</text>
+
+<!-- 1 quicklime hopper -->
+<path d="M96 168 h128 l-40 58 h-48 z" fill="#FFFFFF" stroke="#13202E" stroke-width="3" stroke-linejoin="round"/>
+<path d="M108 176 h104 l-14 20 h-76z" fill="#DADFE4"/>
+<g fill="#C2C9D0"><circle cx="128" cy="184" r="6"/><circle cx="148" cy="181" r="7"/><circle cx="170" cy="185" r="6"/><circle cx="190" cy="182" r="5"/></g>
+<rect x="148" y="226" width="24" height="12" fill="#13202E"/>
+<!-- conveyor -->
+<path d="M150 262 L370 356" stroke="#13202E" stroke-width="12" stroke-linecap="round"/>
+<path d="M150 262 L370 356" stroke="#8A96A3" stroke-width="4" stroke-dasharray="6 10" stroke-linecap="round">
+  <animate attributeName="stroke-dashoffset" from="0" to="-32" dur="0.8s" repeatCount="indefinite"/>
+</path>
+<g><circle r="7" fill="#9AA5B1"/><animateMotion dur="3s" repeatCount="indefinite"><mpath href="#pc-p-lime"/></animateMotion></g>
+<g><circle r="6" fill="#B4BDC6"/><animateMotion dur="3s" begin="-0.75s" repeatCount="indefinite"><mpath href="#pc-p-lime"/></animateMotion></g>
+<g><circle r="8" fill="#9AA5B1"/><animateMotion dur="3s" begin="-1.5s" repeatCount="indefinite"><mpath href="#pc-p-lime"/></animateMotion></g>
+<g><circle r="6" fill="#B4BDC6"/><animateMotion dur="3s" begin="-2.25s" repeatCount="indefinite"><mpath href="#pc-p-lime"/></animateMotion></g>
+<rect x="242" y="176" width="30" height="30" rx="7" fill="#D9342D"/><text x="257" y="200" class="pc-n" text-anchor="middle">1</text>
+<text x="280" y="198" class="pc-t" font-size="26">Quicklime (CaO)</text>
+
+<!-- 2 water tank -->
+<rect x="506" y="160" width="108" height="66" rx="10" fill="#FFFFFF" stroke="#13202E" stroke-width="3"/>
+<rect x="512" y="186" width="96" height="34" rx="6" fill="#4A90C2" opacity=".85">
+  <animate attributeName="y" values="186;192;186" dur="6s" repeatCount="indefinite"/>
+  <animate attributeName="height" values="34;28;34" dur="6s" repeatCount="indefinite"/>
+</rect>
+<path d="M560 226 L560 300 L430 300 L430 384" fill="none" stroke="#13202E" stroke-width="6" stroke-linejoin="round"/>
+<rect x="548" y="250" width="24" height="16" rx="3" fill="#13202E"/>
+<g><path d="M0 -6 C3 -1 5 2 5 4 a5 5 0 0 1 -10 0 c0 -2 2 -5 5 -10z" fill="#4A90C2"/><animateMotion dur="2s" repeatCount="indefinite"><mpath href="#pc-p-water"/></animateMotion></g>
+<g><path d="M0 -6 C3 -1 5 2 5 4 a5 5 0 0 1 -10 0 c0 -2 2 -5 5 -10z" fill="#4A90C2"/><animateMotion dur="2s" begin="-1s" repeatCount="indefinite"><mpath href="#pc-p-water"/></animateMotion></g>
+<rect x="468" y="310" width="30" height="30" rx="7" fill="#D9342D"/><text x="483" y="334" class="pc-n" text-anchor="middle">2</text>
+<text x="506" y="332" class="pc-t" font-size="26">Measured water</text>
+
+<!-- 3 hydrator drum -->
+<rect x="150" y="392" width="400" height="92" rx="46" fill="url(#pc-drumg)" stroke="#13202E" stroke-width="3"/>
+<g clip-path="url(#pc-drum)">
+  <rect x="150" y="452" width="400" height="40" fill="#EEF0F2"/>
+  <line x1="170" y1="438" x2="530" y2="438" stroke="#13202E" stroke-width="5"/>
+  <g stroke="#13202E" stroke-width="5" stroke-linecap="round">
+    <g><line x1="210" y1="408" x2="210" y2="468"/><animateTransform attributeName="transform" type="rotate" from="0 210 438" to="360 210 438" dur="1.6s" repeatCount="indefinite"/></g>
+    <g><line x1="290" y1="408" x2="290" y2="468"/><animateTransform attributeName="transform" type="rotate" from="45 290 438" to="405 290 438" dur="1.6s" repeatCount="indefinite"/></g>
+    <g><line x1="370" y1="408" x2="370" y2="468"/><animateTransform attributeName="transform" type="rotate" from="90 370 438" to="450 370 438" dur="1.6s" repeatCount="indefinite"/></g>
+    <g><line x1="450" y1="408" x2="450" y2="468"/><animateTransform attributeName="transform" type="rotate" from="135 450 438" to="495 450 438" dur="1.6s" repeatCount="indefinite"/></g>
+  </g>
+</g>
+<rect x="134" y="420" width="16" height="36" rx="3" fill="#13202E"/>
+<rect x="550" y="420" width="16" height="36" rx="3" fill="#13202E"/>
+<rect x="200" y="372" width="30" height="22" rx="3" fill="#13202E"/>
+<path d="M344 372 h32 l-6 22 h-20z" fill="#13202E"/>
+<!-- steam -->
+<g fill="#FFFFFF" stroke="#C9CFD6" stroke-width="2">
+  <circle cx="215" cy="366" r="8"><animate attributeName="cy" values="366;318" dur="2s" repeatCount="indefinite"/><animate attributeName="r" values="7;18" dur="2s" repeatCount="indefinite"/><animate attributeName="opacity" values=".95;0" dur="2s" repeatCount="indefinite"/></circle>
+  <circle cx="208" cy="366" r="8"><animate attributeName="cy" values="366;318" dur="2s" begin="-0.7s" repeatCount="indefinite"/><animate attributeName="r" values="7;18" dur="2s" begin="-0.7s" repeatCount="indefinite"/><animate attributeName="opacity" values=".95;0" dur="2s" begin="-0.7s" repeatCount="indefinite"/><animate attributeName="cx" values="214;198" dur="2s" begin="-0.7s" repeatCount="indefinite"/></circle>
+  <circle cx="222" cy="366" r="8"><animate attributeName="cy" values="366;318" dur="2s" begin="-1.35s" repeatCount="indefinite"/><animate attributeName="r" values="7;18" dur="2s" begin="-1.35s" repeatCount="indefinite"/><animate attributeName="opacity" values=".95;0" dur="2s" begin="-1.35s" repeatCount="indefinite"/><animate attributeName="cx" values="216;236" dur="2s" begin="-1.35s" repeatCount="indefinite"/></circle>
+</g>
+<rect x="34" y="504" width="30" height="30" rx="7" fill="#D9342D"/><text x="49" y="528" class="pc-n" text-anchor="middle">3</text>
+<text x="72" y="526" class="pc-t" font-size="26">Hydrator</text>
+<text x="72" y="556" class="pc-s" font-size="21">CaO + H₂O → Ca(OH)₂ + heat</text>
+
+<!-- 4 classifier -->
+<path d="M550 438 L604 438 L604 556" fill="none" stroke="#13202E" stroke-width="6" stroke-linejoin="round"/>
+<rect x="560" y="556" width="88" height="40" rx="6" fill="#FFFFFF" stroke="#13202E" stroke-width="3"/>
+<path d="M560 596 h88 l-34 66 h-20 z" fill="url(#pc-cone)" stroke="#13202E" stroke-width="3" stroke-linejoin="round"/>
+<g stroke="#8A96A3" stroke-width="3" fill="none" stroke-linecap="round">
+  <path d="M574 576 a30 10 0 0 0 60 0" stroke-dasharray="18 12"><animate attributeName="stroke-dashoffset" from="0" to="-60" dur="0.9s" repeatCount="indefinite"/></path>
+</g>
+<path d="M604 662 L604 700" stroke="#13202E" stroke-width="5"/>
+<!-- grit bin -->
+<path d="M578 702 h52 l-6 30 h-40z" fill="#E1E5E9" stroke="#13202E" stroke-width="3" stroke-linejoin="round"/>
+<g><circle r="4" fill="#7A6A55"/><animateMotion dur="1.5s" repeatCount="indefinite"><mpath href="#pc-p-grit"/></animateMotion></g>
+<g><circle r="3" fill="#7A6A55"/><animateMotion dur="1.5s" begin="-0.75s" repeatCount="indefinite"><mpath href="#pc-p-grit"/></animateMotion></g>
+<!-- powder from hydrator to classifier -->
+<g fill="#FFFFFF" stroke="#AAB3BC" stroke-width="1.5">
+  <g><circle r="5"/><animateMotion dur="1.6s" repeatCount="indefinite"><mpath href="#pc-p-out"/></animateMotion></g>
+  <g><circle r="5"/><animateMotion dur="1.6s" begin="-0.8s" repeatCount="indefinite"><mpath href="#pc-p-out"/></animateMotion></g>
+</g>
+<rect x="298" y="638" width="30" height="30" rx="7" fill="#D9342D"/><text x="313" y="662" class="pc-n" text-anchor="middle">4</text>
+<text x="336" y="660" class="pc-t" font-size="26">Classifier</text>
+<text x="336" y="688" class="pc-s" font-size="21">Fine powder on, grit out</text>
+<text x="568" y="724" class="pc-s" font-size="19" text-anchor="end">Grit &amp; silica out</text>
+
+<!-- fine powder line to bagging -->
+<path d="M648 576 L664 576 L664 744 L156 744 L156 770" fill="none" stroke="#13202E" stroke-width="6" stroke-linejoin="round"/>
+<path d="M314 744 L314 750" fill="none" stroke="#13202E" stroke-width="6"/>
+<g fill="#FFFFFF" stroke="#AAB3BC" stroke-width="1.5">
+  <g><circle r="5"/><animateMotion dur="3s" repeatCount="indefinite" path="M648 576 L664 576 L664 744 L156 744 L156 778"/></g>
+  <g><circle r="5"/><animateMotion dur="3s" begin="-1s" repeatCount="indefinite" path="M648 576 L664 576 L664 744 L156 744 L156 778"/></g>
+  <g><circle r="5"/><animateMotion dur="3s" begin="-2s" repeatCount="indefinite" path="M648 576 L664 576 L664 744 L156 744 L156 778"/></g>
+  <g><circle r="5"/><animateMotion dur="2.4s" begin="-0.4s" repeatCount="indefinite" path="M648 576 L664 576 L664 744 L314 744 L314 752"/></g>
+  <g><circle r="5"/><animateMotion dur="2.4s" begin="-1.6s" repeatCount="indefinite" path="M648 576 L664 576 L664 744 L314 744 L314 752"/></g>
+</g>
+
+<!-- 5 bags -->
+<path d="M118 778 h76 l8 92 h-92 z" fill="#FFFFFF" stroke="#13202E" stroke-width="3" stroke-linejoin="round"/>
+<g clip-path="url(#pc-bag)">
+  <rect x="100" y="870" width="120" height="92" fill="#E6EAEE"><animate attributeName="y" values="870;782;782;870" keyTimes="0;.8;.95;1" dur="6s" repeatCount="indefinite"/></rect>
+</g>
+<text x="156" y="836" class="pc-t" font-size="13" text-anchor="middle" fill="#D9342D" style="fill:#D9342D">CALVARA</text>
+<rect x="250" y="752" width="128" height="118" rx="10" fill="#FFFFFF" stroke="#13202E" stroke-width="3"/>
+<g clip-path="url(#pc-jumbo)">
+  <rect x="246" y="870" width="136" height="118" fill="#E6EAEE"><animate attributeName="y" values="870;760;760;870" keyTimes="0;.85;.96;1" dur="6s" repeatCount="indefinite"/></rect>
+</g>
+<path d="M262 752 q12 -22 24 0 M342 752 q12 -22 24 0" fill="none" stroke="#13202E" stroke-width="3"/>
+<text x="314" y="822" class="pc-t" font-size="14" text-anchor="middle" style="fill:#D9342D">CALVARA</text>
+<rect x="418" y="766" width="30" height="30" rx="7" fill="#D9342D"/><text x="433" y="790" class="pc-n" text-anchor="middle">5</text>
+<text x="456" y="788" class="pc-t" font-size="26">Packed and tested</text>
+<text x="456" y="820" class="pc-s" font-size="21">25–40 kg or 900 kg bags</text>
+<text x="456" y="846" class="pc-s" font-size="21">CoA with every lot</text>
+<text x="456" y="878" class="pc-t" font-size="20" style="fill:#D9342D">Grades 80–95 % Ca(OH)₂</text>
+</svg>
