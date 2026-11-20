@@ -666,11 +666,11 @@ def home():
 </div></section>
 {ticker()}
 
+{motion_section(root)}
+
 <section class="broch-band" id="brochure"><div class="wrap">
 {brochure_block(root)}
 </div></section>
-
-{motion_section(root)}
 
 <section><div class="wrap">{stats()}</div></section>
 
