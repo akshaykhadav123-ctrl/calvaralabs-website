@@ -225,7 +225,7 @@
     function play(){ if(v){ var p=v.play(); if(p&&p.catch)p.catch(function(){}); } if(s) s.unpauseAnimations(); setBtn(b,false); }
     function stop(){ if(v) v.pause(); if(s) s.pauseAnimations(); setBtn(b,true); }
     b.addEventListener('click', function(){ user = true; if(b.classList.contains('is-paused')) play(); else stop(); });
-    if(reduce){ stop(); return; }
+    if(reduce || (navigator.connection && navigator.connection.saveData)){ stop(); return; }  // honour Data Saver: stay on the poster, tap Play to run the clip
     if('IntersectionObserver' in window){
       new IntersectionObserver(function(es){ es.forEach(function(e){ if(user) return; if(e.isIntersecting) play(); else stop(); }); }, {threshold:.35}).observe(r);
     } else play();

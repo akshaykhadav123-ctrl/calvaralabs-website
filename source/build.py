@@ -9,6 +9,7 @@ drop them into src/photos/ with the names in PHOTOS and rebuild.
 """
 import datetime, json, re, shutil, sys
 from pathlib import Path
+from urllib.parse import quote
 sys.path.insert(0, str(Path(__file__).parent / "tools"))
 from logo_parts import lockup, mark_svg
 
@@ -88,7 +89,7 @@ def href(root, page):
 
 # ---------- line icons (Lucide, ISC licence: src/icons/LICENSE-lucide.txt) ----------
 def lic(name, cls="ic"):
-    raw = (ROOT / "src" / "icons" / f"{name}.svg").read_text()
+    raw = (ROOT / "src" / "icons" / f"{name}.svg").read_text(encoding="utf-8")
     inner = re.search(r"<svg[^>]*>(.*)</svg>", raw, re.S).group(1)
     inner = re.sub(r"\s+", " ", inner).strip()
     return (f'<svg class="{cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" '
@@ -241,10 +242,12 @@ def footer(root):
 </footer>'''
 
 
-def cta_band(root, title="Ask for a sample of the grade you want", text="Tell us your use, monthly volume and the grade you have in mind. You hear back directly from our engineer, with a sample and its Certificate of Analysis."):
+def cta_band(root, title="Ask for a sample of the grade you want", text="Tell us your use, monthly volume and the grade you have in mind. You hear back directly from our engineer, with a sample and its Certificate of Analysis.", product=""):
+    # product pre-selects the dropdown on the contact form via its ?product= reader
+    contact = href(root, 'contact') + (f"?product={quote(product)}" if product else "")
     return f'''<section class="cta-band"><div class="wrap cta-grid">
 <div><h2>{title}</h2><p>{text}</p></div>
-<div class="btn-row"><a class="btn btn-red" href="{href(root, 'contact')}">Request a quote</a><a class="btn btn-ghost-light" href="{WHATSAPP}">WhatsApp us</a></div>
+<div class="btn-row"><a class="btn btn-red" href="{contact}">Request a quote</a><a class="btn btn-ghost-light" href="{WHATSAPP}">WhatsApp us</a></div>
 </div></section>'''
 
 
@@ -788,7 +791,7 @@ def ticker(root):
 
 
 def motion_section(root):
-    svg = (ROOT / "src" / "assets" / "media" / "process.svg").read_text()
+    svg = (ROOT / "src" / "assets" / "media" / "process.svg").read_text(encoding="utf-8")
     def vid(key, title, text):
         m = f"{root}assets/media/{key}"
         return f'''<figure class="reel">
@@ -815,7 +818,7 @@ def motion_section(root):
     function play(){{ if(v){{ var p=v.play(); if(p&&p.catch)p.catch(function(){{}}); }} if(s) s.unpauseAnimations(); setBtn(b,false); }}
     function stop(){{ if(v) v.pause(); if(s) s.pauseAnimations(); setBtn(b,true); }}
     b.addEventListener('click', function(){{ user = true; if(b.classList.contains('is-paused')) play(); else stop(); }});
-    if(reduce){{ stop(); return; }}
+    if(reduce || (navigator.connection && navigator.connection.saveData)){{ stop(); return; }}  // honour Data Saver: stay on the poster, tap Play to run the clip
     if('IntersectionObserver' in window){{
       new IntersectionObserver(function(es){{ es.forEach(function(e){{ if(user) return; if(e.isIntersecting) play(); else stop(); }}); }}, {{threshold:.35}}).observe(r);
     }} else play();
@@ -1073,7 +1076,7 @@ def lime():
 <div class="faq">{faqs}</div>
 </div></section>
 
-{cta_band(root, "Get a hydrated lime quote", "Send the grade, monthly quantity and delivery city or port. You hear back directly from our engineer.")}
+{cta_band(root, "Get a hydrated lime quote", "Send the grade, monthly quantity and delivery city or port. You hear back directly from our engineer.", product="hydrated lime")}
 '''
     page("hydrated-lime", root, "hydrated-lime", "Hydrated Lime Grades 80–92% | Specifications | Calvara Labs, Jodhpur",
          "Compare four hydrated lime grades: Ca(OH)2 80–92%, silica 1.06–8%, moisture 0.8–2.0%, 90–98.5% through 200 mesh. 25 to 40 kg bags, CoA with every lot.",
@@ -1169,7 +1172,7 @@ def hap():
 <div class="faq">{faqs}</div>
 </div></section>
 
-{cta_band(root, "Request a hydroxyapatite sample", "Tell us your application, particle size and expected quantity. We send 250 g with a Certificate of Analysis.")}
+{cta_band(root, "Request a hydroxyapatite sample", "Tell us your application, particle size and expected quantity. We send 250 g with a Certificate of Analysis.", product="hydroxyapatite")}
 '''
     page("hydroxyapatite", root, "hydroxyapatite", "Hydroxyapatite Powder Manufacturer India | Animal-Free | Calvara Labs",
          "Synthetic, animal-free hydroxyapatite (micro grade, D50 3–8 µm) for toothpaste, tablets, cosmetics and labs. HAp ≥95% by XRD, Ca/P 1.67. Free 250 g sample.",
@@ -1382,11 +1385,11 @@ def extras():
         shutil.copy(ROOT / "src" / "brand" / f, OUT / "assets" / "brand" / f)
     for f in ["favicon.svg", "favicon-32.png", "apple-touch-icon.png"]:
         shutil.copy(ROOT / "src" / f, OUT / f)
-    (OUT / ".htaccess").write_text("ErrorDocument 404 /404.html\nDirectoryIndex index.html\n")
-    (OUT / "robots.txt").write_text(f"User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n")
+    (OUT / ".htaccess").write_text("ErrorDocument 404 /404.html\nDirectoryIndex index.html\n", encoding="utf-8")
+    (OUT / "robots.txt").write_text(f"User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n", encoding="utf-8")
     urls = ["", "hydrated-lime/", "export/", "hydroxyapatite/", "documents/", "about/", "contact/"] + (["hi/", "hi/hydrated-lime/", "hi/contact/"] if HINDI_READY else [])
     items = "".join(f"<url><loc>{SITE}/{u}</loc><lastmod>{datetime.date.today().isoformat()}</lastmod></url>" for u in urls)
-    (OUT / "sitemap.xml").write_text(f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{items}</urlset>\n')
+    (OUT / "sitemap.xml").write_text(f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{items}</urlset>\n', encoding="utf-8")
 
 
 if __name__ == "__main__":
