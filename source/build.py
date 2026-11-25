@@ -991,6 +991,7 @@ def home():
 <a class="nextup-card" href="{href(root, 'export')}"><h3>Prices &amp; export</h3><p>CIF, CFR and FOB terms, container quantities, packing, and ready-to-send questions.</p><span class="go">See export details</span></a>
 <a class="nextup-card" href="{href(root, 'about')}"><h3>About &amp; quality</h3><p>Our plant, the six production steps, what each lab test means, and how we prevent bad lime.</p><span class="go">Meet the plant</span></a>
 <a class="nextup-card" href="{href(root, 'documents')}"><h3>Documents</h3><p>GST, IEC and MSME registrations, and independent lab reports, each with a verify link.</p><span class="go">Open documents</span></a>
+<a class="nextup-card" href="{href(root, 'hydroxyapatite')}"><h3>Hydroxyapatite</h3><p>Animal-free HAp for toothpaste, tablets and labs. Micro grade samples open, 250 g with CoA.</p><span class="go">Request a sample</span></a>
 </div>
 </div></section>
 
