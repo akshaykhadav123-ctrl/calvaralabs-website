@@ -32,6 +32,7 @@ AUTORESPONSE = ("Thank you for contacting Calvara Labs & Minerals. Akshay Khadav
                 "Hydroxyapatite: https://calvaralabs.com/brochures/Calvara-Hydroxyapatite-Brochure-2026.pdf\n\n"
                 "For a faster reply, WhatsApp +91 98927 27068.\n\n"
                 "Calvara Labs & Minerals, Jodhpur, Rajasthan, India · calvaralabs.com")
+MAPS = "https://www.google.com/maps/search/?api=1&query=Calvara+Labs+and+Minerals+Jodhpur"
 OFFICE = "54 Patrakar Colony, Section 7, New Power House Road, Jodhpur, Rajasthan 342003, India"
 WORKS = "Ransigaon, Tehsil Bilara, District Jodhpur, Rajasthan, India"
 
@@ -253,6 +254,7 @@ ORG_LD = {
     "url": SITE + "/", "logo": SITE + "/assets/logo-512.png", "email": EMAIL, "telephone": PHONE_TEL,
     "address": {"@type": "PostalAddress", "streetAddress": "54 Patrakar Colony, Section 7, New Power House Road",
                 "addressLocality": "Jodhpur", "addressRegion": "Rajasthan", "postalCode": "342003", "addressCountry": "IN"},
+    "hasMap": MAPS,
     "description": "Hydrated lime (calcium hydroxide) in four grades, 80 to 92% Ca(OH)2, made at Ransigaon, Jodhpur, Rajasthan, India.",
 }
 
@@ -1376,7 +1378,7 @@ def contact():
 <p><b style="color:#fff">Akshay Khadav</b><br>B.Tech Chemical Engineering, IIT&nbsp;Bombay</p>
 <div class="contact-line"><span>Call or WhatsApp</span><a href="tel:{PHONE_TEL}">{PHONE_DISPLAY}</a></div>
 <div class="contact-line"><span>Email</span><a href="mailto:{EMAIL}">{EMAIL}</a></div>
-<div class="contact-line"><span>Office</span><p>{OFFICE}</p></div>
+<div class="contact-line"><span>Office</span><p>{OFFICE}<br><a href="{MAPS}" target="_blank" rel="noopener">Find us on Google Maps</a></p></div>
 <div class="contact-line"><span>Works</span><p>{WORKS}</p></div>
 </div>
 <div class="side-card light">

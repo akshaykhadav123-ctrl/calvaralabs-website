@@ -353,7 +353,7 @@ def build(B):
 <p><b style="color:#fff">अक्षय खदाव</b><br>बी.टेक केमिकल इंजीनियरिंग, IIT&nbsp;बॉम्बे</p>
 <div class="contact-line"><span>कॉल या व्हाट्सऐप</span><a href="tel:{B.PHONE_TEL}">{B.PHONE_DISPLAY}</a></div>
 <div class="contact-line"><span>ईमेल</span><a href="mailto:{B.EMAIL}">{B.EMAIL}</a></div>
-<div class="contact-line"><span>ऑफ़िस</span><p>{B.OFFICE}</p></div>
+<div class="contact-line"><span>ऑफ़िस</span><p>{B.OFFICE}<br><a href="{B.MAPS}" target="_blank" rel="noopener">Google Maps पर देखें</a></p></div>
 <div class="contact-line"><span>प्लांट</span><p>{B.WORKS}</p></div>
 </div>
 <div class="side-card light">
