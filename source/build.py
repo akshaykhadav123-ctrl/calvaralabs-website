@@ -259,23 +259,62 @@ ORG_LD = {
     "description": "Hydrated lime (calcium hydroxide) in four grades, 80 to 92% Ca(OH)2, made at Ransigaon, Jodhpur, Rajasthan, India.",
 }
 
+# LocalBusiness entity (Jodhpur manufacturer) — attached to every page alongside ORG_LD
+LOCAL_BUSINESS_LD = {
+    "@context": "https://schema.org", "@type": "LocalBusiness",
+    "name": "Calvara Labs & Minerals",
+    "legalName": "Calvara Labs and Minerals",
+    "url": SITE + "/", "telephone": PHONE_TEL, "email": EMAIL,
+    "image": SITE + "/assets/logo-512.png",
+    "address": {"@type": "PostalAddress", "streetAddress": "54 Patrakar Colony, Section 7, New Power House Road",
+                "addressLocality": "Jodhpur", "addressRegion": "Rajasthan", "postalCode": "342003", "addressCountry": "IN"},
+    "areaServed": "IN",
+    "taxId": GSTIN,
+    "description": "Manufacturer of hydrated lime (calcium hydroxide, CAS 1305-62-0, HSN 2522) and hydroxyapatite at its own plant in Ransigaon, Jodhpur, Rajasthan, India.",
+    "foundingDate": "2026",
+    "slogan": "Hydrated lime and hydroxyapatite from our own calcium.",
+}
+
+
+def video_ld():
+    """VideoObject for the three plant clips shown on the home page."""
+    clips = [
+        ("hero-bg", "Calvara lime plant, Ransigaon", "Our own lime plant near Jodhpur: limestone kilns feeding the hydrators, our signature clip over the home page.", "hero-bg-poster.jpg", 25),
+        ("plant-tour", "Inside the plant: kiln to lab", "Walk-through of the plant at Ransigaon, Jodhpur: kiln, raw-material stock, hydrators, classifier, bag and jumbo-bag packing and the plant lab.", "plant-tour-poster.jpg", 22),
+        ("packing-dispatch", "Packing and dispatch", "Packing and dispatch at our Ransigaon plant: 25 to 40 kg bags and 900 kg jumbo bags, ready stock.", "packing-dispatch-poster.jpg", 14),
+    ]
+    return [
+        {"@context": "https://schema.org", "@type": "VideoObject", "name": name, "description": desc,
+         "thumbnailUrl": SITE + f"/assets/media/{poster}", "uploadDate": "2026-11-20",
+         "duration": f"PT{sec}S", "contentUrl": SITE + f"/assets/media/{key}.mp4",
+         "embedUrl": SITE + "/", "publisher": {"@type": "Organization", "name": "Calvara Labs & Minerals", "url": SITE + "/"}}
+        for key, name, desc, poster, sec in clips]
+
 
 HI_ALT = {"": "hi/", "hydrated-lime": "hi/hydrated-lime/", "contact": "hi/contact/"}  # English page -> Hindi page
 
 
-def page(path, root, current, title, desc, body, extra_ld=None, noindex=False, lang="en", alt=None, head_html=None, foot_html=None, ui=None):
+def page(path, root, current, title, desc, body, extra_ld=None, noindex=False, lang="en", alt=None, head_html=None, foot_html=None, ui=None, og_image=None):
     canonical = SITE + "/" + (path + "/" if path and not path.endswith(".html") else "")
     ui = ui or {"wa": "Chat with Akshay on WhatsApp", "top": "Top", "top_label": "Back to top"}
     if lang == "en" and alt is None and path in HI_ALT and HINDI_READY:
         alt = HI_ALT[path]
-    if alt:
-        en_url = SITE + "/" + (path + "/" if path else "") if lang == "en" else SITE + "/" + alt
+    if alt is not None and not noindex:
+        # alt = the counterpart page's path (for EN pages the /hi/ path, for HI pages the EN path)
+        en_url = (SITE + "/" + (path + "/" if path else "")) if lang == "en" else (SITE + "/" + alt if alt else SITE + "/")
         hi_url = SITE + "/" + alt if lang == "en" else canonical
         alts = (f'<link rel="alternate" hreflang="en" href="{en_url}">\n<link rel="alternate" hreflang="hi" href="{hi_url}">\n'
                 f'<link rel="alternate" hreflang="x-default" href="{en_url}">')
     else:
         alts = ""
-    ld = [ORG_LD] + (extra_ld if isinstance(extra_ld, list) else [extra_ld] if extra_ld else [])
+    ld = [ORG_LD, LOCAL_BUSINESS_LD] + (extra_ld if isinstance(extra_ld, list) else [extra_ld] if extra_ld else [])
+    if lang == "en" and path and not path.endswith(".html") and not noindex:
+        # BreadcrumbList for inner pages; the home page is the first crumb everywhere
+        crumb_name = {"hydrated-lime": "Hydrated lime", "export": "Prices & export", "hydroxyapatite": "Hydroxyapatite",
+                      "documents": "Documents", "about": "About & quality", "contact": "Contact"}.get(path, path.title())
+        ld.append({"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "Home", "item": SITE + "/"},
+            {"@type": "ListItem", "position": 2, "name": crumb_name, "item": SITE + "/" + path + "/"}]})
     html = f'''<!doctype html>
 <html lang="{lang}">
 <head>
@@ -291,7 +330,7 @@ def page(path, root, current, title, desc, body, extra_ld=None, noindex=False, l
 <meta property="og:title" content="{title}">
 <meta property="og:description" content="{desc}">
 <meta property="og:url" content="{canonical}">
-<meta property="og:image" content="{SITE}/assets/og.png">
+<meta property="og:image" content="{SITE}/assets/{og_image or 'og.png'}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#13202E">
 <meta name="format-detection" content="telephone=yes">
@@ -891,7 +930,7 @@ def documents():
 </div></section>
 {cta_band(root)}'''
     page("documents", root, "documents", "Documents: GST, IEC, Udyam MSME, Lab Reports | Calvara Labs &amp; Minerals",
-         f"Calvara Labs and Minerals company documents: GST registration (GSTIN {GSTIN}), Importer-Exporter Code (IEC ETMPK7731R), Udyam MSME registration and lab test reports.", body)
+         f"Calvara Labs and Minerals company documents: GST registration (GSTIN {GSTIN}), Importer-Exporter Code (IEC ETMPK7731R), Udyam MSME registration and lab test reports.", body, og_image="og-documents.png")
 
 
 
@@ -981,7 +1020,7 @@ def home():
 '''
     page("", root, "", "Hydrated Lime Manufacturer, Jodhpur | Grades 80–92 | Calvara Labs",
          "Hydrated lime in four grades, 80 to 92% Ca(OH)2, made at our plant near Jodhpur. Silica from 1.06%, up to 98.5% through 200 mesh, CoA with every lot.",
-         body)
+         body, extra_ld=video_ld())
 
 
 def lime():
@@ -1081,7 +1120,7 @@ def lime():
     page("hydrated-lime", root, "hydrated-lime", "Hydrated Lime Grades 80–92% | Specifications | Calvara Labs, Jodhpur",
          "Compare four hydrated lime grades: Ca(OH)2 80–92%, silica 1.06–8%, moisture 0.8–2.0%, 90–98.5% through 200 mesh. 25 to 40 kg bags, CoA with every lot.",
          body, [faq_ld, product_ld("Hydrated lime (calcium hydroxide)", "Hydrated lime in four grades, 80 to 92% Ca(OH)2, made at our plant near Jodhpur, Rajasthan. Packed in 25, 30, 35 or 40 kg bags or 900 kg jumbo bags, with a Certificate of Analysis for every lot.",
-                                   "hydrated-lime/", "Industrial chemicals", {"additionalProperty": [{"@type": "PropertyValue", "name": "CAS", "value": "1305-62-0"}, {"@type": "PropertyValue", "name": "HSN", "value": "2522"}]})])
+                                   "hydrated-lime/", "Industrial chemicals", {"additionalProperty": [{"@type": "PropertyValue", "name": "CAS", "value": "1305-62-0"}, {"@type": "PropertyValue", "name": "HSN", "value": "2522"}]})], og_image="og-lime.png")
 
 
 def hap():
@@ -1177,7 +1216,7 @@ def hap():
     page("hydroxyapatite", root, "hydroxyapatite", "Hydroxyapatite Powder Manufacturer India | Animal-Free | Calvara Labs",
          "Synthetic, animal-free hydroxyapatite (micro grade, D50 3–8 µm) for toothpaste, tablets, cosmetics and labs. HAp ≥95% by XRD, Ca/P 1.67. Free 250 g sample.",
          body, [faq_ld, product_ld("Hydroxyapatite (synthetic)", "Synthetic, animal-free hydroxyapatite, micro grade D50 3 to 8 µm, made from purified calcium near Jodhpur, India. 250 g samples with a Certificate of Analysis.",
-                                   "hydroxyapatite/", "Calcium phosphates", {"additionalProperty": [{"@type": "PropertyValue", "name": "CAS", "value": "1306-06-5"}]})])
+                                   "hydroxyapatite/", "Calcium phosphates", {"additionalProperty": [{"@type": "PropertyValue", "name": "CAS", "value": "1306-06-5"}]})], og_image="og-hap.png")
 
 
 def about():
@@ -1233,7 +1272,7 @@ def about():
 '''
     page("about", root, "about", "About Calvara Labs & Minerals | Lime Plant, Ransigaon, Jodhpur",
          "Calvara Labs & Minerals makes hydrated lime at its own plant in Ransigaon, Jodhpur. Plant lab tests every lot; CoA, lot traceability and approved-sample supply.",
-         body)
+         body, og_image="og-about.png")
 
 
 def contact():
@@ -1291,7 +1330,7 @@ def contact():
 '''
     page("contact", root, "contact", "Contact Calvara Labs & Minerals | Hydrated Lime Quote, Jodhpur",
          "Ask for a hydrated lime sample, specification sheet or grade advice. Call or WhatsApp +91 98927 27068. Office: Patrakar Colony, Jodhpur. Works: Ransigaon.",
-         body)
+         body, og_image="og-contact.png")
 
 
 def export():
@@ -1350,7 +1389,7 @@ def export():
 '''
     page("export", root, "export", "Hydrated Lime Prices CIF, CFR, FOB & Export | Calvara Labs",
          "Hydrated lime prices CIF, CFR, FOB India or ex-works Jodhpur. 25 to 40 kg bags, palletised or not, 20 and 40 ft containers, TDS, CoA and SDS.",
-         body, faq_ld)
+         body, faq_ld, og_image="og-export.png")
 
 
 def thanks():

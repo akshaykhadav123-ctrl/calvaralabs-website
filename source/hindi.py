@@ -92,7 +92,7 @@ def build(B):
 </div></section>'''
 
     def hpage(path, root, current, en_path, title, desc, body, noindex=False):
-        page(path, root, current, title, desc, body, lang="hi", alt=path + "/", noindex=noindex,
+        page(path, root, current, title, desc, body, lang="hi", alt=en_path, noindex=noindex,
              head_html=header(root, current, en_path), foot_html=footer(root), ui=UI)
 
     def ladder():
