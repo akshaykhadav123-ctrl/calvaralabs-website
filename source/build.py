@@ -702,7 +702,7 @@ HAP_ASKS = [
      "1, 5 and 25 kg packs. We make small lots today and scale with demand; ask for monthly capacity and lead time.",
      "Hello Akshay, what monthly hydroxyapatite quantity can you supply, and what is the lead time?"),
     ("Nano grade",
-     "Nano grade (20 to 100 nm) is in development. Ask Akshay for the expected timeline and to join the first sample list.",
+     "Nano grade (20 to 100 nm, rod-shaped, Ca/P 1.65 to 1.68, purity 99 % min) is in development. Ask Akshay for the expected timeline and to join the first sample list.",
      "Hello Akshay, please add us to the first sample list for nano hydroxyapatite. Our use: ___"),
     ("Regulatory documents",
      "Synthetic and animal-free. Tell us the documents your regulatory or QA team needs and Akshay confirms what we can provide.",
@@ -785,6 +785,60 @@ def ticker(root):
 <div class="ticker-view"><div class="ticker-track"><ul>{items}</ul><ul aria-hidden="true" inert>{items}</ul></div></div>
 <button class="ticker-btn" type="button" aria-pressed="false" aria-label="Pause moving text">{lic("pause", "ic i-pause")}{lic("play", "ic i-play")}</button>
 </div>'''
+
+
+# ---------- home: "what are you looking for" tiles and the big process section ----------
+def path_tiles(root):
+    tiles = [
+        ("ruler", "Grades and specs", "Compare 92, 90, 85 and 80: silica, moisture, fineness.", f"{href(root, 'hydrated-lime')}#spec"),
+        ("indian-rupee", "Get a price", "Pick grade, packing and port. One message to Akshay.", "#quote"),
+        ("factory", "How we make it", "From quicklime to a sealed bag, step by step.", "#process"),
+        ("download", "Brochures (PDF)", "Hydrated lime and hydroxyapatite, free download.", "#brochure"),
+        ("microscope", "Lab reports and certificates", "Independent test reports, GST, IEC and Udyam.", href(root, "documents")),
+        ("ship", "Export and containers", "CIF, CFR, FOB, palletised loading, documents.", href(root, "export")),
+        ("hexagon", "Hydroxyapatite", "Animal-free HAP for toothpaste and cosmetics.", href(root, "hydroxyapatite")),
+        ("message-circle", "Talk to the engineer", "WhatsApp Akshay, usually a same-day reply.", WHATSAPP),
+    ]
+    items = "".join(
+        f'<a class="path" href="{u}">{lic(ic, "ic path-ic")}<span class="path-t">{t}</span><span class="path-d">{d}</span>{lic("arrow-right", "ic path-go")}</a>'
+        for ic, t, d, u in tiles)
+    return f'''<section class="paths-band" aria-labelledby="paths-h"><div class="wrap">
+<h2 id="paths-h" class="paths-h">What are you looking for?</h2>
+<nav class="paths" aria-label="Jump to">{items}</nav>
+</div></section>'''
+
+
+PROCESS_STEPS = [
+    ("Quicklime from the kiln", "Limestone from the Jodhpur belt is burnt to quicklime (CaO) and conveyed to the hydrator."),
+    ("Measured water", "Water is added in a measured amount, just enough to slake the quicklime into a dry powder."),
+    ("Hydrator", "Quicklime and water react, giving off heat and steam, and form calcium hydroxide, Ca(OH)<sub>2</sub>."),
+    ("Classifier", "Fine powder is carried on while grit and silica are separated out. This sets each grade's fineness."),
+    ("Packed and tested", "Filled in 25 to 40 kg bags or 900 kg jumbo bags. Every lot is tested in our plant lab and ships with a CoA."),
+]
+
+
+def process_section(root):
+    svg = (ROOT / "src" / "assets" / "media" / "process.svg").read_text()
+    steps = "".join(f'<li><span class="n">{i}</span><div><h3>{t}</h3><p>{d}</p></div></li>' for i, (t, d) in enumerate(PROCESS_STEPS, 1))
+    def vid(key, title, text):
+        m = f"{root}assets/media/{key}"
+        return f'''<figure class="reel">
+<div class="reel-media"><video muted loop playsinline preload="none" poster="{m}-poster.jpg" aria-label="{title}"><source src="{m}.webm" type="video/webm"><source src="{m}.mp4" type="video/mp4"></video>
+<button class="reel-btn" type="button" aria-label="Pause {title.lower()}">{lic("pause", "ic i-pause")}{lic("play", "ic i-play")}</button></div>
+<figcaption><b>{title}</b>{text}</figcaption></figure>'''
+    return f'''<section class="section motion process-big" id="process"><div class="wrap">
+<div class="section-head"><h2>How we make your hydrated lime</h2><p class="lede">Five steps at our plant in Ransigaon, Jodhpur. Plant visits are welcome by appointment.</p></div>
+<div class="proc-grid">
+<figure class="reel reel-svg proc-figure"><div class="reel-media">{svg}
+<button class="reel-btn" type="button" aria-label="Pause process animation">{lic("pause", "ic i-pause")}{lic("play", "ic i-play")}</button></div></figure>
+<ol class="proc-steps">{steps}</ol>
+</div>
+<div class="reels reels-2">
+{vid("plant-tour", "Inside the plant", "Kiln, hydrators, classifier, packing and the plant lab.")}
+{vid("packing-dispatch", "Packing and dispatch", "25 to 40 kg bags and 900 kg jumbo bags, ready stock.")}
+</div>
+<p class="swipe-hint">Swipe to see both videos.</p>
+</div></section>'''
 
 
 def motion_section(root):
@@ -896,6 +950,7 @@ def documents():
 import hindi  # noqa: E402  (Hindi pages; uses the helpers above)
 def home():
     root = ""
+    motion_js = motion_section(root).split("</section>", 1)[1]  # reuse the play/pause script only
     body = f'''
 <section class="hero hero-video"><video class="hero-bg" muted loop playsinline preload="none" poster="assets/media/hero-bg-poster.jpg" aria-hidden="true"><source src="assets/media/hero-bg.webm" type="video/webm"><source src="assets/media/hero-bg.mp4" type="video/mp4"></video><div class="wrap hero-grid">
 <div class="hero-copy">
@@ -906,9 +961,12 @@ def home():
 </div>
 <div class="hero-ladder">{ladder()}</div>
 </div></section>
+
+{path_tiles(root)}
 {marquee(MQ_HOME, "lg", speed=55)}
 
-{motion_section(root)}
+{process_section(root)}
+{motion_js}
 
 <section class="broch-band" id="brochure"><div class="wrap">
 {brochure_block(root)}
@@ -918,66 +976,28 @@ def home():
 
 <section class="section section-tint" id="quote"><div class="wrap">
 {quote_builder(root)}
+<p class="more-link"><a href="{href(root, 'export')}">Prices, packing, containers and payment terms explained</a></p>
 </div></section>
 
-<section class="section"><div class="wrap">
-<div class="section-head"><h2>Everything buyers ask us, ready to send</h2><p class="lede">Prices, packing, containers, documents and terms. Tap any card to ask Akshay directly; most replies come the same day.</p></div>
-{asks_grid(6)}
-<div class="btn-row" style="margin-top:22px"><a class="btn btn-line" href="{href(root, 'export')}">See all prices and export details</a><a class="btn btn-line" href="{href(root, 'export')}#hap">Buying hydroxyapatite? Request a sample</a></div>
-</div></section>
-
-<section class="section"><div class="wrap split">
-<div class="prose">
-<h2>Our own plant. Run by an engineer.</h2>
-<p>Calvara Labs &amp; Minerals makes hydrated lime at its own plant in Ransigaon, in the limestone belt of Jodhpur. Limestone, kilns and lab testing are everyday work for us.</p>
-<p>Each grade has a published specification. You test a sample first, and we supply to the sample you approve.</p>
-<ul><li><b>Kiln know-how.</b> We know limestone, burning and calcium chemistry from running our own kiln.</li><li><b>Tested, not guessed.</b> Every lot is checked in our plant lab and ships with a CoA.</li><li><b>Sample first.</b> Try the grade in your own process before you place a regular order.</li></ul>
-</div>
-{engineer(root)}
-</div></section>
-
-<section class="section section-tint"><div class="wrap">
-<div class="section-head"><h2>From stone to sack, step by step</h2><p class="lede">Every bag you buy goes through these six steps at our plant in Ransigaon, Jodhpur. Plant visits are welcome by appointment.</p></div>
-{plant_rail()}
-</div></section>
-
-<section class="section"><div class="wrap">
-<div class="section-head"><h2>Bad lime costs you money. Here's how we prevent it.</h2><p class="lede">Most lime problems show up in your plant, not on the invoice. These are the five we hear about most often.</p></div>
-{problems()}
-</div></section>
-
-<section class="section section-tint"><div class="wrap">
-<div class="section-head"><h2>Four grades. Pick your purity.</h2><p class="lede">The grade number is the minimum Ca(OH)<sub>2</sub> content. A higher grade gives more active lime, less silica and a finer, whiter powder.</p></div>
-{ranges()}
-<p style="margin-top:24px"><a class="btn btn-solid" href="{href(root, 'hydrated-lime')}#spec">Compare all four grades</a></p>
-</div></section>
-
-<section class="section"><div class="wrap">
+<section class="section" id="industries"><div class="wrap">
 <div class="section-head"><h2>One powder, nine industries</h2><p class="lede">Start with the grade in red. The right final grade depends on how much silica and inert matter your process can tolerate.</p></div>
 {industries()}
 </div></section>
 {marquee(MQ_IND, "sm", reverse=True, speed=45)}
 
-<section class="section section-tint"><div class="wrap">
-<div class="section-head"><h2>Packed your way</h2><p class="lede">Sealed, laminated bags with liners, held in covered storage until loaded onto your truck. Part or full loads, ex-works or delivered.</p></div>
-{bags()}
-{wide_photos()}
-</div></section>
-
-<section class="section"><div class="wrap">
-<div class="section-head"><h2>How to start</h2></div>
-{start_steps()}
-</div></section>
-
-<section class="section section-tint"><div class="wrap split">
-<div class="prose"><h2>Also from our calcium: hydroxyapatite</h2><p>We make synthetic, animal-free hydroxyapatite from purified calcium for toothpaste, tablets, cosmetics and labs. Micro grade samples are open now.</p><p><a href="{href(root, 'hydroxyapatite')}">Hydroxyapatite specification</a></p></div>
-<div class="mini-tile"><span class="formula">Ca<sub>10</sub>(PO<sub>4</sub>)<sub>6</sub>(OH)<sub>2</sub></span><span class="meta">CAS 1306-06-5 · Ca/P 1.67 · D50 3 to 8 µm</span></div>
+<section class="section"><div class="wrap split">
+<div class="prose">
+<h2>Our own plant. Run by an engineer.</h2>
+<p>We make hydrated lime at our own plant in Ransigaon, in the limestone belt of Jodhpur. Each grade has a published specification: you test a sample first, and we supply to the sample you approve.</p>
+<p><a href="{href(root, 'about')}">About our plant and quality checks</a></p>
+</div>
+{engineer(root)}
 </div></section>
 
 {cta_band(root)}
 '''
     page("", root, "", "Hydrated Lime Manufacturer, Jodhpur | Grades 80–92 | Calvara Labs",
-         "Hydrated lime in four grades, 80 to 92% Ca(OH)2, made at our plant near Jodhpur. Silica from 1.06%, up to 98.5% through 200 mesh, CoA with every lot.",
+         "Hydrated lime in four grades, 80 to 92% Ca(OH)2, made at our plant near Jodhpur. Silica as low as 1.06%, fineness up to 98.5% through 200 mesh, CoA with every lot.",
          body)
 
 
@@ -1020,6 +1040,11 @@ def lime():
 <div class="section-head"><h2>Typical specification by grade</h2><p class="lede">The grade number is the minimum Ca(OH)<sub>2</sub> content. Higher grades carry less silica and are finer.</p></div>
 {spec_table()}
 <p class="table-note">Typical, indicative values. Final specifications are confirmed against an agreed sample and the Certificate of Analysis for each lot.</p>
+</div></section>
+
+<section class="section"><div class="wrap">
+<div class="section-head"><h2>Bad lime costs you money. Here's how we prevent it.</h2><p class="lede">Most lime problems show up in your plant, not on the invoice. These are the five we hear about most often.</p></div>
+{problems()}
 </div></section>
 
 <section class="section section-tint" id="quote"><div class="wrap">
@@ -1091,7 +1116,7 @@ def hap():
     rows = "".join(f'<tr><th scope="row">{a}</th><td class="num">{b}</td></tr>' for a, b in spec)
     faq = [
         ("Is your hydroxyapatite animal-free?", "Yes. It is made synthetically from calcium hydroxide and food-grade phosphoric acid. No bone or fish is used."),
-        ("What is the difference between micro and nano hydroxyapatite?", "Nano hydroxyapatite has particles under 100 nm. Our micro grade (D50 3 to 8 µm) is available for samples now. Nano grade (20 to 100 nm) is in development."),
+        ("What is the difference between micro and nano hydroxyapatite?", "Nano hydroxyapatite has particles under 100 nm. Our micro grade (D50 3 to 8 µm) is available for samples now. Nano grade (20 to 100 nm, rod-shaped, Ca/P 1.65 to 1.68, purity 99 % min) is in development."),
         ("What does the Ca/P ratio tell me?", "Pure hydroxyapatite has a calcium to phosphorus molar ratio of 1.67. A ratio close to this shows the product is mostly hydroxyapatite."),
         ("Can I use it in a medical device or bone graft?", "No. Medical-grade hydroxyapatite needs a medical device licence, and we do not offer it."),
     ]
@@ -1117,7 +1142,7 @@ def hap():
 <div class="table-box"><table style="min-width:0">
 <thead><tr><th scope="col">Grade</th><th scope="col">Particle size</th><th scope="col">Status</th></tr></thead>
 <tbody><tr><th scope="row">Micro</th><td class="num">D50 3 to 8 µm</td><td>Samples available now</td></tr>
-<tr><th scope="row">Nano</th><td class="num">20 to 100 nm</td><td>In development</td></tr></tbody></table></div>
+<tr><th scope="row">Nano</th><td class="num">20 to 100 nm, rod-shaped</td><td>In development, <a href="#nano">target specification</a></td></tr></tbody></table></div>
 </div></section>
 
 <section class="section section-tint" id="spec"><div class="wrap split">
@@ -1125,6 +1150,24 @@ def hap():
 <p>These are the limits we make the micro grade to. Each lot ships with its own Certificate of Analysis showing the measured values.</p>
 <p>Heavy metals and fluoride are controlled from the start: we test the incoming lime and use only food-grade phosphoric acid.</p><p>Need a TDS, sample CoA or a specific test report (XRD, Ca/P, heavy metals, particle size)? <a href="https://wa.me/919892727068?text=Hello%20Akshay%2C%20please%20send%20the%20TDS%20and%20sample%20CoA%20for%20your%20hydroxyapatite.%20We%20also%20need%3A%20___">Ask Akshay</a> and he will confirm what is available for your sample lot.</p></div>
 <div class="table-box"><table style="min-width:0"><caption>Micro grade, target limits</caption><tbody>{rows}</tbody></table></div>
+</div></section>
+
+<section class="section" id="nano"><div class="wrap split">
+<div class="prose"><h2>Nano grade: target specification</h2>
+<p>We are developing nano hydroxyapatite to the limits that remineralising toothpaste makers ask us for. These are <b>target limits, not test results</b>. Development samples will ship with their own Certificate of Analysis.</p>
+<p>Working to a different spec? Send it and we will develop to your numbers.</p>
+<div class="btn-row"><a class="btn btn-wa" href="{wa("Hello Akshay, here is our nano hydroxyapatite specification: ___")}">Share your nano spec on WhatsApp</a></div>
+</div>
+<div class="table-box"><table class="spec-2col" style="min-width:0"><caption>Nano grade, target limits (in development)</caption><tbody>
+<tr><th scope="row">Particle size</th><td class="num">20 to 100 nm</td></tr>
+<tr><th scope="row">Particle shape</th><td class="num">Rod-shaped preferred: 20 to 40 nm wide, 60 to 90 nm long</td></tr>
+<tr><th scope="row">Ca/P molar ratio</th><td class="num">1.65 to 1.68 (target 1.67)</td></tr>
+<tr><th scope="row">Purity</th><td class="num">99 % min</td></tr>
+<tr><th scope="row">Lead (Pb)</th><td class="num">below 0.5 ppm</td></tr>
+<tr><th scope="row">Arsenic (As)</th><td class="num">below 0.5 ppm</td></tr>
+<tr><th scope="row">Cadmium (Cd)</th><td class="num">below 0.1 ppm</td></tr>
+<tr><th scope="row">Mercury (Hg)</th><td class="num">below 0.1 ppm</td></tr>
+</tbody></table></div>
 </div></section>
 
 <section class="section"><div class="wrap split">
