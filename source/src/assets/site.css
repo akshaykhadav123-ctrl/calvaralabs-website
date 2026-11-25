@@ -941,3 +941,14 @@ html[lang="hi"] .mq-lg li:nth-child(even){-webkit-text-stroke:1px var(--ink)}
 .broch-hap::after{content:"";position:absolute;inset:5px;pointer-events:none;
   background:url("diamond.svg") no-repeat 0 0/10px 10px,url("diamond.svg") no-repeat 100% 0/10px 10px,url("diamond.svg") no-repeat 0 100%/10px 10px,url("diamond.svg") no-repeat 100% 100%/10px 10px}
 .broch-hap,.broch-hap-live{border-radius:var(--radius)}
+
+/* ===== v28: faster first paint — light WebP hero images, shorter entrance ===== */
+.hero.hero-video{background-image:url("media/hero-bg-poster-768.webp")}
+@media (min-width:769px){.hero.hero-video{background-image:url("media/hero-bg-poster.webp")}}
+.hero-copy > *{animation-duration:.6s}
+.hero-copy > :nth-child(1){animation-delay:0s}
+.hero-copy > :nth-child(2){animation-delay:.08s}
+.hero-copy > :nth-child(3){animation-delay:.16s}
+.hero-copy > :nth-child(4){animation-delay:.24s}
+.hero-ladder{animation-duration:.6s;animation-delay:.2s}
+.ladder .bar i{animation-duration:.8s;animation-delay:calc(.3s + var(--row,0) * .08s)}

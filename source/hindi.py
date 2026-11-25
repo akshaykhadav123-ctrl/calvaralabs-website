@@ -91,9 +91,9 @@ def build(B):
 <div class="btn-row"><a class="btn btn-red" href="{href(root, 'hi/contact')}">भाव पूछें</a><a class="btn btn-ghost-light" href="{B.WHATSAPP}">व्हाट्सऐप करें</a></div>
 </div></section>'''
 
-    def hpage(path, root, current, en_path, title, desc, body, noindex=False):
+    def hpage(path, root, current, en_path, title, desc, body, noindex=False, head_extra=""):
         page(path, root, current, title, desc, body, lang="hi", alt=path + "/", noindex=noindex,
-             head_html=header(root, current, en_path), foot_html=footer(root), ui=UI)
+             head_html=header(root, current, en_path), foot_html=footer(root), ui=UI, head_extra=head_extra)
 
     def ladder():
         rows = ""
@@ -202,7 +202,7 @@ def build(B):
     # ---------- /hi/ home ----------
     root = "../"
     body = f'''
-<section class="hero hero-video"><video class="hero-bg" muted loop playsinline preload="none" poster="{root}assets/media/hero-bg-poster.jpg" aria-hidden="true"><source src="{root}assets/media/hero-bg.webm" type="video/webm"><source src="{root}assets/media/hero-bg.mp4" type="video/mp4"></video><div class="wrap hero-grid">
+<section class="hero hero-video"><video class="hero-bg" muted loop playsinline preload="none" poster="{root}assets/media/hero-bg-poster.webp" aria-hidden="true"><source src="{root}assets/media/hero-bg.webm" type="video/webm"><source src="{root}assets/media/hero-bg.mp4" type="video/mp4"></video><div class="wrap hero-grid">
 <div class="hero-copy">
 <p class="eyebrow-plain">हाइड्रेटेड लाइम · जोधपुर, राजस्थान</p>
 <h1>आपकी ज़रूरत के ग्रेड का हाइड्रेटेड लाइम</h1>
@@ -248,7 +248,7 @@ def build(B):
 
 {cta(root)}'''
     hpage("hi", root, "hi", "", "हाइड्रेटेड लाइम निर्माता, जोधपुर | ग्रेड 80–92 | Calvara Labs",
-          "जोधपुर के अपने प्लांट में बना हाइड्रेटेड लाइम, चार ग्रेड: 80 से 92 % Ca(OH)2। सिलिका 1.06 % से, 98.5 % तक 200 मेश से पार, हर लॉट के साथ CoA।", body)
+          "जोधपुर के अपने प्लांट में बना हाइड्रेटेड लाइम, चार ग्रेड: 80 से 92 % Ca(OH)2। सिलिका 1.06 % से, 98.5 % तक 200 मेश से पार, हर लॉट के साथ CoA।", body, head_extra=B.hero_preload(root))
 
     # ---------- /hi/hydrated-lime/ ----------
     root = "../../"

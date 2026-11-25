@@ -257,10 +257,16 @@ ORG_LD = {
 }
 
 
+def hero_preload(root):
+    m = f"{root}assets/media/hero-bg-poster"
+    return (f'<link rel="preload" as="image" href="{m}-768.webp" media="(max-width:768px)" fetchpriority="high">\n'
+            f'<link rel="preload" as="image" href="{m}.webp" media="(min-width:769px)" fetchpriority="high">\n')
+
+
 HI_ALT = {"": "hi/", "hydrated-lime": "hi/hydrated-lime/", "contact": "hi/contact/"}  # English page -> Hindi page
 
 
-def page(path, root, current, title, desc, body, extra_ld=None, noindex=False, lang="en", alt=None, head_html=None, foot_html=None, ui=None):
+def page(path, root, current, title, desc, body, extra_ld=None, noindex=False, lang="en", alt=None, head_html=None, foot_html=None, ui=None, head_extra=""):
     canonical = SITE + "/" + (path + "/" if path and not path.endswith(".html") else "")
     ui = ui or {"wa": "Chat with Akshay on WhatsApp", "top": "Top", "top_label": "Back to top"}
     if lang == "en" and alt is None and path in HI_ALT and HINDI_READY:
@@ -295,7 +301,7 @@ def page(path, root, current, title, desc, body, extra_ld=None, noindex=False, l
 <link rel="icon" href="{root}favicon.svg" type="image/svg+xml">
 <link rel="icon" href="{root}favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="{root}apple-touch-icon.png">
-<link rel="preload" href="{root}assets/fonts/jost.woff2" as="font" type="font/woff2" crossorigin>
+{head_extra}<link rel="preload" href="{root}assets/fonts/jost.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="{root}assets/site.css">
 <script type="application/ld+json">{json.dumps(ld if len(ld) > 1 else ld[0], ensure_ascii=False)}</script>
 {f"""<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{{"token": "{CF_BEACON_TOKEN}"}}'></script>""" if CF_BEACON_TOKEN else ""}
@@ -321,10 +327,11 @@ def page(path, root, current, title, desc, body, extra_ld=None, noindex=False, l
   function pad(){{ if(top){{ document.documentElement.style.scrollPaddingTop=(top.offsetHeight+12)+'px'; document.documentElement.style.setProperty('--toph', top.offsetHeight+'px'); }} }}
   pad(); addEventListener('resize',pad);
   var hv=document.querySelector('video.hero-bg');
-  if(hv && !matchMedia('(prefers-reduced-motion: reduce)').matches && !(navigator.connection && navigator.connection.saveData)){{
+  var cn=navigator.connection||{{}};
+  if(hv && innerWidth>=900 && !matchMedia('(prefers-reduced-motion: reduce)').matches && !cn.saveData && !/(^|slow-)2g|3g/.test(cn.effectiveType||'')){{
     hv.dataset.ok='1';
     var go=function(){{ hv.preload='auto'; hv.play().catch(function(){{}}); }};
-    if(document.readyState==='complete') setTimeout(go,300); else addEventListener('load',function(){{ setTimeout(go,300); }});
+    if(document.readyState==='complete') setTimeout(go,1500); else addEventListener('load',function(){{ setTimeout(go,1500); }});
     if('IntersectionObserver' in window) new IntersectionObserver(function(es){{ if(document.documentElement.classList.contains('motion-paused')) return; es[0].isIntersecting ? hv.play().catch(function(){{}}) : hv.pause(); }}).observe(hv);
     hv.addEventListener('playing',function(){{ hv.classList.add('is-on'); }});
   }}
@@ -839,7 +846,7 @@ def process_section(root):
     def vid(key, title, text):
         m = f"{root}assets/media/{key}"
         return f'''<figure class="reel reel-arch">
-<div class="reel-media"><video muted loop playsinline preload="none" poster="{m}-poster.jpg" aria-label="{title}"><source src="{m}.webm" type="video/webm"><source src="{m}.mp4" type="video/mp4"></video>
+<div class="reel-media"><video muted loop playsinline preload="none" data-poster="{m}-poster.jpg" aria-label="{title}"><source src="{m}.webm" type="video/webm"><source src="{m}.mp4" type="video/mp4"></video>
 <button class="reel-btn" type="button" aria-label="Pause {title.lower()}">{lic("pause", "ic i-pause")}{lic("play", "ic i-play")}</button></div>
 <figcaption><b>{title}</b>{text}</figcaption></figure>'''
     return f'''<section class="proc-story motion" id="process"><div class="wrap">
@@ -890,7 +897,7 @@ def motion_section(root):
     def vid(key, title, text):
         m = f"{root}assets/media/{key}"
         return f'''<figure class="reel">
-<div class="reel-media"><video muted loop playsinline preload="none" poster="{m}-poster.jpg" aria-label="{title}"><source src="{m}.webm" type="video/webm"><source src="{m}.mp4" type="video/mp4"></video>
+<div class="reel-media"><video muted loop playsinline preload="none" data-poster="{m}-poster.jpg" aria-label="{title}"><source src="{m}.webm" type="video/webm"><source src="{m}.mp4" type="video/mp4"></video>
 <button class="reel-btn" type="button" aria-label="Pause {title.lower()}">{lic("pause", "ic i-pause")}{lic("play", "ic i-play")}</button></div>
 <figcaption><b>{title}</b>{text}</figcaption></figure>'''
     return f'''<section class="section motion"><div class="wrap">
@@ -910,6 +917,7 @@ def motion_section(root):
   function setBtn(b, paused){{ b.classList.toggle('is-paused', paused); b.setAttribute('aria-label', (paused ? 'Play ' : 'Pause ') + b.getAttribute('aria-label').replace(/^(Play|Pause) /,'')); }}
   document.querySelectorAll('.reel').forEach(function(r){{
     var v = r.querySelector('video'), s = r.querySelector('.reel-media > svg'), b = r.querySelector('.reel-btn'), user = false;
+    if(v && v.dataset.poster){{ if('IntersectionObserver' in window){{ var po=new IntersectionObserver(function(es){{ if(es[0].isIntersecting){{ v.poster=v.dataset.poster; po.disconnect(); }} }},{{rootMargin:'600px 0px'}}); po.observe(r); }} else v.poster=v.dataset.poster; }}
     function play(){{ if(v){{ var p=v.play(); if(p&&p.catch)p.catch(function(){{}}); }} if(s) s.unpauseAnimations(); setBtn(b,false); }}
     function stop(){{ if(v) v.pause(); if(s) s.pauseAnimations(); setBtn(b,true); }}
     b.addEventListener('click', function(){{ user = true; if(b.classList.contains('is-paused')) play(); else stop(); }});
@@ -996,7 +1004,7 @@ def home():
     root = ""
     motion_js = motion_section(root).split("</section>", 1)[1]  # reuse the play/pause script only
     body = f'''
-<section class="hero hero-video"><video class="hero-bg" muted loop playsinline preload="none" poster="assets/media/hero-bg-poster.jpg" aria-hidden="true"><source src="assets/media/hero-bg.webm" type="video/webm"><source src="assets/media/hero-bg.mp4" type="video/mp4"></video><div class="wrap hero-grid">
+<section class="hero hero-video"><video class="hero-bg" muted loop playsinline preload="none" poster="assets/media/hero-bg-poster.webp" aria-hidden="true"><source src="assets/media/hero-bg.webm" type="video/webm"><source src="assets/media/hero-bg.mp4" type="video/mp4"></video><div class="wrap hero-grid">
 <div class="hero-copy">
 <p class="eyebrow-plain">Hydrated lime · Jodhpur, Rajasthan</p>
 <h1>Hydrated lime, made to the grade you need.</h1>
@@ -1042,7 +1050,7 @@ def home():
 '''
     page("", root, "", "Hydrated Lime Manufacturer, Jodhpur | Grades 80–92 | Calvara Labs",
          "Hydrated lime in four grades, 80 to 92% Ca(OH)2, made at our plant near Jodhpur. Silica as low as 1.06%, fineness up to 98.5% through 200 mesh, CoA with every lot.",
-         body)
+         body, head_extra=hero_preload(root))
 
 
 def lime():
@@ -1459,6 +1467,11 @@ def not_found():
 
 def extras():
     shutil.copytree(ROOT / "src" / "assets", OUT / "assets", dirs_exist_ok=True)
+    css = (OUT / "assets" / "site.css").read_text()
+    css = re.sub(r"/\*.*?\*/", "", css, flags=re.S)
+    css = re.sub(r"\s+", " ", css)
+    css = re.sub(r"\s*([{}:;,>])\s*", r"\1", css).replace(";}", "}")
+    (OUT / "assets" / "site.css").write_text(css.strip() + "\n")
     shutil.copytree(ROOT / "src" / "brochures", OUT / "brochures", dirs_exist_ok=True)
     shutil.copytree(ROOT / "src" / "documents", OUT / "documents", dirs_exist_ok=True)
     shutil.copytree(ROOT / "src" / "icons", OUT / "assets" / "icons", dirs_exist_ok=True)
