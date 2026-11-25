@@ -719,9 +719,9 @@ def hap_asks_grid():
 # Brochures shown at the top of the home page. Set "file" to a PDF in src/brochures/ to publish one;
 # file None shows a "coming soon" card.
 BROCHURES = {
-    "lime": {"title": "Hydrated Lime Brochure 2026", "file": "Calvara-Hydrated-Lime-Brochure-2026.pdf",
+    "lime": {"title": "Hydrated Lime Brochure", "file": "Calvara-Hydrated-Lime-Brochure-2026.pdf",
              "meta": "10 pages · PDF · 1.3 MB", "what": "All 4 grades and specs, plant photos, packing, export loading and CoA format."},
-    "hap": {"title": "Hydroxyapatite Brochure 2026", "file": "Calvara-Hydroxyapatite-Brochure-2026.pdf",
+    "hap": {"title": "Hydroxyapatite Brochure", "file": "Calvara-Hydroxyapatite-Brochure-2026.pdf",
             "meta": "6 pages · PDF · 0.8 MB", "what": "Micro and nano grades, full specification, how we make it, and how to start with a 250 g sample."},
 }
 

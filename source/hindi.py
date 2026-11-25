@@ -171,8 +171,8 @@ def build(B):
         s = B.brochure_block(root)
         for a, b in [
             ("Free download", "मुफ़्त डाउनलोड"),
-            (">Hydrated Lime Brochure 2026<", ">हाइड्रेटेड लाइम ब्रोशर 2026<"),
-            (">Hydroxyapatite Brochure 2026<", ">हाइड्रॉक्सीएपेटाइट ब्रोशर 2026<"),
+            (">Hydrated Lime Brochure<", ">हाइड्रेटेड लाइम ब्रोशर<"),
+            (">Hydroxyapatite Brochure<", ">हाइड्रॉक्सीएपेटाइट ब्रोशर<"),
             ("All 4 grades and specs, plant photos, packing, export loading and CoA format.",
              "चारों ग्रेड और उनकी स्पेसिफ़िकेशन, प्लांट की तस्वीरें, पैकिंग, लोडिंग और CoA का फ़ॉर्मेट। ब्रोशर अंग्रेज़ी में है।"),
             ("Micro and nano grades, full specification, how we make it, and how to start with a 250 g sample.",

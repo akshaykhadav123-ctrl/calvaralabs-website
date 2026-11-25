@@ -935,3 +935,9 @@ html[lang="hi"] .mq-lg li:nth-child(even){-webkit-text-stroke:1px var(--ink)}
 .engineer .btn-red,.engineer .btn-red:hover{color:#fff}
 @media (max-width:860px){.story-fig .proc-figure{width:min(100%,calc(36vh * .8))}.st{min-height:44vh;padding:16px 0}}
 .proc-story .reels-2{margin-inline:auto}
+
+/* ===== v27: same fine frame on both brochure cards ===== */
+.broch-hap::before{content:"";position:absolute;inset:10px;border:1px solid rgba(181,39,31,.3);pointer-events:none}
+.broch-hap::after{content:"";position:absolute;inset:5px;pointer-events:none;
+  background:url("diamond.svg") no-repeat 0 0/10px 10px,url("diamond.svg") no-repeat 100% 0/10px 10px,url("diamond.svg") no-repeat 0 100%/10px 10px,url("diamond.svg") no-repeat 100% 100%/10px 10px}
+.broch-hap,.broch-hap-live{border-radius:var(--radius)}
