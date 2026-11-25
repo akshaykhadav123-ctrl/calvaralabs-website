@@ -478,7 +478,8 @@ def engineer(root, short=False):
     more = "" if short else "<p>I am a chemical engineer from IIT Bombay and I lead Calvara Labs &amp; Minerals. When you write to us, you speak directly with me about chemistry, grades and dispatch, not with a call centre.</p>"
     return f'''<div class="engineer">{av}<div>
 <blockquote>“Tell me about your process. I'll suggest the grade that fits, and send you a sample to prove it.”</blockquote>
-<p><b>Akshay Khadav</b>, B.Tech Chemical Engineering, IIT Bombay</p>
+<p class="eng-name"><b>Akshay Khadav</b></p>
+<p class="eng-cred">B.Tech Chemical Engineering, IIT Bombay</p>
 {more}
 <div class="btn-row"><a class="btn btn-red" href="{WHATSAPP}">WhatsApp Akshay</a><a class="btn btn-ghost-light" href="tel:{PHONE_TEL}">Call {PHONE_DISPLAY}</a></div>
 </div></div>'''
@@ -829,24 +830,45 @@ def ticker(root):
 </div>'''
 
 
+PROCESS_STEPS = [
+    ("Kiln", "Rajasthan limestone is burnt to quicklime (CaO) and drawn out onto the conveyor."),
+    ("Measured water", "Quicklime is fed to the hydrator with a metered flow of water."),
+    ("Hydrator", "Quicklime is slaked into dry calcium hydroxide, Ca(OH)₂, in a rotating drum."),
+    ("Classifier", "Fine powder passes on; grit and silica are dropped out, so fineness stays within the grade."),
+    ("Packing", "25 to 40 kg bags and 900 kg jumbo bags, filled under a bag-filter dust collector."),
+]
+
+
 def motion_section(root):
     svg = (ROOT / "src" / "assets" / "media" / "process.svg").read_text(encoding="utf-8")
-    def vid(key, title, text):
+    arch = (ROOT / "src" / "assets" / "jharokha.svg").read_text(encoding="utf-8").replace("<svg ", "<svg class=\"arch\" ", 1)
+    steps = "".join(f'<li><span class="n">{i + 1}</span><div><h3>{t}</h3><p>{d}</p></div></li>'
+                    for i, (t, d) in enumerate(PROCESS_STEPS))
+    def vid(key, title, text, cls=""):
         m = f"{root}assets/media/{key}"
-        return f'''<figure class="reel">
+        return f'''<figure class="reel {cls}">
 <div class="reel-media"><video muted loop playsinline preload="none" poster="{m}-poster.jpg" aria-label="{title}"><source src="{m}.webm" type="video/webm"><source src="{m}.mp4" type="video/mp4"></video>
 <button class="reel-btn" type="button" aria-label="Pause {title.lower()}">{lic("pause", "ic i-pause")}{lic("play", "ic i-play")}</button></div>
 <figcaption><b>{title}</b>{text}</figcaption></figure>'''
     return f'''<section class="section motion"><div class="wrap">
 <div class="section-head"><h2>See how your lime is made</h2><p class="lede">From quicklime to a sealed bag at our plant in Ransigaon, Jodhpur. Plant visits are welcome by appointment.</p></div>
-<div class="reels">
-<figure class="reel reel-svg"><div class="reel-media">{svg}
+<div class="featured lattice">
+<div class="featured-grid">
+<div class="featured-media">
+<figure class="reel reel-svg">{arch}<div class="reel-media">{svg}
 <button class="reel-btn" type="button" aria-label="Pause process animation">{lic("pause", "ic i-pause")}{lic("play", "ic i-play")}</button></div>
 <figcaption><b>The process</b>Quicklime and measured water become dry hydrated lime.</figcaption></figure>
-{vid("plant-tour", "Inside the plant", "Kiln, hydrators, classifier, packing and the plant lab.")}
-{vid("packing-dispatch", "Packing and dispatch", "25 to 40 kg bags and 900 kg jumbo bags, ready stock.")}
 </div>
-<p class="swipe-hint">Swipe to see all three.</p>
+<div class="featured-legend">
+<h3>Five steps, one roof</h3>
+<ol class="featured-steps">{steps}</ol>
+<p class="featured-note"><b>Why you should care:</b> because the same plant runs the kiln, the hydrator and the lab, every lot can be tested and shipped with its own Certificate of Analysis.</p>
+</div>
+</div>
+<div class="featured-proof reels"><b>Watch the plant run</b>
+<div class="reels-duo">{vid("plant-tour", "Inside the plant", "Kiln, hydrators, classifier, packing and the plant lab.")}{vid("packing-dispatch", "Packing and dispatch", "25 to 40 kg bags and 900 kg jumbo bags, ready stock.")}</div>
+</div>
+</div>
 </div></section>
 <script>
 (function(){{
@@ -963,52 +985,13 @@ def home():
 </div></section>
 
 <section class="section"><div class="wrap">
-<div class="section-head"><h2>Everything buyers ask us, ready to send</h2><p class="lede">Prices, packing, containers, documents and terms. Tap any card to ask Akshay directly; most replies come the same day.</p></div>
-{asks_grid(6)}
-<div class="btn-row" style="margin-top:22px"><a class="btn btn-line" href="{href(root, 'export')}">See all prices and export details</a><a class="btn btn-line" href="{href(root, 'export')}#hap">Buying hydroxyapatite? Request a sample</a></div>
-</div></section>
-
-<section class="section"><div class="wrap split">
-<div class="prose">
-<h2>Our own plant. Run by an engineer.</h2>
-<p>Calvara Labs &amp; Minerals makes hydrated lime at its own plant in Ransigaon, in the limestone belt of Jodhpur. Limestone, kilns and lab testing are everyday work for us.</p>
-<p>Each grade has a published specification. You test a sample first, and we supply to the sample you approve.</p>
-<ul><li><b>Kiln know-how.</b> We know limestone, burning and calcium chemistry from running our own kiln.</li><li><b>Tested, not guessed.</b> Every lot is checked in our plant lab and ships with a CoA.</li><li><b>Sample first.</b> Try the grade in your own process before you place a regular order.</li></ul>
+<div class="section-head"><h2>Go deeper</h2><p class="lede">This page keeps things short. The detail lives on the pages below.</p></div>
+<div class="nextup">
+<a class="nextup-card" href="{href(root, 'hydrated-lime')}"><h3>Hydrated lime</h3><p>Grades and specifications, uses by industry, storage, and the grade-by-grade data table.</p><span class="go">Read the spec</span></a>
+<a class="nextup-card" href="{href(root, 'export')}"><h3>Prices &amp; export</h3><p>CIF, CFR and FOB terms, container quantities, packing, and ready-to-send questions.</p><span class="go">See export details</span></a>
+<a class="nextup-card" href="{href(root, 'about')}"><h3>About &amp; quality</h3><p>Our plant, the six production steps, what each lab test means, and how we prevent bad lime.</p><span class="go">Meet the plant</span></a>
+<a class="nextup-card" href="{href(root, 'documents')}"><h3>Documents</h3><p>GST, IEC and MSME registrations, and independent lab reports, each with a verify link.</p><span class="go">Open documents</span></a>
 </div>
-{engineer(root)}
-</div></section>
-
-<section class="section section-tint"><div class="wrap">
-<div class="section-head"><h2>From stone to sack, step by step</h2><p class="lede">Every bag you buy goes through these six steps at our plant in Ransigaon, Jodhpur. Plant visits are welcome by appointment.</p></div>
-{plant_rail()}
-</div></section>
-
-<section class="section"><div class="wrap">
-<div class="section-head"><h2>Bad lime costs you money. Here's how we prevent it.</h2><p class="lede">Most lime problems show up in your plant, not on the invoice. These are the five we hear about most often.</p></div>
-{problems()}
-</div></section>
-
-<section class="section section-tint"><div class="wrap">
-<div class="section-head"><h2>Four grades. Pick your purity.</h2><p class="lede">The grade number is the minimum Ca(OH)<sub>2</sub> content. A higher grade gives more active lime, less silica and a finer, whiter powder.</p></div>
-{ranges()}
-<p style="margin-top:24px"><a class="btn btn-solid" href="{href(root, 'hydrated-lime')}#spec">Compare all four grades</a></p>
-</div></section>
-
-<section class="section"><div class="wrap">
-<div class="section-head"><h2>One powder, nine industries</h2><p class="lede">Start with the grade in red. The right final grade depends on how much silica and inert matter your process can tolerate.</p></div>
-{industries()}
-</div></section>
-{marquee(MQ_IND, "sm", reverse=True, speed=45)}
-
-<section class="section section-tint"><div class="wrap">
-<div class="section-head"><h2>Packed your way</h2><p class="lede">Sealed, laminated bags with liners, held in covered storage until loaded onto your truck. Part or full loads, ex-works or delivered.</p></div>
-{bags()}
-{wide_photos()}
-</div></section>
-
-<section class="section"><div class="wrap">
-<div class="section-head"><h2>How to start</h2></div>
-{start_steps()}
 </div></section>
 
 <section class="section section-tint"><div class="wrap split">
@@ -1266,6 +1249,11 @@ def about():
 <li><b>Approved-sample match.</b> Supplies are held to the sample you signed off.</li></ul>
 </div>
 {coa_sample()}
+</div></section>
+
+<section class="section"><div class="wrap">
+<div class="section-head"><h2>Bad lime costs you money. Here's how we prevent it.</h2><p class="lede">Most lime problems show up in your plant, not on the invoice. These are the five we hear about most often.</p></div>
+{problems()}
 </div></section>
 
 {cta_band(root, "Talk to us about your process")}
