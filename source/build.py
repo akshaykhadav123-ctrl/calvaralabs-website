@@ -854,8 +854,7 @@ def process_section(root):
 <div class="story" data-boxes="{boxes}">
 <div class="story-fig">
 <figure class="reel reel-svg proc-figure"><div class="reel-media">{svg}
-<svg class="spot" viewBox="0 0 720 900" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><defs><mask id="spot-m"><rect width="720" height="900" fill="#fff"/><rect class="spot-hole" x="0" y="0" width="720" height="900" rx="18" fill="#000"/></mask></defs>
-<rect width="720" height="900" fill="#0E1C2E" fill-opacity=".62" mask="url(#spot-m)"/><rect class="spot-ring" x="0" y="0" width="720" height="900" rx="18" fill="none" stroke="#E0B25B" stroke-width="3" opacity="0"/></svg>
+<div class="spot" aria-hidden="true"><i class="spot-win"></i></div>
 <button class="reel-btn" type="button" aria-label="Pause process animation">{lic("pause", "ic i-pause")}{lic("play", "ic i-play")}</button></div></figure>
 <div class="st-dots" role="group" aria-label="Go to step">{dots}</div>
 </div>
@@ -871,23 +870,32 @@ def process_section(root):
 (function(){{
   var story=document.querySelector('.story'); if(!story) return;
   var boxes=story.dataset.boxes.split(';').map(function(b){{return b.split(',').map(Number);}});
-  var hole=story.querySelector('.spot-hole'), ring=story.querySelector('.spot-ring');
+  var win=story.querySelector('.spot-win');
   var steps=[].slice.call(story.querySelectorAll('.st')), dots=[].slice.call(story.querySelectorAll('.st-dot'));
-  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches, cur=[0,0,720,900], raf=null, active=0;
-  function set(r){{ ['x','y','width','height'].forEach(function(k,i){{ hole.setAttribute(k,r[i]); ring.setAttribute(k,r[i]); }}); cur=r; }}
-  function go(to){{ cancelAnimationFrame(raf); if(reduce){{ set(to); return; }} var from=cur.slice(), t0=null;
-    function f(ts){{ if(!t0) t0=ts; var k=Math.min(1,(ts-t0)/650), e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;
-      set(from.map(function(v,i){{return v+(to[i]-v)*e;}})); if(k<1) raf=requestAnimationFrame(f); }} raf=requestAnimationFrame(f); }}
+  var active=-1, ticking=false, on=false, mq=matchMedia('(max-width:860px)');
+  function place(n){{ var p=6, b=n?boxes[n-1]:[-p,-p,720+2*p,900+2*p];
+    var x=b[0]-(n?p:0), y=b[1]-(n?p:0), w=b[2]+(n?2*p:0), h=b[3]+(n?2*p:0);
+    win.style.left=(x/7.2)+'%'; win.style.top=(y/9)+'%'; win.style.width=(w/7.2)+'%'; win.style.height=(h/9)+'%';
+    win.classList.toggle('is-on', !!n); }}
   function activate(n){{ if(n===active) return; active=n;
     steps.forEach(function(s){{ s.classList.toggle('is-on', +s.dataset.step===n); }});
-    dots.forEach(function(d){{ d.classList.toggle('is-on', +d.dataset.go===n); d.setAttribute('aria-pressed', +d.dataset.go===n); }});
-    var p=6, b=n?boxes[n-1]:[0,0,720,900]; go(n?[b[0]-p,b[1]-p,b[2]+2*p,b[3]+2*p]:b); ring.setAttribute('opacity', n?1:0); }}
+    dots.forEach(function(d){{ var o=+d.dataset.go===n; d.classList.toggle('is-on', o); d.setAttribute('aria-pressed', o); }});
+    place(n); }}
+  function pick(){{ ticking=false; var a=innerHeight*(mq.matches?.74:.5), best=1, bd=1e9;
+    for(var i=0;i<steps.length;i++){{ var r=steps[i].getBoundingClientRect();
+      if(r.top<=a && r.bottom>=a){{ best=i+1; bd=0; break; }}
+      var d=Math.min(Math.abs(r.top-a),Math.abs(r.bottom-a)); if(d<bd){{ bd=d; best=i+1; }} }}
+    activate(best); }}
+  function onScroll(){{ if(!ticking){{ ticking=true; requestAnimationFrame(pick); }} }}
+  activate(0);
   if('IntersectionObserver' in window){{
-    var io=new IntersectionObserver(function(es){{ es.forEach(function(e){{ if(e.isIntersecting) activate(+e.target.dataset.step); }}); }},{{rootMargin: matchMedia('(max-width:860px)').matches ? '-68% 0px -22% 0px' : '-45% 0px -45% 0px'}});
-    steps.forEach(function(s){{ io.observe(s); }});
-    new IntersectionObserver(function(es){{ if(!es[0].isIntersecting) activate(0); }},{{threshold:0}}).observe(story);
-  }} else activate(1);
-  dots.forEach(function(d){{ d.addEventListener('click',function(){{ var s=steps[+d.dataset.go-1]; s.scrollIntoView({{behavior:reduce?'auto':'smooth',block:'center'}}); activate(+d.dataset.go); }}); }});
+    new IntersectionObserver(function(es){{ var v=es[0].isIntersecting;
+      if(v && !on){{ on=true; addEventListener('scroll',onScroll,{{passive:true}}); pick(); }}
+      else if(!v && on){{ on=false; removeEventListener('scroll',onScroll); activate(0); }} }},{{threshold:0}}).observe(story);
+  }} else {{ addEventListener('scroll',onScroll,{{passive:true}}); pick(); }}
+  dots.forEach(function(d){{ d.addEventListener('click',function(){{ var s=steps[+d.dataset.go-1];
+    var r=matchMedia('(prefers-reduced-motion: reduce)').matches;
+    scrollTo({{top:s.getBoundingClientRect().top+scrollY-innerHeight*(mq.matches?.74:.5)+Math.min(s.offsetHeight/2,80), behavior:r?'auto':'smooth'}}); }}); }});
 }})();
 </script>'''
 

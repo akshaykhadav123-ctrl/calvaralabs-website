@@ -952,3 +952,14 @@ html[lang="hi"] .mq-lg li:nth-child(even){-webkit-text-stroke:1px var(--ink)}
 .hero-copy > :nth-child(4){animation-delay:.24s}
 .hero-ladder{animation-duration:.6s;animation-delay:.2s}
 .ladder .bar i{animation-duration:.8s;animation-delay:calc(.3s + var(--row,0) * .08s)}
+
+/* v29 smoother process walkthrough: browser-animated spotlight window */
+.spot{position:absolute;inset:0;pointer-events:none;overflow:hidden;border-radius:inherit}
+.spot-win{position:absolute;left:-1%;top:-1%;width:102%;height:102%;border-radius:14px;border:2px solid transparent;box-shadow:0 0 0 200vmax rgba(14,28,46,0);
+  transition:left .7s cubic-bezier(.22,.61,.36,1),top .7s cubic-bezier(.22,.61,.36,1),width .7s cubic-bezier(.22,.61,.36,1),height .7s cubic-bezier(.22,.61,.36,1),box-shadow .5s ease,border-color .5s ease}
+.spot-win.is-on{border-color:#E0B25B;box-shadow:0 0 0 200vmax rgba(14,28,46,.58),0 0 24px rgba(224,178,91,.35)}
+.story-fig .reel-media{contain:layout paint;isolation:isolate}
+.st{opacity:.42;transition:opacity .55s ease}
+.st > *{transition:transform .55s cubic-bezier(.22,.61,.36,1)}
+.st:not(.is-on) > *{transform:translateY(6px)}
+@media (prefers-reduced-motion:reduce){.spot-win,.st,.st > *{transition:none}.st:not(.is-on) > *{transform:none}}
