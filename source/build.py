@@ -1094,6 +1094,11 @@ def lime():
 </div></section>
 
 <section class="section"><div class="wrap">
+<div class="section-head"><h2>How to start buying</h2></div>
+{start_steps()}
+</div></section>
+
+<section class="section"><div class="wrap">
 <div class="section-head"><h2>Questions buyers ask</h2></div>
 <div class="faq">{faqs}</div>
 </div></section>
