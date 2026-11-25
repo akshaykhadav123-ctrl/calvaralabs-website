@@ -881,3 +881,57 @@ html[lang="hi"] .mq-lg li:nth-child(even){-webkit-text-stroke:1px var(--ink)}
 @media (max-width:820px){.process-big .reels-2{display:flex}}
 .spec-2col th[scope="row"]{width:42%;white-space:normal}
 .spec-2col td.num{white-space:normal}
+
+/* ===== v25: engineer credentials on their own line ===== */
+.eng-name{display:flex;flex-direction:column;gap:2px}
+.eng-name b{font-size:16px}
+.eng-name span{white-space:nowrap;font-size:14.5px}
+@media (max-width:360px){.eng-name span{white-space:normal}}
+
+/* ===== v26: process walkthrough in Jodhpur blue + Rajasthani touches ===== */
+:root{--jblue:#1C3557;--jblue-deep:#132742;--sand:#F3E6D3;--sand-deep:#E0B25B}
+.proc-story{position:relative;background:var(--jblue) url("jaali-light.svg") 0 0/56px 56px;color:#fff;padding:clamp(56px,7vw,104px) 0 clamp(48px,6vw,88px);margin-top:26px}
+.proc-story::before{content:"";position:absolute;left:0;right:0;top:-25px;height:26px;background:url("arches.svg") repeat-x 0 0/60px 26px}
+.proc-story .section-head h2{color:#fff}
+.proc-story .section-head h2::after{filter:brightness(0) invert(1);opacity:.85}
+.proc-story .lede{color:#C9D5E4;max-width:62ch}
+.story{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:clamp(28px,5vw,72px);align-items:start}
+.story-fig{position:sticky;top:calc(var(--toph,120px) + 18px);display:flex;flex-direction:column;align-items:center;gap:14px}
+.story-fig .proc-figure{width:min(100%,calc((100vh - var(--toph,120px) - 110px) * .8));margin:0}
+.story-fig .reel-media{aspect-ratio:4/5;border-radius:20px;overflow:hidden;box-shadow:0 30px 70px -30px rgba(0,0,0,.65);border:0}
+.spot{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.st-dots{display:flex;gap:8px}
+.st-dot{width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,.35);background:transparent;color:#fff;font-family:var(--display);font-size:15px;cursor:pointer;transition:background .2s,border-color .2s,color .2s}
+.st-dot:hover{border-color:#fff}
+.st-dot.is-on{background:var(--sand-deep);border-color:var(--sand-deep);color:var(--jblue-deep)}
+.story-steps{display:flex;flex-direction:column}
+.st{min-height:62vh;display:flex;flex-direction:column;justify-content:center;gap:12px;padding:24px 0;opacity:.38;transition:opacity .4s ease}
+.st.is-on{opacity:1}
+.st-n{font-family:var(--display);font-weight:400;font-size:clamp(44px,5vw,64px);line-height:1;color:transparent;-webkit-text-stroke:1.2px var(--sand-deep)}
+.st h3{color:#fff;font-size:clamp(26px,2.8vw,36px);font-weight:500}
+.st p{color:#D6DEE9;font-size:clamp(16.5px,1.4vw,18.5px);line-height:1.7;max-width:46ch}
+.st .st-why{display:flex;flex-direction:column;gap:4px;margin-top:6px;padding:14px 18px;border-left:3px solid var(--sand-deep);background:rgba(255,255,255,.06);border-radius:0 10px 10px 0;color:#F1E7D8}
+.st .st-why b{font-family:var(--display);font-weight:500;font-size:13.5px;letter-spacing:.04em;color:var(--sand-deep)}
+.proc-story .reels-2{margin-top:clamp(36px,5vw,64px)}
+.proc-story .reel figcaption{color:#C9D5E4}
+.proc-story .reel figcaption b{color:#fff}
+.proc-story .swipe-hint{color:#C9D5E4}
+/* jharokha-arched video frames */
+.reel-arch .reel-media{border-radius:46% 46% 14px 14px / 30% 30% 14px 14px;border:0}
+.reel-arch .reel-media::after{content:"";position:absolute;inset:8px;border:1px solid rgba(224,178,91,.6);border-radius:46% 46% 10px 10px / 30% 30% 10px 10px;pointer-events:none}
+@media (max-width:860px){
+  .story{grid-template-columns:1fr;gap:0}
+  .story-fig{top:calc(var(--toph,100px) + 8px);z-index:2;background:linear-gradient(var(--jblue) 88%,rgba(28,53,87,0));padding-bottom:10px}
+  .story-fig .proc-figure{width:min(100%,calc(46vh * .8))}
+  .st-dot{width:30px;height:30px;font-size:13px}
+  .st{min-height:48vh}
+}
+@media (prefers-reduced-motion:reduce){.st{transition:none}}
+/* sandstone arch badges behind tile icons */
+.path-ic{box-sizing:content-box;padding:9px 9px 7px;background:var(--sand);border-radius:50% 50% 6px 6px / 42% 42% 6px 6px;width:24px;height:24px}
+@media (max-width:520px){.path-ic{width:20px;height:20px;padding:7px 7px 5px}}
+.st .st-why{display:block}
+.st .st-why b{display:block;margin-bottom:4px}
+.engineer .btn-red,.engineer .btn-red:hover{color:#fff}
+@media (max-width:860px){.story-fig .proc-figure{width:min(100%,calc(36vh * .8))}.st{min-height:44vh;padding:16px 0}}
+.proc-story .reels-2{margin-inline:auto}

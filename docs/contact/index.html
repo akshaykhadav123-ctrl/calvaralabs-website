@@ -89,7 +89,7 @@ Calvara Labs & Minerals, Jodhpur, Rajasthan, India · calvaralabs.com">
 <aside style="display:flex;flex-direction:column;gap:20px">
 <div class="side-card dark">
 <h2 style="font-size:22px">Your engineer</h2>
-<p><b style="color:#fff">Akshay Khadav</b><br>B.Tech Chemical Engineering, IIT Bombay</p>
+<p><b style="color:#fff">Akshay Khadav</b><br>B.Tech Chemical Engineering, IIT&nbsp;Bombay</p>
 <div class="contact-line"><span>Call or WhatsApp</span><a href="tel:+919892727068">+91 98927 27068</a></div>
 <div class="contact-line"><span>Email</span><a href="mailto:sales@calvaralabs.com">sales@calvaralabs.com</a></div>
 <div class="contact-line"><span>Office</span><p>54 Patrakar Colony, Section 7, New Power House Road, Jodhpur, Rajasthan 342003, India</p></div>
@@ -127,7 +127,7 @@ Calvara Labs & Minerals, Jodhpur, Rajasthan, India · calvaralabs.com">
     if(matchMedia('(prefers-reduced-motion: reduce)').matches) tset(true);
   }
   var smooth=!matchMedia('(prefers-reduced-motion: reduce)').matches;
-  function pad(){ if(top) document.documentElement.style.scrollPaddingTop=(top.offsetHeight+12)+'px'; }
+  function pad(){ if(top){ document.documentElement.style.scrollPaddingTop=(top.offsetHeight+12)+'px'; document.documentElement.style.setProperty('--toph', top.offsetHeight+'px'); } }
   pad(); addEventListener('resize',pad);
   var hv=document.querySelector('video.hero-bg');
   if(hv && !matchMedia('(prefers-reduced-motion: reduce)').matches && !(navigator.connection && navigator.connection.saveData)){

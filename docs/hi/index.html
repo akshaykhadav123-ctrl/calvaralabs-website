@@ -304,7 +304,7 @@ f.addEventListener("change",build);f.addEventListener("input",build);build();})(
 </div>
 <div class="engineer"><img class="avatar" src="../assets/photos/akshay.webp" alt="अक्षय खदाव" loading="lazy" width="84" height="84" style="padding:0"><div>
 <blockquote>“अपनी प्रक्रिया के बारे में बताइए। मैं सही ग्रेड सुझाऊँगा, और सैंपल भेजकर दिखाऊँगा कि वह काम करता है।”</blockquote>
-<p><b>अक्षय खदाव</b>, बी.टेक केमिकल इंजीनियरिंग, IIT बॉम्बे</p>
+<p class="eng-name"><b>अक्षय खदाव</b><span>बी.टेक केमिकल इंजीनियरिंग, IIT&nbsp;बॉम्बे</span></p>
 <p>आप हमें लिखते हैं तो सीधे मुझसे बात होती है: केमिस्ट्री, ग्रेड और डिस्पैच, किसी कॉल सेंटर से नहीं।</p>
 <div class="btn-row"><a class="btn btn-red" href="https://wa.me/919892727068?text=Hello%20Calvara%2C%20I%20would%20like%20to%20ask%20about%20hydrated%20lime.">अक्षय को व्हाट्सऐप करें</a><a class="btn btn-ghost-light" href="tel:+919892727068">कॉल करें +91 98927 27068</a></div>
 </div></div>
@@ -347,7 +347,7 @@ f.addEventListener("change",build);f.addEventListener("input",build);build();})(
     if(matchMedia('(prefers-reduced-motion: reduce)').matches) tset(true);
   }
   var smooth=!matchMedia('(prefers-reduced-motion: reduce)').matches;
-  function pad(){ if(top) document.documentElement.style.scrollPaddingTop=(top.offsetHeight+12)+'px'; }
+  function pad(){ if(top){ document.documentElement.style.scrollPaddingTop=(top.offsetHeight+12)+'px'; document.documentElement.style.setProperty('--toph', top.offsetHeight+'px'); } }
   pad(); addEventListener('resize',pad);
   var hv=document.querySelector('video.hero-bg');
   if(hv && !matchMedia('(prefers-reduced-motion: reduce)').matches && !(navigator.connection && navigator.connection.saveData)){

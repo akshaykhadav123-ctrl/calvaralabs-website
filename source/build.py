@@ -318,7 +318,7 @@ def page(path, root, current, title, desc, body, extra_ld=None, noindex=False, l
     if(matchMedia('(prefers-reduced-motion: reduce)').matches) tset(true);
   }}
   var smooth=!matchMedia('(prefers-reduced-motion: reduce)').matches;
-  function pad(){{ if(top) document.documentElement.style.scrollPaddingTop=(top.offsetHeight+12)+'px'; }}
+  function pad(){{ if(top){{ document.documentElement.style.scrollPaddingTop=(top.offsetHeight+12)+'px'; document.documentElement.style.setProperty('--toph', top.offsetHeight+'px'); }} }}
   pad(); addEventListener('resize',pad);
   var hv=document.querySelector('video.hero-bg');
   if(hv && !matchMedia('(prefers-reduced-motion: reduce)').matches && !(navigator.connection && navigator.connection.saveData)){{
@@ -433,10 +433,10 @@ def stats():
 def engineer(root, short=False):
     img = photo("akshay")
     av = f'<img class="avatar" src="{img}" alt="Akshay Khadav" loading="lazy" width="84" height="84" style="padding:0">' if img else '<span class="avatar" aria-hidden="true">AK</span>'
-    more = "" if short else "<p>I am a chemical engineer from IIT Bombay and I lead Calvara Labs &amp; Minerals. When you write to us, you speak directly with me about chemistry, grades and dispatch, not with a call centre.</p>"
+    more = "" if short else "<p>I am a chemical engineer from IIT&nbsp;Bombay and I lead Calvara Labs &amp; Minerals. When you write to us, you speak directly with me about chemistry, grades and dispatch, not with a call centre.</p>"
     return f'''<div class="engineer">{av}<div>
 <blockquote>“Tell me about your process. I'll suggest the grade that fits, and send you a sample to prove it.”</blockquote>
-<p><b>Akshay Khadav</b>, B.Tech Chemical Engineering, IIT Bombay</p>
+<p class="eng-name"><b>Akshay Khadav</b><span>B.Tech Chemical Engineering, IIT&nbsp;Bombay</span></p>
 {more}
 <div class="btn-row"><a class="btn btn-red" href="{WHATSAPP}">WhatsApp Akshay</a><a class="btn btn-ghost-light" href="tel:{PHONE_TEL}">Call {PHONE_DISPLAY}</a></div>
 </div></div>'''
@@ -462,7 +462,7 @@ def problems():
         ("Every truck is different", "One good lot, then the next one upsets your process.",
          "Supplied to your approved sample", "We agree the specification against the sample you approved, and every lot is traceable by lot number."),
         ("Nobody to call", "A trader can't answer technical questions or fix a problem.",
-         "A chemical engineer on the phone", "Akshay Khadav (IIT Bombay) answers technical questions directly."),
+         "A chemical engineer on the phone", "Akshay Khadav (IIT&nbsp;Bombay) answers technical questions directly."),
     ]
     out = "".join(f'<div class="pf-row"><div class="bad"><h3>{a}</h3><p>{b}</p></div><div class="good"><h3>{c}</h3><p>{d}</p></div></div>' for a, b, c, d in rows)
     return f'''<div class="pf">{out}</div>
@@ -809,36 +809,80 @@ def path_tiles(root):
 
 
 PROCESS_STEPS = [
-    ("Quicklime from the kiln", "Limestone from the Jodhpur belt is burnt to quicklime (CaO) and conveyed to the hydrator."),
-    ("Measured water", "Water is added in a measured amount, just enough to slake the quicklime into a dry powder."),
-    ("Hydrator", "Quicklime and water react, giving off heat and steam, and form calcium hydroxide, Ca(OH)<sub>2</sub>."),
-    ("Classifier", "Fine powder is carried on while grit and silica are separated out. This sets each grade's fineness."),
-    ("Packed and tested", "Filled in 25 to 40 kg bags or 900 kg jumbo bags. Every lot is tested in our plant lab and ships with a CoA."),
+    # title, what happens, what it means for you, spotlight box on the diagram (x, y, w, h in the 720 x 900 drawing)
+    ("Quicklime from the kiln",
+     "Limestone from the Jodhpur limestone belt is burnt to quicklime (CaO) and carried by conveyor to the hydrator.",
+     "Good stone and a full burn set the ceiling for purity. Every grade starts here.", (70, 150, 420, 255)),
+    ("Measured water",
+     "Water is added in a measured amount: just enough to slake the quicklime into a dry powder, no more.",
+     "Too little water leaves quicklime that heats up in your process; too much makes lumps. Moisture stays between 0.8 and 2.0 %.", (405, 145, 305, 250)),
+    ("Hydrator",
+     "Quicklime and water are mixed as they react. The reaction gives off heat and steam and forms calcium hydroxide.",
+     "CaO + H<sub>2</sub>O → Ca(OH)<sub>2</sub> + heat. Fully hydrated lime is stable, safe to handle and easy to dose.", (15, 305, 590, 265)),
+    ("Classifier",
+     "Fine powder is carried on, while grit and coarse, silica-rich particles are separated out.",
+     "This sets each grade's fineness (up to 98.5 % through 200 mesh) and keeps silica down to 1.06 % in grade 92.", (285, 535, 400, 205)),
+    ("Packed and tested",
+     "The powder is filled in 25, 30, 35 or 40 kg bags or 900 kg jumbo bags. Every lot is tested in our plant lab.",
+     "You get the grade you approved, lot after lot, with a Certificate of Analysis on every dispatch.", (85, 722, 630, 175)),
 ]
 
 
 def process_section(root):
     svg = (ROOT / "src" / "assets" / "media" / "process.svg").read_text()
-    steps = "".join(f'<li><span class="n">{i}</span><div><h3>{t}</h3><p>{d}</p></div></li>' for i, (t, d) in enumerate(PROCESS_STEPS, 1))
+    boxes = ";".join(",".join(str(v) for v in b[3]) for b in PROCESS_STEPS)
+    steps = "".join(
+        f'''<article class="st" data-step="{i}"><span class="st-n">{i:02d}</span><h3>{t}</h3><p>{d}</p>
+<p class="st-why"><b>What it means for you</b>{w}</p></article>'''
+        for i, (t, d, w, _b) in enumerate(PROCESS_STEPS, 1))
+    dots = "".join(f'<button type="button" class="st-dot" data-go="{i}" aria-label="Step {i}: {t}">{i}</button>' for i, (t, *_r) in enumerate(PROCESS_STEPS, 1))
     def vid(key, title, text):
         m = f"{root}assets/media/{key}"
-        return f'''<figure class="reel">
+        return f'''<figure class="reel reel-arch">
 <div class="reel-media"><video muted loop playsinline preload="none" poster="{m}-poster.jpg" aria-label="{title}"><source src="{m}.webm" type="video/webm"><source src="{m}.mp4" type="video/mp4"></video>
 <button class="reel-btn" type="button" aria-label="Pause {title.lower()}">{lic("pause", "ic i-pause")}{lic("play", "ic i-play")}</button></div>
 <figcaption><b>{title}</b>{text}</figcaption></figure>'''
-    return f'''<section class="section motion process-big" id="process"><div class="wrap">
-<div class="section-head"><h2>How we make your hydrated lime</h2><p class="lede">Five steps at our plant in Ransigaon, Jodhpur. Plant visits are welcome by appointment.</p></div>
-<div class="proc-grid">
+    return f'''<section class="proc-story motion" id="process"><div class="wrap">
+<div class="section-head"><h2>How we make your hydrated lime</h2><p class="lede">Five steps at our plant in Ransigaon, Jodhpur. Scroll through them to see what happens at each step and what it means for the lime you receive.</p></div>
+<div class="story" data-boxes="{boxes}">
+<div class="story-fig">
 <figure class="reel reel-svg proc-figure"><div class="reel-media">{svg}
+<svg class="spot" viewBox="0 0 720 900" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><defs><mask id="spot-m"><rect width="720" height="900" fill="#fff"/><rect class="spot-hole" x="0" y="0" width="720" height="900" rx="18" fill="#000"/></mask></defs>
+<rect width="720" height="900" fill="#0E1C2E" fill-opacity=".62" mask="url(#spot-m)"/><rect class="spot-ring" x="0" y="0" width="720" height="900" rx="18" fill="none" stroke="#E0B25B" stroke-width="3" opacity="0"/></svg>
 <button class="reel-btn" type="button" aria-label="Pause process animation">{lic("pause", "ic i-pause")}{lic("play", "ic i-play")}</button></div></figure>
-<ol class="proc-steps">{steps}</ol>
+<div class="st-dots" role="group" aria-label="Go to step">{dots}</div>
+</div>
+<div class="story-steps">{steps}</div>
 </div>
 <div class="reels reels-2">
 {vid("plant-tour", "Inside the plant", "Kiln, hydrators, classifier, packing and the plant lab.")}
 {vid("packing-dispatch", "Packing and dispatch", "25 to 40 kg bags and 900 kg jumbo bags, ready stock.")}
 </div>
 <p class="swipe-hint">Swipe to see both videos.</p>
-</div></section>'''
+</div></section>
+<script>
+(function(){{
+  var story=document.querySelector('.story'); if(!story) return;
+  var boxes=story.dataset.boxes.split(';').map(function(b){{return b.split(',').map(Number);}});
+  var hole=story.querySelector('.spot-hole'), ring=story.querySelector('.spot-ring');
+  var steps=[].slice.call(story.querySelectorAll('.st')), dots=[].slice.call(story.querySelectorAll('.st-dot'));
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches, cur=[0,0,720,900], raf=null, active=0;
+  function set(r){{ ['x','y','width','height'].forEach(function(k,i){{ hole.setAttribute(k,r[i]); ring.setAttribute(k,r[i]); }}); cur=r; }}
+  function go(to){{ cancelAnimationFrame(raf); if(reduce){{ set(to); return; }} var from=cur.slice(), t0=null;
+    function f(ts){{ if(!t0) t0=ts; var k=Math.min(1,(ts-t0)/650), e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;
+      set(from.map(function(v,i){{return v+(to[i]-v)*e;}})); if(k<1) raf=requestAnimationFrame(f); }} raf=requestAnimationFrame(f); }}
+  function activate(n){{ if(n===active) return; active=n;
+    steps.forEach(function(s){{ s.classList.toggle('is-on', +s.dataset.step===n); }});
+    dots.forEach(function(d){{ d.classList.toggle('is-on', +d.dataset.go===n); d.setAttribute('aria-pressed', +d.dataset.go===n); }});
+    var p=6, b=n?boxes[n-1]:[0,0,720,900]; go(n?[b[0]-p,b[1]-p,b[2]+2*p,b[3]+2*p]:b); ring.setAttribute('opacity', n?1:0); }}
+  if('IntersectionObserver' in window){{
+    var io=new IntersectionObserver(function(es){{ es.forEach(function(e){{ if(e.isIntersecting) activate(+e.target.dataset.step); }}); }},{{rootMargin: matchMedia('(max-width:860px)').matches ? '-68% 0px -22% 0px' : '-45% 0px -45% 0px'}});
+    steps.forEach(function(s){{ io.observe(s); }});
+    new IntersectionObserver(function(es){{ if(!es[0].isIntersecting) activate(0); }},{{threshold:0}}).observe(story);
+  }} else activate(1);
+  dots.forEach(function(d){{ d.addEventListener('click',function(){{ var s=steps[+d.dataset.go-1]; s.scrollIntoView({{behavior:reduce?'auto':'smooth',block:'center'}}); activate(+d.dataset.go); }}); }});
+}})();
+</script>'''
 
 
 def motion_section(root):
@@ -1313,7 +1357,7 @@ def contact():
 <aside style="display:flex;flex-direction:column;gap:20px">
 <div class="side-card dark">
 <h2 style="font-size:22px">Your engineer</h2>
-<p><b style="color:#fff">Akshay Khadav</b><br>B.Tech Chemical Engineering, IIT Bombay</p>
+<p><b style="color:#fff">Akshay Khadav</b><br>B.Tech Chemical Engineering, IIT&nbsp;Bombay</p>
 <div class="contact-line"><span>Call or WhatsApp</span><a href="tel:{PHONE_TEL}">{PHONE_DISPLAY}</a></div>
 <div class="contact-line"><span>Email</span><a href="mailto:{EMAIL}">{EMAIL}</a></div>
 <div class="contact-line"><span>Office</span><p>{OFFICE}</p></div>

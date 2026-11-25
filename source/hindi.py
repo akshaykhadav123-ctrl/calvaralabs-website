@@ -191,7 +191,7 @@ def build(B):
         av = f'<img class="avatar" src="{img}" alt="अक्षय खदाव" loading="lazy" width="84" height="84" style="padding:0">' if img else ""
         return f'''<div class="engineer">{av}<div>
 <blockquote>“अपनी प्रक्रिया के बारे में बताइए। मैं सही ग्रेड सुझाऊँगा, और सैंपल भेजकर दिखाऊँगा कि वह काम करता है।”</blockquote>
-<p><b>अक्षय खदाव</b>, बी.टेक केमिकल इंजीनियरिंग, IIT बॉम्बे</p>
+<p class="eng-name"><b>अक्षय खदाव</b><span>बी.टेक केमिकल इंजीनियरिंग, IIT&nbsp;बॉम्बे</span></p>
 <p>आप हमें लिखते हैं तो सीधे मुझसे बात होती है: केमिस्ट्री, ग्रेड और डिस्पैच, किसी कॉल सेंटर से नहीं।</p>
 <div class="btn-row"><a class="btn btn-red" href="{B.WHATSAPP}">अक्षय को व्हाट्सऐप करें</a><a class="btn btn-ghost-light" href="tel:{B.PHONE_TEL}">कॉल करें {B.PHONE_DISPLAY}</a></div>
 </div></div>'''
@@ -350,7 +350,7 @@ def build(B):
 <aside style="display:flex;flex-direction:column;gap:20px">
 <div class="side-card dark">
 <h2 style="font-size:22px">आपके इंजीनियर</h2>
-<p><b style="color:#fff">अक्षय खदाव</b><br>बी.टेक केमिकल इंजीनियरिंग, IIT बॉम्बे</p>
+<p><b style="color:#fff">अक्षय खदाव</b><br>बी.टेक केमिकल इंजीनियरिंग, IIT&nbsp;बॉम्बे</p>
 <div class="contact-line"><span>कॉल या व्हाट्सऐप</span><a href="tel:{B.PHONE_TEL}">{B.PHONE_DISPLAY}</a></div>
 <div class="contact-line"><span>ईमेल</span><a href="mailto:{B.EMAIL}">{B.EMAIL}</a></div>
 <div class="contact-line"><span>ऑफ़िस</span><p>{B.OFFICE}</p></div>

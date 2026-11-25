@@ -76,7 +76,7 @@
     if(matchMedia('(prefers-reduced-motion: reduce)').matches) tset(true);
   }
   var smooth=!matchMedia('(prefers-reduced-motion: reduce)').matches;
-  function pad(){ if(top) document.documentElement.style.scrollPaddingTop=(top.offsetHeight+12)+'px'; }
+  function pad(){ if(top){ document.documentElement.style.scrollPaddingTop=(top.offsetHeight+12)+'px'; document.documentElement.style.setProperty('--toph', top.offsetHeight+'px'); } }
   pad(); addEventListener('resize',pad);
   var hv=document.querySelector('video.hero-bg');
   if(hv && !matchMedia('(prefers-reduced-motion: reduce)').matches && !(navigator.connection && navigator.connection.saveData)){
