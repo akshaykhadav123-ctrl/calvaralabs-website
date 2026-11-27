@@ -37,6 +37,12 @@ MAPS = "https://www.google.com/maps/search/?api=1&query=Calvara+Labs+and+Mineral
 OFFICE = "54 Patrakar Colony, Section 7, New Power House Road, Jodhpur, Rajasthan 342003, India"
 WORKS = "Ransigaon, Tehsil Bilara, District Jodhpur, Rajasthan, India"
 
+# Real business facts for the LocalBusiness schema. Left unset (None) so nothing
+# is invented: set them to real values, then rebuild and the fields appear on
+# every page's JSON-LD automatically.
+OFFICE_HOURS = None    # e.g. (("Monday", "Friday", "09:30", "18:30"),)  -> openingHoursSpecification
+PLANT_GEO = None       # e.g. (26.42, 73.56) lat/long of the Ransigaon plant  -> geo
+
 # grade, label, Ca(OH)2 min, CaO eq, moisture max, acid insoluble max, passing 200 mesh min
 GRADES = [
     ("92", "High purity", "92 %", "~69.5 %", "0.8 %", "1.06 %", "98.5 %"),
@@ -252,7 +258,7 @@ def industry(slug):
     service_ld = {"@context": "https://schema.org", "@type": "Service", "name": c["title"], "description": c["lede"],
                   "serviceType": f"hydrated lime supply, {c['name'].lower()}", "provider": {"@type": "Organization", "name": "Calvara Labs & Minerals", "url": SITE},
                   "areaServed": "IN", "url": SITE + f"/industries/{slug}/"}
-    page(f"industries/{slug}", root, f"industries/{slug}", c["title"] + " | Calvara Labs & Minerals", c["lede"], body, service_ld, og_image="og-lime.png")
+    page(f"industries/{slug}", root, f"industries/{slug}", c["title"] + " | Calvara Labs & Minerals", c["lede"], body, service_ld, alt=f"hi/industries/{slug}/", og_image="og-lime.png")
 
 
 def industry_index():
@@ -278,7 +284,7 @@ def industry_index():
 
 {cta_band(root)}'''
     page("industries", root, "industries", "Hydrated Lime by Industry: Water, Sugar, Effluent, Steel, More | Calvara Labs",
-         "Which hydrated lime grade to use in ten industries — water and effluent treatment, sugar, chemicals, ceramics and glass, flue gas, construction, steel, paper and leather, agriculture.", body, og_image="og-lime.png")
+         "Which hydrated lime grade to use in ten industries — water and effluent treatment, sugar, chemicals, ceramics and glass, flue gas, construction, steel, paper and leather, agriculture.", body, alt="hi/industries/", og_image="og-lime.png")
 PHOTOS = {  # key -> file in src/photos (optional)
     "kiln": "kiln.webp", "stock": "stock.webp", "hydrators": "hydrators.webp", "classifier": "classifier.webp",
     "smallbag": "smallbag.webp", "jumbo": "jumbo.webp", "jumbo-front": "jumbo-front.webp",
@@ -346,7 +352,7 @@ def brand(root, dark=False):
     return f'<a class="brand" href="{href(root, "")}" aria-label="Calvara Labs &amp; Minerals, home">{svg}</a>'
 
 
-NAV = [("hydrated-lime", "Hydrated lime"), ("export", "Export"), ("hydroxyapatite", "Hydroxyapatite"), ("documents", "Documents"), ("about", "About"), ("contact", "Contact")]
+NAV = [("hydrated-lime", "Hydrated lime"), ("export", "Prices &amp; export"), ("hydroxyapatite", "Hydroxyapatite"), ("documents", "Documents"), ("about", "About"), ("contact", "Contact")]
 HINDI_READY = True  # switch on once the Hindi pages are complete
 GSTIN = "08ETMPK7731R1ZN"
 # Documents page. Only real documents supplied by Akshay; files live in src/documents/.
@@ -489,6 +495,15 @@ LOCAL_BUSINESS_LD = {
     "foundingDate": "2026",
     "slogan": "Hydrated lime and hydroxyapatite from our own calcium.",
 }
+if OFFICE_HOURS:
+    # e.g. OFFICE_HOURS = (("Monday", "Friday", "09:30", "18:30"),)
+    LOCAL_BUSINESS_LD["openingHoursSpecification"] = [
+        {"@type": "OpeningHoursSpecification", "dayOfWeek": [d for d in days],
+         "opens": o, "closes": c} for days, o, c in OFFICE_HOURS]
+if PLANT_GEO:
+    # e.g. PLANT_GEO = (26.42, 73.56)
+    lat, lon = PLANT_GEO
+    LOCAL_BUSINESS_LD["geo"] = {"@type": "GeoCoordinates", "latitude": lat, "longitude": lon}
 
 
 def video_ld():
@@ -518,7 +533,7 @@ HI_ALT = {"": "hi/", "hydrated-lime": "hi/hydrated-lime/", "contact": "hi/contac
 def page(path, root, current, title, desc, body, extra_ld=None, noindex=False, lang="en", alt=None, head_html=None, foot_html=None, ui=None, og_image=None, head_extra=""):
 
     canonical = SITE + "/" + (path + "/" if path and not path.endswith(".html") else "")
-    ui = ui or {"wa": "Chat with Akshay on WhatsApp", "top": "Top", "top_label": "Back to top"}
+    ui = ui or {"wa": "Chat with Akshay on WhatsApp", "top": "Top", "top_label": "Back to top", "quote": "Quote", "quote_label": "Jump to the quote form"}
     if lang == "en" and alt is None and path in HI_ALT and HINDI_READY:
         alt = HI_ALT[path]
     if alt is not None and not noindex:
@@ -579,6 +594,7 @@ def page(path, root, current, title, desc, body, extra_ld=None, noindex=False, l
 {foot_html or footer(root)}
 <a class="wa-float" href="{WHATSAPP}" aria-label="{ui['wa']}">{lic("message-circle")}</a>
 <button class="to-top" type="button" aria-label="{ui['top_label']}" hidden>{lic("arrow-up")}<span>{ui['top']}</span></button>
+<a class="jump-quote" href="#quote" aria-label="{ui.get('quote_label', 'Jump to the quote form')}" hidden>{lic("indian-rupee", "ic")}<span>{ui.get('quote', 'Quote')}</span></a>
 <script>
 (function(){{
   var top=document.querySelector('.site-top'), btn=document.querySelector('.to-top'), menu=document.querySelector('.menu');
@@ -601,7 +617,9 @@ def page(path, root, current, title, desc, body, extra_ld=None, noindex=False, l
     hv.addEventListener('playing',function(){{ hv.classList.add('is-on'); }});
   }}
   btn.hidden=false;
-  function onScroll(){{ btn.classList.toggle('is-on', scrollY>600); }}
+  var jq=document.querySelector('.jump-quote'), qsec=document.getElementById('quote');
+  if(jq && qsec){{ jq.hidden=false; }}
+  function onScroll(){{ btn.classList.toggle('is-on', scrollY>600); if(jq && qsec){{ var r=qsec.getBoundingClientRect(); jq.classList.toggle('is-on', scrollY>600 && r.top<0); }} }}
   addEventListener('scroll',onScroll,{{passive:true}}); onScroll();
   btn.addEventListener('click',function(){{ scrollTo({{top:0,behavior:smooth?'smooth':'auto'}}); var s=document.querySelector('.skip'); }});
   if(menu){{
@@ -1718,7 +1736,7 @@ def contact():
 <input type="hidden" name="_autoresponse" value="{AUTORESPONSE}">
 <input class="hp" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true">
 <div class="field"><label for="f-name">Your name</label><input id="f-name" name="name" type="text" autocomplete="name" required></div>
-<div class="field"><label for="f-company">Company</label><input id="f-company" name="company" type="text" autocomplete="organization" required></div>
+<div class="field"><label for="f-company">Company (optional)</label><input id="f-company" name="company" type="text" autocomplete="organization"></div>
 <div class="field"><label for="f-phone">Phone or WhatsApp</label><input id="f-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required></div>
 <div class="field"><label for="f-email">Email</label><input id="f-email" name="email" type="email" inputmode="email" autocomplete="email"></div>
 <div class="field"><label for="f-product">Product</label><select id="f-product" name="product"><option>Hydrated lime</option><option>Hydroxyapatite</option><option>Both</option></select></div>
@@ -1747,6 +1765,7 @@ def contact():
 </div></section>
 <script>
 (function(){{var q=new URLSearchParams(location.search);[["product","f-product"],["grade","f-grade"]].forEach(function(p){{var v=q.get(p[0]),s=document.getElementById(p[1]);if(!v||!s)return;for(var i=0;i<s.options.length;i++){{if(s.options[i].text.toLowerCase().indexOf(v.toLowerCase())>-1){{s.selectedIndex=i;break;}}}}}});}})();
+(function(){{var f=document.querySelector('.form');if(!f)return;var b=f.querySelector('button[type=submit]'),note=f.querySelector('.actions p');f.addEventListener('submit',function(){{b.disabled=true;b.textContent='Sending…';if(note)note.textContent='Sending your enquiry — this opens FormSubmit and redirects to a thank-you page.';}});}})();
 </script>
 '''
     page("contact", root, "contact", "Contact Calvara Labs & Minerals | Hydrated Lime Quote, Jodhpur",
@@ -1858,7 +1877,9 @@ def extras():
     (OUT / ".htaccess").write_text("ErrorDocument 404 /404.html\nDirectoryIndex index.html\n", encoding="utf-8")
     (OUT / "robots.txt").write_text(f"User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n", encoding="utf-8")
     urls = ["", "hydrated-lime/", "export/", "hydroxyapatite/", "documents/", "about/", "contact/",
-            "industries/"] + [f"industries/{s}/" for s in IND_ORDER] + (["hi/", "hi/hydrated-lime/", "hi/contact/"] if HINDI_READY else [])
+            "industries/"] + [f"industries/{s}/" for s in IND_ORDER] + (
+        ["hi/", "hi/hydrated-lime/", "hi/contact/", "hi/industries/"] + [f"hi/industries/{s}/" for s in IND_ORDER]
+        if HINDI_READY else [])
     items = "".join(f"<url><loc>{SITE}/{u}</loc><lastmod>{datetime.date.today().isoformat()}</lastmod></url>" for u in urls)
     (OUT / "sitemap.xml").write_text(f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{items}</urlset>\n', encoding="utf-8")
 

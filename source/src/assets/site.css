@@ -1048,3 +1048,22 @@ html[lang="hi"] .mq-lg li:nth-child(even){-webkit-text-stroke:1px var(--ink)}
 
 /* v30 calculator before real loads are filled in */
 .ccalc-out.is-empty .ccalc-t,.ccalc-out.is-empty .ccalc-b{font-size:clamp(20px,2vw,26px)}
+
+/* ===== v30: sticky jump-to-quote + mobile nav breathing room ===== */
+.jump-quote{position:fixed;left:16px;bottom:calc(18px + env(safe-area-inset-bottom));z-index:25;display:flex;align-items:center;gap:7px;
+  padding:0 16px;height:48px;border:0;border-radius:999px;background:var(--paper);color:var(--ink);font-family:var(--display);font-weight:600;font-size:15px;
+  box-shadow:0 8px 20px -6px rgba(19,32,46,.35);text-decoration:none;opacity:0;transform:translateY(12px);pointer-events:none;transition:opacity .2s,transform .2s}
+.jump-quote .ic{width:18px;height:18px;color:var(--red-deep)}
+.jump-quote.is-on{opacity:1;transform:none;pointer-events:auto}
+.jump-quote:hover{background:var(--ink);color:#fff}
+.jump-quote:hover .ic{color:var(--sand-deep,#E0B25B)}
+@media (prefers-reduced-motion:reduce){.jump-quote{transition:none}}
+/* 820–980px: the desktop nav is already hidden (menu active at <900px), so this band
+   is the mobile header. Give the language switch and menu button room so they
+   never crowd the wordmark between 820 and 980px. */
+@media (min-width:820px) and (max-width:980px){
+  .head-row{gap:10px}
+  .brand .lockup{height:34px}
+  .lang-mob{margin-left:6px;padding:8px 10px}
+  .menu summary{padding:9px 12px}
+}
