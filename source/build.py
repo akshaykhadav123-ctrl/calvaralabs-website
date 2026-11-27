@@ -33,9 +33,11 @@ AUTORESPONSE = ("Thank you for contacting Calvara Labs & Minerals. Akshay Khadav
                 "Hydroxyapatite: https://calvaralabs.com/brochures/Calvara-Hydroxyapatite-Brochure-2026.pdf\n\n"
                 "For a faster reply, WhatsApp +91 98927 27068.\n\n"
                 "Calvara Labs & Minerals, Jodhpur, Rajasthan, India · calvaralabs.com")
-MAPS = "https://www.google.com/maps/search/?api=1&query=Calvara+Labs+and+Minerals+Jodhpur"
+MAPS = "https://maps.app.goo.gl/CKMo71KT45vNi9Kg6"
 OFFICE = "54 Patrakar Colony, Section 7, New Power House Road, Jodhpur, Rajasthan 342003, India"
 WORKS = "Ransigaon, Tehsil Bilara, District Jodhpur, Rajasthan, India"
+OFFICE_HOURS = None    # e.g. (("Monday", "Friday", "09:30", "18:30"),)  -> openingHoursSpecification
+OFFICE_GEO = (26.26227, 73.01422)  # Patrakar Colony office pin; plant has no public pin yet
 
 # grade, label, Ca(OH)2 min, CaO eq, moisture max, acid insoluble max, passing 200 mesh min
 GRADES = [
@@ -255,9 +257,19 @@ def industry(slug):
     page(f"industries/{slug}", root, f"industries/{slug}", c["title"] + " | Calvara Labs & Minerals", c["lede"], body, service_ld, og_image="og-lime.png")
 
 
+IND_FAQ = [
+    ("What does the grade number mean?", "It is the minimum Ca(OH)2 percentage. Higher numbers mean higher purity and less inert material — important where your process is sensitive to ash or residue."),
+    ("Do you supply before a contract?", "Yes. A sample with its Certificate of Analysis lets you test in your own process before you place an order. Approved-sample supply is how we work."),
+    ("What packing options are there?", "25, 30, 35 and 40 kg laminated liner bags on pallets, or 900 kg jumbo bags. We match the packing to your handling."),
+    ("Can we visit the plant?", "Yes, at Ransigaon, Jodhpur, by appointment. WhatsApp or call +91 98927 27068."),
+]
+
 def industry_index():
     root = "../"
     cards = ""
+    faqs = "".join(f"<details><summary>{q}</summary><p>{a}</p></details>" for q, a in IND_FAQ)
+    ind_faq_ld = {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [
+        {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in IND_FAQ]}
     for s in IND_ORDER:
         c = IND_CONTENT[s]
         icon = lic(IND_ICON.get(c["name"], "factory"), "ic ind-ic")
@@ -276,9 +288,14 @@ def industry_index():
 <div class="nextup">{cards}</div>
 </div></section>
 
+<section class="section section-tint"><div class="wrap">
+<div class="section-head"><h2>Common questions</h2><p class="lede">Short answers. Ask for anything else.</p></div>
+{faqs}
+</div></section>
+
 {cta_band(root)}'''
-    page("industries", root, "industries", "Hydrated Lime by Industry: Water, Sugar, Effluent, Steel, More | Calvara Labs",
-         "Which hydrated lime grade to use in ten industries — water and effluent treatment, sugar, chemicals, ceramics and glass, flue gas, construction, steel, paper and leather, agriculture.", body, og_image="og-lime.png")
+    page("industries", root, "industries", "Hydrated Lime by Industry | Calvara Labs &amp; Minerals",
+         "Which hydrated lime grade to use in ten industries — water and effluent, sugar, chemicals, flue gas, construction, steel and more. Start with the grade in red.", body, [ind_faq_ld], alt="hi/industries/", og_image="og-lime.png")
 PHOTOS = {  # key -> file in src/photos (optional)
     "kiln": "kiln.webp", "stock": "stock.webp", "hydrators": "hydrators.webp", "classifier": "classifier.webp",
     "smallbag": "smallbag.webp", "jumbo": "jumbo.webp", "jumbo-front": "jumbo-front.webp",
@@ -488,6 +505,7 @@ LOCAL_BUSINESS_LD = {
     "description": "Manufacturer of hydrated lime (calcium hydroxide, CAS 1305-62-0, HSN 2522) and hydroxyapatite at its own plant in Ransigaon, Jodhpur, Rajasthan, India.",
     "foundingDate": "2026",
     "slogan": "Hydrated lime and hydroxyapatite from our own calcium.",
+    "hasMap": MAPS,
 }
 
 
@@ -530,6 +548,9 @@ def page(path, root, current, title, desc, body, extra_ld=None, noindex=False, l
     else:
         alts = ""
     ld = [ORG_LD, LOCAL_BUSINESS_LD] + (extra_ld if isinstance(extra_ld, list) else [extra_ld] if extra_ld else [])
+    if OFFICE_GEO:
+        lat, lon = OFFICE_GEO
+        LOCAL_BUSINESS_LD["geo"] = {"@type": "GeoCoordinates", "latitude": lat, "longitude": lon}
     if lang == "en" and path and not path.endswith(".html") and not noindex:
         # BreadcrumbList for inner pages; the home page is the first crumb everywhere
         known = {"hydrated-lime": "Hydrated lime", "export": "Prices & export", "hydroxyapatite": "Hydroxyapatite",
@@ -1065,10 +1086,10 @@ def book(key, link, title, width=None, pages=7):
     p = lambda n: f"photos/book/{key}-p{n}.webp"
     n = (pages - 1) // 2  # number of leaves; the last odd page lies under them
     leaves = [(2 * k + 1, 2 * k + 2) for k in reversed(range(n))]  # bottom to top: (front, back); the cover is on top
-    lv = "".join(f'<span class="leaf" style="--i:{n - 1 - i}"><img class="f" src="{p(f)}" alt="" loading="lazy"><img class="b" src="{p(b)}" alt="" loading="lazy"></span>'
+    lv = "".join(f'<span class="leaf" style="--i:{n - 1 - i}"><img class="f" src="{p(f)}" alt="" width="320" height="453" loading="lazy"><img class="b" src="{p(b)}" alt="" width="320" height="453" loading="lazy"></span>'
                  for i, (f, b) in enumerate(leaves))
     return (f'<a class="broch-cover book" href="{link}" target="_blank" rel="noopener"{f' style="--w:{width}px"' if width else ''} aria-label="View the {title} online">'
-            f'<span class="book-in"><img class="book-base" src="{p(2 * n + 1)}" alt="" loading="lazy">{lv}</span></a>')
+            f'<span class="book-in"><img class="book-base" src="{p(2 * n + 1)}" alt="" width="320" height="453" loading="lazy">{lv}</span></a>')
 
 
 def brochure_block(root):
@@ -1347,8 +1368,8 @@ def documents():
 <div class="asks">{req}</div>
 </div></section>
 {cta_band(root)}'''
-    page("documents", root, "documents", "Documents: GST, IEC, Udyam MSME, Lab Reports | Calvara Labs &amp; Minerals",
-         f"Calvara Labs and Minerals company documents: GST registration (GSTIN {GSTIN}), Importer-Exporter Code (IEC ETMPK7731R), Udyam MSME registration and lab test reports.", body, og_image="og-documents.png")
+    page("documents", root, "documents", "Documents: GST, IEC, Udyam, Lab Reports | Calvara Labs",
+         f"Company documents: GST registration (GSTIN {GSTIN}), Importer-Exporter Code (IEC ETMPK7731R), Udyam MSME registration and lab reports with verify links.", body, og_image="og-documents.png")
 
 
 
@@ -1515,7 +1536,7 @@ def lime():
 
 {cta_band(root, "Get a hydrated lime quote", "Send the grade, monthly quantity and delivery city or port. You hear back directly from our engineer.", product="hydrated lime")}
 '''
-    page("hydrated-lime", root, "hydrated-lime", "Hydrated Lime Grades 80–92% | Specifications | Calvara Labs, Jodhpur",
+    page("hydrated-lime", root, "hydrated-lime", "Hydrated Lime Grades 80–92% | Calvara Labs, Jodhpur",
          "Compare four hydrated lime grades: Ca(OH)2 80–92%, silica 1.06–8%, moisture 0.8–2.0%, 90–98.5% through 200 mesh. 25 to 40 kg bags, CoA with every lot.",
          body, [faq_ld, product_ld("Hydrated lime (calcium hydroxide)", "Hydrated lime in four grades, 80 to 92% Ca(OH)2, made at our plant near Jodhpur, Rajasthan. Packed in 25, 30, 35 or 40 kg bags or 900 kg jumbo bags, with a Certificate of Analysis for every lot.",
                                    "hydrated-lime/", "Industrial chemicals", {"additionalProperty": [{"@type": "PropertyValue", "name": "CAS", "value": "1305-62-0"}, {"@type": "PropertyValue", "name": "HSN", "value": "2522"}]})], og_image="og-lime.png")
@@ -1629,7 +1650,7 @@ def hap():
 
 {cta_band(root, "Request a hydroxyapatite sample", "Tell us your application, particle size and expected quantity. We send 250 g with a Certificate of Analysis.", product="hydroxyapatite")}
 '''
-    page("hydroxyapatite", root, "hydroxyapatite", "Hydroxyapatite Powder Manufacturer India | Animal-Free | Calvara Labs",
+    page("hydroxyapatite", root, "hydroxyapatite", "Hydroxyapatite Powder | Animal-Free | Calvara Labs",
          "Synthetic, animal-free hydroxyapatite (micro grade, D50 3–8 µm) for toothpaste, tablets, cosmetics and labs. HAp ≥95% by XRD, Ca/P 1.67. Free 250 g sample.",
          body, [faq_ld, product_ld("Hydroxyapatite (synthetic)", "Synthetic, animal-free hydroxyapatite, micro grade D50 3 to 8 µm, made from purified calcium near Jodhpur, India. 250 g samples with a Certificate of Analysis.",
                                    "hydroxyapatite/", "Calcium phosphates", {"additionalProperty": [{"@type": "PropertyValue", "name": "CAS", "value": "1306-06-5"}]})], og_image="og-hap.png")
@@ -1637,6 +1658,10 @@ def hap():
 
 def about():
     root = "../"
+    person_ld = {"@context": "https://schema.org", "@type": "Person", "name": "Akshay Khadav",
+                 "jobTitle": "Chemical Engineer",
+                 "alumniOf": {"@type": "Organization", "name": "IIT Bombay"},
+                 "worksFor": {"@type": "Organization", "name": "Calvara Labs & Minerals"}}
     body = f'''
 <section class="page-head"><div class="wrap">
 {crumbs(root, "About &amp; quality")}
@@ -1693,7 +1718,7 @@ def about():
 '''
     page("about", root, "about", "About Calvara Labs & Minerals | Lime Plant, Ransigaon, Jodhpur",
          "Calvara Labs & Minerals makes hydrated lime at its own plant in Ransigaon, Jodhpur. Plant lab tests every lot; CoA, lot traceability and approved-sample supply.",
-         body, og_image="og-about.png")
+         body, person_ld, og_image="og-about.png")
 
 
 def contact():
