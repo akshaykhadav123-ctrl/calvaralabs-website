@@ -1045,3 +1045,6 @@ html[lang="hi"] .mq-lg li:nth-child(even){-webkit-text-stroke:1px var(--ink)}
 .st > *{transition:transform .55s cubic-bezier(.22,.61,.36,1)}
 .st:not(.is-on) > *{transform:translateY(6px)}
 @media (prefers-reduced-motion:reduce){.spot-win,.st,.st > *{transition:none}.st:not(.is-on) > *{transform:none}}
+
+/* v30 calculator before real loads are filled in */
+.ccalc-out.is-empty .ccalc-t,.ccalc-out.is-empty .ccalc-b{font-size:clamp(20px,2vw,26px)}

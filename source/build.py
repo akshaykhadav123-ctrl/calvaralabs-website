@@ -84,13 +84,13 @@ IND_CONTENT = {
             "Fineness matters for dosing: up to 98.5 % of the 92 grade passes 200 mesh, which feeds and dissolves smoothly at the low concentrations water plants dose at.",
             "Plants that run on a value budget can move to the 90 grade for softening where a little higher inert matter is acceptable; tell us your process and we will confirm with a sample before you commit."],
         "use": [
-            "Hydrated lime is dosed as a slurry or dry powder to raise pH, soften water (lime-soda process) and keep carbonation within range. Fine, consistent powder keeps dosing pumps and feeders stable.",
+            "Hydrated lime is dosed as a slurry or dry powder to raise pH, soften water (lime-soda process) and condition it against corrosion. Fine, consistent powder keeps dosing pumps and feeders stable.",
             "We supply the grade to your dosing method, with a Certificate of Analysis for every lot so your water quality records can reference each delivery."],
     },
     "effluent-treatment": {
         "name": "Water and wastewater", "title": "Hydrated lime for effluent treatment",
         "h1": "Hydrated lime for effluent treatment",
-        "lede": "pH neutralisation, heavy-metal and phosphate precipitation in ETPs, CETPs and on-site treatment plants. Usually a step below drinking-water purity, at a step up in cost.",
+        "lede": "pH neutralisation, heavy-metal and phosphate precipitation in ETPs, CETPs and on-site treatment plants. Usually a step below drinking-water purity, and a step down in cost.",
         "grade": "90",
         "why": [
             "For precipitation work the 90 grade is the usual starting point: enough purity that your metal hydroxides and phosphates precipitate cleanly, without paying for the extra fineness that drinking water requires.",
@@ -98,7 +98,7 @@ IND_CONTENT = {
             "Tell us your pH targets and what you are precipitating, and Akshay will recommend a grade and a sample with its CoA so you can test in your own plant first."],
         "use": [
             "In effluent plants, lime neutralises acidic streams, precipitates heavy metals as hydroxides and co-precipitates phosphates in biological treatment. It is dosed at the reaction tank or as part of a lime-soda softening step.",
-            "Because dosing is heavier than in water treatment, most ETP buyers pack in 25 to 40 kg bags or 900 kg jumbo bags and value consistent fineness over batch to batch more than the highest possible grade."],
+            "Because dosing is heavier than in water treatment, most ETP buyers pack in 25 to 40 kg bags or 900 kg jumbo bags and value the same fineness lot after lot more than the highest possible grade."],
     },
     "sugar": {
         "name": "Sugar industry", "title": "Hydrated lime for sugar",
@@ -107,11 +107,11 @@ IND_CONTENT = {
         "grade": "90",
         "why": [
             "Sugar mills usually start on the 90 grade: it clarifies juice at normal doses with low residue, and it is cheaper than the drinking-water 92 without the extra fineness a mill does not need.",
-            "Mills running a high clarity spec or a continuous purification plant can step up to the 92 grade; its lower silica keeps undissolved grit out of your juice. Plants sensitive to colour can also ask us to hold silica tighter.",
-            "Crushing season is when supply reliability matters most: we hold ready stock across all four grades, and every lot ships with its CoA so your mill lab can verify it on receipt."],
+            "Mills running a high clarity spec or a continuous purification plant can step up to the 92 grade; its lower silica keeps undissolved grit out of your juice.",
+            "Crushing season is when supply matters most: plan your season's volume with us before it starts, and every lot ships with its CoA so your mill lab can verify it on receipt."],
         "use": [
             "Lime is dosed into the juice to raise pH, where it binds impurities, waxes and colour bodies, and precipitates them out. In the purification step it also contributes to ash removal and stabilises the process.",
-            "Mills dose it as a milk-of-lime slurry or directly as fine powder. A consistent fineness means a steadier clarification, and steadier clarification means more sugar out of the same juice."],
+            "Mills dose it as a milk-of-lime slurry or directly as fine powder. A consistent fineness keeps the milk of lime even and the clarification steady."],
     },
     "chemicals": {
         "name": "Chemicals", "title": "Hydrated lime for chemicals",
@@ -120,10 +120,10 @@ IND_CONTENT = {
         "grade": "92",
         "why": [
             "Chemical buyers start on the 92 grade: the lowest silica of the range keeps inert matter out of your reaction and out of the finished product, and the 98.5 % through 200 mesh fineness keeps the reagent behaving consistently.",
-            "For caustic soda, lime reacts with soda ash to regenerate caustic and recover the lime; the same purity logic applies. Where the chemistry is sensitive, tell us your spec or standard and we will confirm which grade meets it, sample first."],
+            "For caustic soda by the lime-soda route, lime reacts with soda ash to give caustic soda and a calcium carbonate mud; the same purity logic applies. Where the chemistry is sensitive, tell us your spec or standard and we will confirm which grade meets it, sample first."],
         "use": [
             "Hydrated lime serves as a direct reagent in calcium salt manufacture, as the reagent in bleaching powder production, and in the causticising step of soda-lime processes.",
-            "We can align our Certificate of Analysis with your incoming specification, lot by lot, so your quality team can accept deliveries on paper before they open a single bag."],
+            "Send us your incoming specification and we will tell you which grade meets it. Every lot ships with a Certificate of Analysis your quality team can check on receipt."],
     },
     "ceramics-glass": {
         "name": "Ceramics and glass", "title": "Hydrated lime for ceramics and glass",
@@ -134,7 +134,7 @@ IND_CONTENT = {
             "Ceramic and glass buyers run on the 92 grade because the batch chemistry is theirs to defend: the lowest silica cap of our range and the highest fineness mean the lime you add is doing what you planned, nothing else.",
             "The 90 grade works for batches where a slightly higher inert fraction is acceptable; we will confirm against your raw-material specification and a sample before you change suppliers."],
         "use": [
-            "In ceramics, hydrated lime acts as a flux and plasticiser in bodies and as a glaze additive. In glass it enters the batch as a calcium source, replacing some of the soda line and stabilising the melt.",
+            "In ceramics, hydrated lime acts as a flux and plasticiser in bodies and as a glaze additive. In glass it enters the batch as a source of calcium oxide, which makes the glass harder and more durable in water.",
             "Because batches are weighed in tonnes and reworked slowly, most ceramic and glass plants value a supplier who can hold one grade consistently; ours ships with a CoA that states the measured result for every lot."],
     },
     "flue-gas": {
@@ -143,7 +143,7 @@ IND_CONTENT = {
         "lede": "Scrubbing and neutralisation of SO₂ and HCl in flue-gas scrubbers, on solid fuel, waste-to-energy and process vents. Dosing is heavy, so the grade is a cost decision.",
         "grade": "85",
         "why": [
-            "Scrubbing is a volume game: you dose a lot of lime against a lot of gas, so the 85 grade is the usual starting point and the 80 for cost-critical lines. The acid neutralises to the hydroxide regardless; the grade number mostly sets your cost per tonne.",
+            "Scrubbing is a volume game: you dose a lot of lime against a lot of gas, so the 85 grade is the usual starting point and the 80 for cost-critical lines. Lower grades simply carry more inert matter, so you dose a little more; the grade number mostly sets your cost per tonne.",
             "Fineness still helps: a finer powder neutralises faster and leaves less undigested grit in the scrubber slurry. If your scrubber runs tight, step up one grade and we will show you the CoA for both before you decide.",
             "Tell Akshay your gas composition and scrubber type; he will suggest the grade and the packing that keeps your landed cost down."],
         "use": [
@@ -156,11 +156,11 @@ IND_CONTENT = {
         "lede": "Plaster, mortar, lime putty, soil stabilisation and AAC blocks: the everyday, value-priced side of the lime business, where the 80 grade does the work.",
         "grade": "80",
         "why": [
-            "Construction work is dosed in bulk, so the 80 grade is the right one: 80 % minimum Ca(OH)₂ at the lowest price point of our range, with moisture capped at 2 % so it works clean in mortar and stabilisation mixes.",
+            "Construction work is dosed in bulk, so the 80 grade is the right one: 80 % minimum Ca(OH)₂ at the lowest price point of our range, with moisture at or below 2.0 % so it mixes clean in mortar and stabilisation mixes.",
             "For AAC blocks and putty, where fineness and reactivity show up in the product, the 85 grade is the common step up. We will confirm the split with your mix design before you lock a contract."],
         "use": [
-            "In plaster and mortar, hydrated lime improves workability and finish. In soil stabilisation it corrects acidic, low-plasticity subgrades for roads and foundations. In AAC blocks it reacts with the alumino-silicate line to form the calcium aluminosilicate hydrate that makes the block rise.",
-            "Builders and block plants usually pack in 25 to 40 kg bags on or off pallets, and keep several months of dry storage, so our bags are sealed and laminated to stay dry on your yard."],
+            "In plaster and mortar, hydrated lime improves workability and finish. In soil stabilisation it dries and stiffens high-plasticity clay subgrades for roads and foundations. In AAC blocks it is a calcium source that reacts with fly ash or silica in the autoclave to form the calcium silicate hydrate that gives the block its strength.",
+            "Builders and block plants usually pack in 25 to 40 kg bags on or off pallets, and store them dry, off the ground and under cover."],
     },
     "steel": {
         "name": "Steel and metallurgy", "title": "Hydrated lime for steel and metallurgy",
@@ -171,7 +171,7 @@ IND_CONTENT = {
             "Steel plants generally start on the 80 grade for bulk flux and neutralisation work: the alkalinity is what the process uses, and the cost per tonne is what the process is priced against.",
             "Where your slag or dust treatment has a tighter impurity limit, the 85 grade is the usual step up. Send us the position lime holds in your process and we will suggest the grade and the sample to test it with."],
         "use": [
-            "As flux, hydrated lime helps build the slag that carries phosphorus and sulphur out of the melt. It also neutralises acidic off-gas and dust streams, and conditions mill dust for re-use.",
+            "In metal plants hydrated lime neutralises spent pickling acid and acidic off-gas, treats plant effluent, and is used as a coating carrier in wire drawing. Where it is used as flux, it helps form the slag that carries sulphur and phosphorus out of the melt.",
             "Most metal shops take it in jumbo bags for bulk dosing, or in 40 kg bags for smaller lines, and check each delivery against the CoA we ship with it."],
     },
     "paper-leather": {
@@ -195,8 +195,8 @@ IND_CONTENT = {
             "Field application is a volume, price decision, so the 80 grade is the standard agricultural choice: 80 % minimum Ca(OH)₂ at the lowest cost per tonne of our range.",
             "For soil amendments blended into fertilisers or applied on sensitive crops, some buyers step up to the 85 for a cleaner product; we will confirm the split against your soil report before you commit."],
         "use": [
-            "Hydrated lime raises acidic soil pH, improves nutrient availability and conditions the profile for better root growth. It is also used in the preparation of lime-based fertilisers and as a treatment in animal feed.",
-            "Agricultural buyers pack it in 50 to 40 kg bags on pallets for the trade, and we hold ready stock so the season does not catch us short."],
+            "Hydrated lime raises acidic soil pH, improves nutrient availability and conditions the profile for better root growth. It is also used in the preparation of lime-based fertilisers.",
+            "Agricultural buyers usually take 25 to 40 kg bags; tell us your season's volume early so the order is ready when you need it."],
     },
 }
 IND_ORDER = ["water-treatment", "effluent-treatment", "sugar", "chemicals", "ceramics-glass",
@@ -801,7 +801,7 @@ def bags():
 
 # ---------- container load calculator ----------
 # EXPORT BUYERS' FIRST QUESTION: "how many tonnes fit in my container?"
-# The tonne figures below are INDICATIVE. Replace the LOADS values with the
+# No tonne figures are published until Akshay gives real measured loads. Fill LOADS with the
 # real measured loads for each (box, packing) combination, then rebuild:
 #   python source/build.py live
 # bag_count is derived from tonnes × 1000 ÷ bag weight, so it stays right.
@@ -821,29 +821,29 @@ def container_calc(root):
 <div class="ccalc-out">
 <div><span class="ccalc-t" id="cc-t">–</span><small>approx. tonnes in the box</small></div>
 <div><span class="ccalc-b" id="cc-b">–</span><small>approx. bags / jumbos</small></div>
-<p class="ccalc-note" id="cc-note">Indicative loads — send your box and packing and Akshay confirms the exact figure, palletised or not.</p>
+<p class="ccalc-note" id="cc-note">Pick your container and packing, then send it on WhatsApp. Akshay confirms the exact load and your CIF price.</p>
 </div>
 <div class="ccalc-act"><a class="btn btn-wa" id="cc-wa" href="{base}">{lic("message-circle")}Get CIF price</a></div>
 </div>
 <script>
 (function(){{
   // EDIT THESE with your real measured container loads (tonnes).
-  var LOADS = {{
-    "20": {{ "bags-pal": 25.0, "bags-loose": 27.0, "jumbo": 26.0 }},
-    "40": {{ "bags-pal": 27.0, "bags-loose": 27.5, "jumbo": 27.0 }}
-  }};
+  // Real measured loads in tonnes go here, e.g. {{"20":{{"bags-pal":..,"bags-loose":..,"jumbo":..}},"40":{{..}}}}.
+  // Until filled in, no tonnage is shown and the WhatsApp message asks Akshay to confirm the load.
+  var LOADS = null;
   var BAG = {{ "bag-25": 25, "bag-30": 30, "bag-35": 35, "bag-40": 40, "jumbo": 900 }};
   var PAL = document.getElementById("cc-pal");
   function recalc(){{
     var box = document.getElementById("cc-box").value, pkg = document.getElementById("cc-pkg").value;
     var isJ = pkg === "jumbo", pal = isJ ? "pal" : PAL.value;
-    var t = LOADS[box][isJ ? "jumbo" : ("bags-" + (pal === "pal" ? "pal" : "loose"))];
-    var n = Math.round(t * 1000 / BAG[pkg]);
-    document.getElementById("cc-t").textContent = t.toFixed(1);
-    document.getElementById("cc-b").textContent = n + (isJ ? " jumbos" : " bags");
+    var t = LOADS ? LOADS[box][isJ ? "jumbo" : ("bags-" + (pal === "pal" ? "pal" : "loose"))] : null;
+    var n = t ? Math.round(t * 1000 / BAG[pkg]) : null;
+    document.querySelector(".ccalc-out").classList.toggle("is-empty", !t);
+    document.getElementById("cc-t").textContent = t ? t.toFixed(1) : "On request";
+    document.getElementById("cc-b").textContent = t ? n + (isJ ? " jumbos" : " bags") : "Confirmed on WhatsApp";
     var msg = "Hello Akshay, please quote hydrated lime, CIF my port. "
       + "Container: " + box + " ft · Packing: " + (isJ ? "900 kg jumbo bags" : BAG[pkg] + " kg bags, " + (pal === "pal" ? "palletised" : "non-palletised"))
-      + ". Estimated load: ~" + t.toFixed(1) + " t (about " + n + (isJ ? " jumbos" : " bags") + "). "
+      + (t ? ". Estimated load: ~" + t.toFixed(1) + " t (about " + n + (isJ ? " jumbos" : " bags") + "). " : ". Please confirm how many tonnes fit. ")
       + "Grade: ___ · Port: ___ · Monthly volume: ___";
     document.getElementById("cc-wa").href = "{base}?text=" + encodeURIComponent(msg);
   }}
@@ -1168,7 +1168,7 @@ STORY_STEPS = [
 
 
 def process_section(root):
-    svg = (ROOT / "src" / "assets" / "media" / "process.svg").read_text()
+    svg = (ROOT / "src" / "assets" / "media" / "process.svg").read_text(encoding="utf-8")
     boxes = ";".join(",".join(str(v) for v in b[3]) for b in STORY_STEPS)
     steps = "".join(
         f'''<article class="st" data-step="{i}"><span class="st-n">{i:02d}</span><h3>{t}</h3><p>{d}</p>
@@ -1840,11 +1840,11 @@ def not_found():
 
 def extras():
     shutil.copytree(ROOT / "src" / "assets", OUT / "assets", dirs_exist_ok=True)
-    css = (OUT / "assets" / "site.css").read_text()
+    css = (OUT / "assets" / "site.css").read_text(encoding="utf-8")
     css = re.sub(r"/\*.*?\*/", "", css, flags=re.S)
     css = re.sub(r"\s+", " ", css)
     css = re.sub(r"\s*([{}:;,>])\s*", r"\1", css).replace(";}", "}")
-    (OUT / "assets" / "site.css").write_text(css.strip() + "\n")
+    (OUT / "assets" / "site.css").write_text(css.strip() + "\n", encoding="utf-8")
     shutil.copytree(ROOT / "src" / "brochures", OUT / "brochures", dirs_exist_ok=True)
     shutil.copytree(ROOT / "src" / "documents", OUT / "documents", dirs_exist_ok=True)
     shutil.copytree(ROOT / "src" / "icons", OUT / "assets" / "icons", dirs_exist_ok=True)

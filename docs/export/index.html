@@ -103,29 +103,29 @@ f.addEventListener("change",build);f.addEventListener("input",build);build();})(
 <div class="ccalc-out">
 <div><span class="ccalc-t" id="cc-t">–</span><small>approx. tonnes in the box</small></div>
 <div><span class="ccalc-b" id="cc-b">–</span><small>approx. bags / jumbos</small></div>
-<p class="ccalc-note" id="cc-note">Indicative loads — send your box and packing and Akshay confirms the exact figure, palletised or not.</p>
+<p class="ccalc-note" id="cc-note">Pick your container and packing, then send it on WhatsApp. Akshay confirms the exact load and your CIF price.</p>
 </div>
 <div class="ccalc-act"><a class="btn btn-wa" id="cc-wa" href="https://wa.me/919892727068"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" /></svg>Get CIF price</a></div>
 </div>
 <script>
 (function(){
   // EDIT THESE with your real measured container loads (tonnes).
-  var LOADS = {
-    "20": { "bags-pal": 25.0, "bags-loose": 27.0, "jumbo": 26.0 },
-    "40": { "bags-pal": 27.0, "bags-loose": 27.5, "jumbo": 27.0 }
-  };
+  // Real measured loads in tonnes go here, e.g. {"20":{"bags-pal":..,"bags-loose":..,"jumbo":..},"40":{..}}.
+  // Until filled in, no tonnage is shown and the WhatsApp message asks Akshay to confirm the load.
+  var LOADS = null;
   var BAG = { "bag-25": 25, "bag-30": 30, "bag-35": 35, "bag-40": 40, "jumbo": 900 };
   var PAL = document.getElementById("cc-pal");
   function recalc(){
     var box = document.getElementById("cc-box").value, pkg = document.getElementById("cc-pkg").value;
     var isJ = pkg === "jumbo", pal = isJ ? "pal" : PAL.value;
-    var t = LOADS[box][isJ ? "jumbo" : ("bags-" + (pal === "pal" ? "pal" : "loose"))];
-    var n = Math.round(t * 1000 / BAG[pkg]);
-    document.getElementById("cc-t").textContent = t.toFixed(1);
-    document.getElementById("cc-b").textContent = n + (isJ ? " jumbos" : " bags");
+    var t = LOADS ? LOADS[box][isJ ? "jumbo" : ("bags-" + (pal === "pal" ? "pal" : "loose"))] : null;
+    var n = t ? Math.round(t * 1000 / BAG[pkg]) : null;
+    document.querySelector(".ccalc-out").classList.toggle("is-empty", !t);
+    document.getElementById("cc-t").textContent = t ? t.toFixed(1) : "On request";
+    document.getElementById("cc-b").textContent = t ? n + (isJ ? " jumbos" : " bags") : "Confirmed on WhatsApp";
     var msg = "Hello Akshay, please quote hydrated lime, CIF my port. "
       + "Container: " + box + " ft · Packing: " + (isJ ? "900 kg jumbo bags" : BAG[pkg] + " kg bags, " + (pal === "pal" ? "palletised" : "non-palletised"))
-      + ". Estimated load: ~" + t.toFixed(1) + " t (about " + n + (isJ ? " jumbos" : " bags") + "). "
+      + (t ? ". Estimated load: ~" + t.toFixed(1) + " t (about " + n + (isJ ? " jumbos" : " bags") + "). " : ". Please confirm how many tonnes fit. ")
       + "Grade: ___ · Port: ___ · Monthly volume: ___";
     document.getElementById("cc-wa").href = "https://wa.me/919892727068?text=" + encodeURIComponent(msg);
   }
