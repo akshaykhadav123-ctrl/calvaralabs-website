@@ -1067,3 +1067,6 @@ html[lang="hi"] .mq-lg li:nth-child(even){-webkit-text-stroke:1px var(--ink)}
   .lang-mob{margin-left:6px;padding:8px 10px}
   .menu summary{padding:9px 12px}
 }
+
+/* v31 lighter phone hero photo */
+@media (max-width:600px){.hero.hero-video{background-image:url("media/hero-bg-poster-m.webp")}}

@@ -523,7 +523,8 @@ def video_ld():
 
 def hero_preload(root):
     m = f"{root}assets/media/hero-bg-poster"
-    return (f'<link rel="preload" as="image" href="{m}-768.webp" media="(max-width:768px)" fetchpriority="high">\n'
+    return (f'<link rel="preload" as="image" href="{m}-m.webp" media="(max-width:600px)" fetchpriority="high">\n'
+            f'<link rel="preload" as="image" href="{m}-768.webp" media="(min-width:601px) and (max-width:768px)" fetchpriority="high">\n'
             f'<link rel="preload" as="image" href="{m}.webp" media="(min-width:769px)" fetchpriority="high">\n')
 
 
@@ -581,7 +582,7 @@ def page(path, root, current, title, desc, body, extra_ld=None, noindex=False, l
 <link rel="icon" href="{root}favicon.svg" type="image/svg+xml">
 <link rel="icon" href="{root}favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="{root}apple-touch-icon.png">
-{head_extra}<link rel="preload" href="{root}assets/fonts/jost.woff2" as="font" type="font/woff2" crossorigin>
+{head_extra}<link rel="preload" href="{root}assets/fonts/jost.woff2" as="font" type="font/woff2" media="(min-width:769px)" crossorigin>
 <link rel="stylesheet" href="{root}assets/site.css">
 <script type="application/ld+json">{json.dumps(ld if len(ld) > 1 else ld[0], ensure_ascii=False)}</script>
 {f"""<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{{"token": "{CF_BEACON_TOKEN}"}}'></script>""" if CF_BEACON_TOKEN else ""}
@@ -1857,6 +1858,25 @@ def not_found():
     page("404.html", root, "", "Page not found | Calvara Labs & Minerals", "Page not found.", body, noindex=True)
 
 
+def inline_home_css(css):
+    """Home pages are where most visits land: put the stylesheet in the page so the
+    first paint does not wait for a second download, then fetch site.css quietly
+    after load so the next page finds it in the cache."""
+    for rel, root in (("index.html", ""), ("hi/index.html", "../")):
+        f = OUT / rel
+        if not f.exists():
+            continue
+        html = f.read_text(encoding="utf-8")
+        link = f'<link rel="stylesheet" href="{root}assets/site.css">'
+        if link not in html:
+            continue
+        local = re.sub(r'url\((["\']?)(?!data:|https?:|/|#)', lambda m: f"url({m.group(1)}{root}assets/", css)
+        html = html.replace(link, f"<style>{local}</style>", 1)
+        pre = f'<script>addEventListener("load",function(){{setTimeout(function(){{var l=document.createElement("link");l.rel="prefetch";l.href="{root}assets/site.css";document.head.appendChild(l)}},2500)}})</script>'
+        html = html.replace("</body>", pre + "</body>", 1)
+        f.write_text(html, encoding="utf-8")
+
+
 def extras():
     shutil.copytree(ROOT / "src" / "assets", OUT / "assets", dirs_exist_ok=True)
     css = (OUT / "assets" / "site.css").read_text(encoding="utf-8")
@@ -1864,6 +1884,7 @@ def extras():
     css = re.sub(r"\s+", " ", css)
     css = re.sub(r"\s*([{}:;,>])\s*", r"\1", css).replace(";}", "}")
     (OUT / "assets" / "site.css").write_text(css.strip() + "\n", encoding="utf-8")
+    inline_home_css(css.strip())
     shutil.copytree(ROOT / "src" / "brochures", OUT / "brochures", dirs_exist_ok=True)
     shutil.copytree(ROOT / "src" / "documents", OUT / "documents", dirs_exist_ok=True)
     shutil.copytree(ROOT / "src" / "icons", OUT / "assets" / "icons", dirs_exist_ok=True)
