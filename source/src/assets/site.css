@@ -1070,3 +1070,26 @@ html[lang="hi"] .mq-lg li:nth-child(even){-webkit-text-stroke:1px var(--ink)}
 
 /* v31 lighter phone hero photo */
 @media (max-width:600px){.hero.hero-video{background-image:url("media/hero-bg-poster-m.webp")}}
+
+/* v32 grade picker table */
+.gp-wrap{margin-top:8px}
+.gp{min-width:640px}
+.gp th[scope=row] a{color:var(--ink);text-decoration:underline;text-decoration-color:var(--line-strong);text-underline-offset:3px}
+.gp th[scope=row] a:hover{text-decoration-color:var(--red,#C62D24)}
+.gp .gp-g{font-family:var(--display);font-size:22px;font-weight:600;color:var(--red,#C62D24)}
+.gp .gp-step{color:var(--muted,#5B6876);white-space:nowrap}
+.gp tr.gp-hap td,.gp tr.gp-hap th{border-top:2px solid var(--line-strong)}
+@media (max-width:640px){.gp .gp-step{white-space:normal}}
+@media (max-width:640px){
+.gp{min-width:0}
+.gp thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.gp tbody tr{display:grid;grid-template-columns:1fr auto;gap:2px 12px;padding:12px 16px;border-top:1px solid var(--line)}
+.gp tbody th,.gp tbody td{display:block;padding:0;border:0!important;text-align:left}
+.gp tbody th{grid-column:1;align-self:center}
+.gp tbody td.num{grid-column:2;grid-row:1;text-align:right}
+.gp tbody td:nth-child(3),.gp tbody td:nth-child(4){grid-column:1 / -1;font-size:15px}
+.gp tbody td:nth-child(4){color:var(--ink)}
+.gp tr.gp-hap td{grid-column:1 / -1}
+.gp tr.gp-hap{border-top:2px solid var(--line-strong)}
+}
+@media (max-width:640px){.gp td.gp-empty{display:none}}

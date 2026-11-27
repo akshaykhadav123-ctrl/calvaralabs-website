@@ -65,7 +65,8 @@ INDUSTRIES = [
     ("Construction", "Lime plaster, mortar, putty, soil stabilisation, AAC blocks", ["80", "85"]),
     ("Steel and metallurgy", "Flux, slag conditioning, acid neutralisation", ["80", "85"]),
     ("Paper, leather and textile", "Causticising, unhairing, dyeing and finishing", ["85", "80"]),
-    ("Agriculture", "Soil pH correction, fertiliser preparation", ["80"]),
+    ("Agriculture", "Soil pH correction, fertiliser preparation, shed and manure treatment", ["80", "85"]),
+    ("Mining and mineral processing", "pH control in flotation and leaching, acid mine water neutralisation", ["85", "92", "80"]),
 ]
 PLANT_STEPS = [
     ("kiln", "Kiln", "Limestone is burnt to quicklime (CaO) and drawn out onto the conveyor."),
@@ -90,7 +91,7 @@ IND_CONTENT = {
             "Fineness matters for dosing: up to 98.5 % of the 92 grade passes 200 mesh, which feeds and dissolves smoothly at the low concentrations water plants dose at.",
             "Plants that run on a value budget can move to the 90 grade for softening where a little higher inert matter is acceptable; tell us your process and we will confirm with a sample before you commit."],
         "use": [
-            "Hydrated lime is dosed as a slurry or dry powder to raise pH, soften water (lime-soda process) and condition it against corrosion. Fine, consistent powder keeps dosing pumps and feeders stable.",
+            "Hydrated lime is dosed as a slurry or dry powder to raise pH, soften water (lime-soda process) and condition it against corrosion. In softening it also precipitates phosphorus and some dissolved metals, which settle out with the sludge. Fine, consistent powder keeps dosing pumps and feeders stable.",
             "We supply the grade to your dosing method, with a Certificate of Analysis for every lot so your water quality records can reference each delivery."],
     },
     "effluent-treatment": {
@@ -103,7 +104,7 @@ IND_CONTENT = {
             "Where your ETP runs heavy volumes and cost per tonne decides, the 85 grade is the standard range answer. It handles pH correction and bulk precipitation the same way; we match the grade to your influent, not to a label.",
             "Tell us your pH targets and what you are precipitating, and Akshay will recommend a grade and a sample with its CoA so you can test in your own plant first."],
         "use": [
-            "In effluent plants, lime neutralises acidic streams, precipitates heavy metals as hydroxides and co-precipitates phosphates in biological treatment. It is dosed at the reaction tank or as part of a lime-soda softening step.",
+            "In effluent plants, lime neutralises acidic streams, precipitates heavy metals as hydroxides and co-precipitates phosphates in biological treatment. It is dosed at the reaction tank or as part of a lime-soda softening step, and it conditions the sludge so it dewaters better on filter and belt presses.",
             "Because dosing is heavier than in water treatment, most ETP buyers pack in 25 to 40 kg bags or 900 kg jumbo bags and value the same fineness lot after lot more than the highest possible grade."],
     },
     "sugar": {
@@ -128,7 +129,7 @@ IND_CONTENT = {
             "Chemical buyers start on the 92 grade: the lowest silica of the range keeps inert matter out of your reaction and out of the finished product, and the 98.5 % through 200 mesh fineness keeps the reagent behaving consistently.",
             "For caustic soda by the lime-soda route, lime reacts with soda ash to give caustic soda and a calcium carbonate mud; the same purity logic applies. Where the chemistry is sensitive, tell us your spec or standard and we will confirm which grade meets it, sample first."],
         "use": [
-            "Hydrated lime serves as a direct reagent in calcium salt manufacture, as the reagent in bleaching powder production, and in the causticising step of soda-lime processes.",
+            "Hydrated lime serves as a direct reagent in calcium salt manufacture (calcium chloride, calcium peroxide, precipitated calcium carbonate), as the reagent in bleaching powder and calcium hypochlorite production, and in the causticising step of soda-lime processes.",
             "Send us your incoming specification and we will tell you which grade meets it. Every lot ships with a Certificate of Analysis your quality team can check on receipt."],
     },
     "ceramics-glass": {
@@ -153,7 +154,7 @@ IND_CONTENT = {
             "Fineness still helps: a finer powder neutralises faster and leaves less undigested grit in the scrubber slurry. If your scrubber runs tight, step up one grade and we will show you the CoA for both before you decide.",
             "Tell Akshay your gas composition and scrubber type; he will suggest the grade and the packing that keeps your landed cost down."],
         "use": [
-            "Hydrated lime slurry is the standard absorbent for acid gas scrubbing: it neutralises SO₂ and HCl and converts them to stable calcium salts that fall out with the scrubber waste.",
+            "Hydrated lime is injected dry into the gas duct or fed as a slurry to spray-dryer and wet scrubbers. It neutralises SO₂ and HCl and turns them into calcium sulphite, gypsum and calcium chloride, which leave with the scrubber solids.",
             "Plants dose from large day tanks, so most flue-gas buyers pack in 900 kg jumbo bags and value steady, dry powder that slurry-mixes without lumps."],
     },
     "construction": {
@@ -201,12 +202,25 @@ IND_CONTENT = {
             "Field application is a volume, price decision, so the 80 grade is the standard agricultural choice: 80 % minimum Ca(OH)₂ at the lowest cost per tonne of our range.",
             "For soil amendments blended into fertilisers or applied on sensitive crops, some buyers step up to the 85 for a cleaner product; we will confirm the split against your soil report before you commit."],
         "use": [
-            "Hydrated lime raises acidic soil pH, improves nutrient availability and conditions the profile for better root growth. It is also used in the preparation of lime-based fertilisers.",
+            "Hydrated lime raises acidic soil pH, improves nutrient availability and conditions the profile for better root growth. It is also used in the preparation of lime-based fertilisers, and on farms to disinfect poultry and cattle sheds and to treat manure and litter.",
             "Agricultural buyers usually take 25 to 40 kg bags; tell us your season's volume early so the order is ready when you need it."],
+    },
+    "mining": {
+        "name": "Mining and mineral processing", "title": "Hydrated lime for mining and mineral processing",
+        "h1": "Hydrated lime for mining and mineral processing",
+        "lede": "The pH reagent of the concentrator: flotation, cyanide leaching, and neutralising acid mine water and tailings. The grade sets how much lime you dose per tonne of ore.",
+        "grade": "85",
+        "why": [
+            "Most circuits start on the 85 grade: pH controllers dose by alkalinity, so a steady Ca(OH)₂ content keeps your pH loop steady, at a standard-range price.",
+            "Step up to the 92 grade where reagent consumption is costed tightly or inert grit upsets the circuit: more active lime per tonne means less lime dosed and less silica carried into the pulp.",
+            "For bulk neutralisation of acid mine water and tailings, the 80 grade does the job at the lowest cost per tonne. Tell us your circuit and ore, and we will send a sample with its CoA to test first."],
+        "use": [
+            "In flotation, lime raises the pulp pH and depresses pyrite, so copper, lead and zinc minerals float selectively. In gold cyanide leaching it keeps the pH high, so cyanide stays in solution instead of escaping as HCN gas.",
+            "Lime also neutralises acid mine drainage and acidic tailings and precipitates dissolved metals such as iron, copper and zinc as hydroxides. Plants slake or slurry it in a day tank, so most mining buyers take 900 kg jumbo bags."],
     },
 }
 IND_ORDER = ["water-treatment", "effluent-treatment", "sugar", "chemicals", "ceramics-glass",
-            "flue-gas", "construction", "steel", "paper-leather", "agriculture"]
+            "flue-gas", "construction", "steel", "paper-leather", "agriculture", "mining"]
 
 
 def industry(slug):
@@ -261,6 +275,38 @@ def industry(slug):
     page(f"industries/{slug}", root, f"industries/{slug}", c["title"] + " | Calvara Labs & Minerals", c["lede"], body, service_ld, alt=f"hi/industries/{slug}/", og_image="og-lime.png")
 
 
+# Grade picker: one row per industry -> grade to start on, when to step, deciding factor.
+GRADE_PICKER = [
+    ("water-treatment", "Drinking water", "92", "90 on a value budget", "Purity: least residue in the water"),
+    ("effluent-treatment", "Wastewater and effluent", "90", "85 where cost per tonne decides", "Match the influent, not the label"),
+    ("flue-gas", "Flue-gas scrubbing", "85", "80 on cost-critical lines", "Cost, and dry lump-free bulk powder"),
+    ("sugar", "Sugar", "90", "92 for high-clarity syrup", "Fast-mixing powder, season-long supply"),
+    ("chemicals", "Chemicals", "92", "", "Its purity becomes your product's"),
+    ("ceramics-glass", "Ceramics and glass", "92", "90 where the batch allows", "Low impurities, even fineness"),
+    ("construction", "Construction and soil", "80", "85 for AAC blocks and putty", "Price and availability"),
+    ("steel", "Steel and non-ferrous", "80", "85 where slag chemistry is tighter", "Price and slag chemistry"),
+    ("paper-leather", "Paper, leather and textile", "85", "80 for tannery limes", "Steady fine lime in a daily process"),
+    ("agriculture", "Agriculture", "80", "85 for blends and sensitive crops", "Price and your soil report"),
+    ("mining", "Mining and minerals", "85", "92 for tight circuits, 80 for mine water", "pH control with a clean composition"),
+]
+
+
+def grade_picker(root, hi=None):
+    """hi: optional dict slug -> (industry, step, factor) in Hindi, plus labels."""
+    rows = ""
+    for slug, ind, g, step, why in GRADE_PICKER:
+        link = ("hi/industries/" if hi else "industries/") + slug
+        if hi:
+            ind, step, why = hi[slug]
+        st = f'<span class="gp-step">{step}</span>' if step else '<span class="gp-step">—</span>'
+        rows += f'<tr><th scope="row"><a href="{href(root, link)}">{ind}</a></th><td class="num"><b class="gp-g">{g}</b></td><td{' class="gp-empty"' if not step else ''}>{st}</td><td>{why}</td></tr>'
+    hap = hi["_hap"] if hi else ("Hydroxyapatite (HAP)", "Our HAP line", "Particle size, purity, Ca/P ratio")
+    rows += f'<tr class="gp-hap"><th scope="row"><a href="{href(root, "hydroxyapatite")}">{hap[0]}</a></th><td colspan="2">{hap[1]}</td><td>{hap[2]}</td></tr>'
+    cap, h1, h2, h3, h4 = hi["_labels"] if hi else ("Which grade to start on, by industry", "Industry", "Start on", "Step to", "What decides it")
+    return (f'<div class="table-box gp-wrap"><table class="gp"><caption>{cap}</caption><thead><tr><th scope="col">{h1}</th>'
+            f'<th scope="col">{h2}</th><th scope="col">{h3}</th><th scope="col">{h4}</th></tr></thead><tbody>{rows}</tbody></table></div>')
+
+
 def industry_index():
     root = "../"
     cards = ""
@@ -273,9 +319,14 @@ def industry_index():
 <nav class="crumbs" aria-label="You are here"><a href="{href(root, '')}">Home</a> / <span aria-current="page">Industries</span></nav>
 <div class="prose" style="gap:14px;max-width:760px">
 <h1>Hydrated lime by industry</h1>
-<p class="lede">Ten application pages: which grade to use, why, and how it is used in your process. Start with yours, and take the grade in red into your first conversation.</p>
-<div class="btn-row"><a class="btn btn-solid" href="{href(root, 'hydrated-lime')}#industries">Grade-by-industry table</a><a class="btn btn-line" href="{href(root, 'contact')}">Ask Akshay</a></div>
+<p class="lede">Eleven application pages: which grade to use, why, and how it is used in your process. Start with yours, and take the grade in red into your first conversation.</p>
+<div class="btn-row"><a class="btn btn-solid" href="#picker">Grade picker</a><a class="btn btn-line" href="{href(root, 'contact')}">Ask Akshay</a></div>
 </div>
+</div></section>
+
+<section class="section section-tint" id="picker"><div class="wrap">
+<div class="section-head"><h2>Grade picker</h2><p class="lede">Start on the grade shown, then step up or down on the factor that decides it. We confirm with a sample and its CoA before you commit.</p></div>
+{grade_picker(root)}
 </div></section>
 
 <section class="section"><div class="wrap">
@@ -284,7 +335,7 @@ def industry_index():
 
 {cta_band(root)}'''
     page("industries", root, "industries", "Hydrated Lime by Industry: Water, Sugar, Effluent, Steel, More | Calvara Labs",
-         "Which hydrated lime grade to use in ten industries — water and effluent treatment, sugar, chemicals, ceramics and glass, flue gas, construction, steel, paper and leather, agriculture.", body, alt="hi/industries/", og_image="og-lime.png")
+         "Which hydrated lime grade to use in eleven industries — water and effluent treatment, sugar, chemicals, ceramics and glass, flue gas, construction, steel, paper and leather, agriculture, mining.", body, alt="hi/industries/", og_image="og-lime.png")
 PHOTOS = {  # key -> file in src/photos (optional)
     "kiln": "kiln.webp", "stock": "stock.webp", "hydrators": "hydrators.webp", "classifier": "classifier.webp",
     "smallbag": "smallbag.webp", "jumbo": "jumbo.webp", "jumbo-front": "jumbo-front.webp",
@@ -321,10 +372,12 @@ ASK_ICON = {"Prices on your terms": "indian-rupee", "Palletised or not": "layers
             "Packs and capacity": "package", "Nano grade": "hexagon", "Regulatory documents": "shield-check"}
 IND_ICON = {"Water and wastewater": "droplets", "Chemicals": "flask-conical", "Sugar industry": "candy",
             "Ceramics and glass": "amphora", "Flue gas treatment": "factory", "Construction": "building-2",
-            "Steel and metallurgy": "anvil", "Paper, leather and textile": "scroll-text", "Agriculture": "sprout"}
+            "Steel and metallurgy": "anvil", "Paper, leather and textile": "scroll-text", "Agriculture": "sprout",
+            "Mining and mineral processing": "pickaxe"}
 IND_SLUG = {"Water and wastewater": "water-treatment", "Chemicals": "chemicals", "Sugar industry": "sugar",
             "Ceramics and glass": "ceramics-glass", "Flue gas treatment": "flue-gas", "Construction": "construction",
-            "Steel and metallurgy": "steel", "Paper, leather and textile": "paper-leather", "Agriculture": "agriculture"}
+            "Steel and metallurgy": "steel", "Paper, leather and textile": "paper-leather", "Agriculture": "agriculture",
+            "Mining and mineral processing": "mining"}
 
 
 def ask_card(t, d, m):
@@ -1408,7 +1461,7 @@ def home():
 <div class="section-head"><h2>Go deeper</h2><p class="lede">This page keeps things short. The detail lives on the pages below.</p></div>
 <div class="nextup">
 <a class="nextup-card" href="{href(root, 'hydrated-lime')}"><h3>Hydrated lime</h3><p>Grades and specifications, uses by industry, storage, and the grade-by-grade data table.</p><span class="go">Read the spec</span></a>
-<a class="nextup-card" href="{href(root, 'industries')}"><h3>By industry</h3><p>Ten application pages: water, effluent, sugar, steel and more — which grade, why, and how it is used.</p><span class="go">Find your use</span></a>
+<a class="nextup-card" href="{href(root, 'industries')}"><h3>By industry</h3><p>Eleven application pages: water, effluent, sugar, mining and more — which grade, why, and how it is used.</p><span class="go">Find your use</span></a>
 <a class="nextup-card" href="{href(root, 'export')}"><h3>Prices &amp; export</h3><p>CIF, CFR and FOB terms, container quantities, packing, and ready-to-send questions.</p><span class="go">See export details</span></a>
 <a class="nextup-card" href="{href(root, 'about')}"><h3>About &amp; quality</h3><p>Our plant, the six production steps, what each lab test means, and how we prevent bad lime.</p><span class="go">Meet the plant</span></a>
 <a class="nextup-card" href="{href(root, 'documents')}"><h3>Documents</h3><p>GST, IEC and MSME registrations, and independent lab reports, each with a verify link.</p><span class="go">Open documents</span></a>
@@ -1492,8 +1545,9 @@ def lime():
 </div></section>
 
 <section class="section" id="industries"><div class="wrap">
-<div class="section-head"><h2>Find your grade by industry</h2><p class="lede">Start with the grade in red. Each industry has its own page: grade, why and the typical use.</p></div>
-{industries()}
+<div class="section-head"><h2>Find your grade by industry</h2><p class="lede">Start on the grade shown, then step up or down on the factor that decides it. Each industry has its own page: grade, why and the typical use.</p></div>
+{grade_picker("../")}
+<div style="margin-top:clamp(28px,4vw,44px)">{industries()}</div>
 </div></section>
 
 <section class="section section-tint"><div class="wrap">
