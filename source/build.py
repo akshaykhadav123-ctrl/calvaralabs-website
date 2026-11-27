@@ -9,6 +9,7 @@ drop them into src/photos/ with the names in PHOTOS and rebuild.
 """
 import datetime, json, re, shutil, sys
 from pathlib import Path
+from urllib.parse import quote
 sys.path.insert(0, str(Path(__file__).parent / "tools"))
 from logo_parts import lockup, mark_svg
 
@@ -68,6 +69,216 @@ PLANT_STEPS = [
     ("smallbag", "Small bag packing", "Powder is fed from hoppers and filled in 25, 30, 35 or 40 kg bags."),
     ("jumbo", "Jumbo-bag packing", "900 kg bags filled under a bag-filter dust collector."),
 ]
+
+# ---------- one page per industry application ----------
+# Buyers search "hydrated lime for X" before they search a supplier. Each entry
+# becomes /industries/<slug>/ : which grade to use, why, and the typical use.
+IND_CONTENT = {
+    "water-treatment": {
+        "name": "Water and wastewater", "title": "Hydrated lime for water treatment",
+        "h1": "Hydrated lime for water treatment",
+        "lede": "pH correction, softening and hardness control in drinking water plants and process water. The grade you need is the one that leaves the least residue in your water.",
+        "grade": "92",
+        "why": [
+            "In water, you are paying for purity, not just alkalinity. The 92 grade carries the least silica and inert matter of all our grades, so less undissolved residue settles out of your dosing line and less sludge forms downstream.",
+            "Fineness matters for dosing: up to 98.5 % of the 92 grade passes 200 mesh, which feeds and dissolves smoothly at the low concentrations water plants dose at.",
+            "Plants that run on a value budget can move to the 90 grade for softening where a little higher inert matter is acceptable; tell us your process and we will confirm with a sample before you commit."],
+        "use": [
+            "Hydrated lime is dosed as a slurry or dry powder to raise pH, soften water (lime-soda process) and keep carbonation within range. Fine, consistent powder keeps dosing pumps and feeders stable.",
+            "We supply the grade to your dosing method, with a Certificate of Analysis for every lot so your water quality records can reference each delivery."],
+    },
+    "effluent-treatment": {
+        "name": "Water and wastewater", "title": "Hydrated lime for effluent treatment",
+        "h1": "Hydrated lime for effluent treatment",
+        "lede": "pH neutralisation, heavy-metal and phosphate precipitation in ETPs, CETPs and on-site treatment plants. Usually a step below drinking-water purity, at a step up in cost.",
+        "grade": "90",
+        "why": [
+            "For precipitation work the 90 grade is the usual starting point: enough purity that your metal hydroxides and phosphates precipitate cleanly, without paying for the extra fineness that drinking water requires.",
+            "Where your ETP runs heavy volumes and cost per tonne decides, the 85 grade is the standard range answer. It handles pH correction and bulk precipitation the same way; we match the grade to your influent, not to a label.",
+            "Tell us your pH targets and what you are precipitating, and Akshay will recommend a grade and a sample with its CoA so you can test in your own plant first."],
+        "use": [
+            "In effluent plants, lime neutralises acidic streams, precipitates heavy metals as hydroxides and co-precipitates phosphates in biological treatment. It is dosed at the reaction tank or as part of a lime-soda softening step.",
+            "Because dosing is heavier than in water treatment, most ETP buyers pack in 25 to 40 kg bags or 900 kg jumbo bags and value consistent fineness over batch to batch more than the highest possible grade."],
+    },
+    "sugar": {
+        "name": "Sugar industry", "title": "Hydrated lime for sugar",
+        "h1": "Hydrated lime for sugar",
+        "lede": "Clarification and purification of cane juice and beet liquor: pH control, impurity precipitation and colour protection, run every day of the crushing season.",
+        "grade": "90",
+        "why": [
+            "Sugar mills usually start on the 90 grade: it clarifies juice at normal doses with low residue, and it is cheaper than the drinking-water 92 without the extra fineness a mill does not need.",
+            "Mills running a high clarity spec or a continuous purification plant can step up to the 92 grade; its lower silica keeps undissolved grit out of your juice. Plants sensitive to colour can also ask us to hold silica tighter.",
+            "Crushing season is when supply reliability matters most: we hold ready stock across all four grades, and every lot ships with its CoA so your mill lab can verify it on receipt."],
+        "use": [
+            "Lime is dosed into the juice to raise pH, where it binds impurities, waxes and colour bodies, and precipitates them out. In the purification step it also contributes to ash removal and stabilises the process.",
+            "Mills dose it as a milk-of-lime slurry or directly as fine powder. A consistent fineness means a steadier clarification, and steadier clarification means more sugar out of the same juice."],
+    },
+    "chemicals": {
+        "name": "Chemicals", "title": "Hydrated lime for chemicals",
+        "h1": "Hydrated lime for chemical manufacturing",
+        "lede": "As a reagent and a process material: calcium salts, bleaching powder, caustic soda and other calcium-based chemistry. Here the grade is part of your product quality.",
+        "grade": "92",
+        "why": [
+            "Chemical buyers start on the 92 grade: the lowest silica of the range keeps inert matter out of your reaction and out of the finished product, and the 98.5 % through 200 mesh fineness keeps the reagent behaving consistently.",
+            "For caustic soda, lime reacts with soda ash to regenerate caustic and recover the lime; the same purity logic applies. Where the chemistry is sensitive, tell us your spec or standard and we will confirm which grade meets it, sample first."],
+        "use": [
+            "Hydrated lime serves as a direct reagent in calcium salt manufacture, as the reagent in bleaching powder production, and in the causticising step of soda-lime processes.",
+            "We can align our Certificate of Analysis with your incoming specification, lot by lot, so your quality team can accept deliveries on paper before they open a single bag."],
+    },
+    "ceramics-glass": {
+        "name": "Ceramics and glass", "title": "Hydrated lime for ceramics and glass",
+        "h1": "Hydrated lime for ceramics and glass",
+        "lede": "As a raw material and process additive in ceramic bodies, glazes and glass batches, where low impurities and even fineness keep your batch chemistry steady.",
+        "grade": "92",
+        "why": [
+            "Ceramic and glass buyers run on the 92 grade because the batch chemistry is theirs to defend: the lowest silica cap of our range and the highest fineness mean the lime you add is doing what you planned, nothing else.",
+            "The 90 grade works for batches where a slightly higher inert fraction is acceptable; we will confirm against your raw-material specification and a sample before you change suppliers."],
+        "use": [
+            "In ceramics, hydrated lime acts as a flux and plasticiser in bodies and as a glaze additive. In glass it enters the batch as a calcium source, replacing some of the soda line and stabilising the melt.",
+            "Because batches are weighed in tonnes and reworked slowly, most ceramic and glass plants value a supplier who can hold one grade consistently; ours ships with a CoA that states the measured result for every lot."],
+    },
+    "flue-gas": {
+        "name": "Flue gas treatment", "title": "Hydrated lime for flue gas treatment",
+        "h1": "Hydrated lime for flue gas treatment",
+        "lede": "Scrubbing and neutralisation of SO₂ and HCl in flue-gas scrubbers, on solid fuel, waste-to-energy and process vents. Dosing is heavy, so the grade is a cost decision.",
+        "grade": "85",
+        "why": [
+            "Scrubbing is a volume game: you dose a lot of lime against a lot of gas, so the 85 grade is the usual starting point and the 80 for cost-critical lines. The acid neutralises to the hydroxide regardless; the grade number mostly sets your cost per tonne.",
+            "Fineness still helps: a finer powder neutralises faster and leaves less undigested grit in the scrubber slurry. If your scrubber runs tight, step up one grade and we will show you the CoA for both before you decide.",
+            "Tell Akshay your gas composition and scrubber type; he will suggest the grade and the packing that keeps your landed cost down."],
+        "use": [
+            "Hydrated lime slurry is the standard absorbent for acid gas scrubbing: it neutralises SO₂ and HCl and converts them to stable calcium salts that fall out with the scrubber waste.",
+            "Plants dose from large day tanks, so most flue-gas buyers pack in 900 kg jumbo bags and value steady, dry powder that slurry-mixes without lumps."],
+    },
+    "construction": {
+        "name": "Construction", "title": "Hydrated lime for construction",
+        "h1": "Hydrated lime for construction",
+        "lede": "Plaster, mortar, lime putty, soil stabilisation and AAC blocks: the everyday, value-priced side of the lime business, where the 80 grade does the work.",
+        "grade": "80",
+        "why": [
+            "Construction work is dosed in bulk, so the 80 grade is the right one: 80 % minimum Ca(OH)₂ at the lowest price point of our range, with moisture capped at 2 % so it works clean in mortar and stabilisation mixes.",
+            "For AAC blocks and putty, where fineness and reactivity show up in the product, the 85 grade is the common step up. We will confirm the split with your mix design before you lock a contract."],
+        "use": [
+            "In plaster and mortar, hydrated lime improves workability and finish. In soil stabilisation it corrects acidic, low-plasticity subgrades for roads and foundations. In AAC blocks it reacts with the alumino-silicate line to form the calcium aluminosilicate hydrate that makes the block rise.",
+            "Builders and block plants usually pack in 25 to 40 kg bags on or off pallets, and keep several months of dry storage, so our bags are sealed and laminated to stay dry on your yard."],
+    },
+    "steel": {
+        "name": "Steel and metallurgy", "title": "Hydrated lime for steel and metallurgy",
+        "h1": "Hydrated lime for steel and metallurgy",
+        "lede": "Flux, slag conditioning and acid neutralisation in steel and non-ferrous shops, where the grade is chosen on price and on what your slag chemistry allows.",
+        "grade": "80",
+        "why": [
+            "Steel plants generally start on the 80 grade for bulk flux and neutralisation work: the alkalinity is what the process uses, and the cost per tonne is what the process is priced against.",
+            "Where your slag or dust treatment has a tighter impurity limit, the 85 grade is the usual step up. Send us the position lime holds in your process and we will suggest the grade and the sample to test it with."],
+        "use": [
+            "As flux, hydrated lime helps build the slag that carries phosphorus and sulphur out of the melt. It also neutralises acidic off-gas and dust streams, and conditions mill dust for re-use.",
+            "Most metal shops take it in jumbo bags for bulk dosing, or in 40 kg bags for smaller lines, and check each delivery against the CoA we ship with it."],
+    },
+    "paper-leather": {
+        "name": "Paper, leather and textile", "title": "Hydrated lime for paper, leather and textiles",
+        "h1": "Hydrated lime for paper, leather and textiles",
+        "lede": "Causticising, leather unhairing and the dye and finishing baths of textile plants: steady, fine lime in a process you run every day.",
+        "grade": "85",
+        "why": [
+            "The 85 grade is the usual choice here: fine enough for even causticising, priced in the standard range, and stable batch to batch, which matters when your vats run on a recipe.",
+            "For tanneries working unhairing limes, the 80 grade is the value answer; for paper mills causticising in larger lines, the 90 covers lines where your caustic spec is tight. Akshay will confirm against your recipe with a sample first."],
+        "use": [
+            "Paper plants use lime in the recovery cycle and in causticising. Tanneries dose it in unhairing limes to loosen and remove hide hair. Textile plants use it in dyeing, scouring and finishing baths where a stable alkali keeps the shade even.",
+            "All three run on fine, free-flowing powder, so we match the fineness of the grade to your dosing method, from small bag to jumbo."],
+    },
+    "agriculture": {
+        "name": "Agriculture", "title": "Hydrated lime for agriculture",
+        "h1": "Hydrated lime for agriculture",
+        "lede": "Soil pH correction and fertiliser preparation: the bulk, value side of the range, where the 80 grade is the working grade across most crops.",
+        "grade": "80",
+        "why": [
+            "Field application is a volume, price decision, so the 80 grade is the standard agricultural choice: 80 % minimum Ca(OH)₂ at the lowest cost per tonne of our range.",
+            "For soil amendments blended into fertilisers or applied on sensitive crops, some buyers step up to the 85 for a cleaner product; we will confirm the split against your soil report before you commit."],
+        "use": [
+            "Hydrated lime raises acidic soil pH, improves nutrient availability and conditions the profile for better root growth. It is also used in the preparation of lime-based fertilisers and as a treatment in animal feed.",
+            "Agricultural buyers pack it in 50 to 40 kg bags on pallets for the trade, and we hold ready stock so the season does not catch us short."],
+    },
+}
+IND_ORDER = ["water-treatment", "effluent-treatment", "sugar", "chemicals", "ceramics-glass",
+            "flue-gas", "construction", "steel", "paper-leather", "agriculture"]
+
+
+def industry(slug):
+    c = IND_CONTENT[slug]
+    root = "../../"  # page lives at /industries/<slug>/ — two levels deep
+    g = next(row for row in GRADES if row[0] == c["grade"])
+    others = "".join(
+        f'<a class="nextup-card" href="{href(root, "industries/" + s)}"><h3>{IND_CONTENT[s]["title"]}</h3><p>{IND_CONTENT[s]["lede"]}</p><span class="go">See the page</span></a>'
+        for s in IND_ORDER if s != slug)
+    body = f'''
+<section class="page-head"><div class="wrap">
+<nav class="crumbs" aria-label="You are here"><a href="{href(root, '')}">Home</a> / <a href="{href(root, 'hydrated-lime')}#industries">Industries</a> / <span aria-current="page">{c["name"]}</span></nav>
+<div class="page-head-grid">
+<div class="prose" style="gap:16px">
+<h1>{c["h1"]}</h1>
+<p class="lede">{c["lede"]}</p>
+<div class="btn-row"><a class="btn btn-solid" href="#quote">Get a price</a><a class="btn btn-line" href="{href(root, 'hydrated-lime')}#spec">Compare all grades</a></div>
+</div>
+<div class="mini-tile"><span class="formula">Grade {c["grade"]}</span><span class="meta">Suggested starting grade for {c["name"].lower()}</span><span class="meta">Ca(OH)<sub>2</sub> {g[2]} minimum · silica ≤ {g[5]}</span></div>
+</div>
+</div></section>
+
+<section class="section"><div class="wrap">
+<div class="section-head"><h2>Which grade, and why</h2><p class="lede">We start you on the grade below, then confirm it against your process with a sample.</p></div>
+<div class="prose" style="max-width:760px">{"".join(f"<p>{p}</p>" for p in c["why"])}</div>
+<p style="margin-top:18px"><a class="btn btn-line" href="{href(root, 'hydrated-lime')}#spec">Full grade-by-grade specification</a></p>
+</div></section>
+
+<section class="section section-tint"><div class="wrap">
+<div class="section-head"><h2>How it is used</h2></div>
+<div class="prose" style="max-width:760px">{"".join(f"<p>{p}</p>" for p in c["use"])}</div>
+</div></section>
+
+<section class="section"><div class="wrap">
+<div class="section-head"><h2>How to start</h2><p class="lede">Three steps, sample first.</p></div>
+{start_steps()}
+</div></section>
+
+<section class="section section-tint" id="quote"><div class="wrap">
+{quote_builder(root)}
+</div></section>
+
+<section class="section"><div class="wrap">
+<div class="section-head"><h2>Other applications</h2></div>
+<div class="nextup">{others}</div>
+</div></section>
+
+{cta_band(root)}'''
+    service_ld = {"@context": "https://schema.org", "@type": "Service", "name": c["title"], "description": c["lede"],
+                  "serviceType": f"hydrated lime supply, {c['name'].lower()}", "provider": {"@type": "Organization", "name": "Calvara Labs & Minerals", "url": SITE},
+                  "areaServed": "IN", "url": SITE + f"/industries/{slug}/"}
+    page(f"industries/{slug}", root, f"industries/{slug}", c["title"] + " | Calvara Labs & Minerals", c["lede"], body, service_ld, og_image="og-lime.png")
+
+
+def industry_index():
+    root = "../"
+    cards = ""
+    for s in IND_ORDER:
+        c = IND_CONTENT[s]
+        icon = lic(IND_ICON.get(c["name"], "factory"), "ic ind-ic")
+        cards += f'<a class="nextup-card" href="{href(root, "industries/" + s)}">{icon}<h3>{c["title"]}</h3><p>Start on grade {c["grade"]}; we confirm against your process with a sample and its CoA.</p><span class="go">Read the page</span></a>'
+    body = f'''
+<section class="page-head"><div class="wrap">
+<nav class="crumbs" aria-label="You are here"><a href="{href(root, '')}">Home</a> / <span aria-current="page">Industries</span></nav>
+<div class="prose" style="gap:14px;max-width:760px">
+<h1>Hydrated lime by industry</h1>
+<p class="lede">Ten application pages: which grade to use, why, and how it is used in your process. Start with yours, and take the grade in red into your first conversation.</p>
+<div class="btn-row"><a class="btn btn-solid" href="{href(root, 'hydrated-lime')}#industries">Grade-by-industry table</a><a class="btn btn-line" href="{href(root, 'contact')}">Ask Akshay</a></div>
+</div>
+</div></section>
+
+<section class="section"><div class="wrap">
+<div class="nextup">{cards}</div>
+</div></section>
+
+{cta_band(root)}'''
+    page("industries", root, "industries", "Hydrated Lime by Industry: Water, Sugar, Effluent, Steel, More | Calvara Labs",
+         "Which hydrated lime grade to use in ten industries — water and effluent treatment, sugar, chemicals, ceramics and glass, flue gas, construction, steel, paper and leather, agriculture.", body, og_image="og-lime.png")
 PHOTOS = {  # key -> file in src/photos (optional)
     "kiln": "kiln.webp", "stock": "stock.webp", "hydrators": "hydrators.webp", "classifier": "classifier.webp",
     "smallbag": "smallbag.webp", "jumbo": "jumbo.webp", "jumbo-front": "jumbo-front.webp",
@@ -89,7 +300,7 @@ def href(root, page):
 
 # ---------- line icons (Lucide, ISC licence: src/icons/LICENSE-lucide.txt) ----------
 def lic(name, cls="ic"):
-    raw = (ROOT / "src" / "icons" / f"{name}.svg").read_text()
+    raw = (ROOT / "src" / "icons" / f"{name}.svg").read_text(encoding="utf-8")
     inner = re.search(r"<svg[^>]*>(.*)</svg>", raw, re.S).group(1)
     inner = re.sub(r"\s+", " ", inner).strip()
     return (f'<svg class="{cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" '
@@ -105,6 +316,9 @@ ASK_ICON = {"Prices on your terms": "indian-rupee", "Palletised or not": "layers
 IND_ICON = {"Water and wastewater": "droplets", "Chemicals": "flask-conical", "Sugar industry": "candy",
             "Ceramics and glass": "amphora", "Flue gas treatment": "factory", "Construction": "building-2",
             "Steel and metallurgy": "anvil", "Paper, leather and textile": "scroll-text", "Agriculture": "sprout"}
+IND_SLUG = {"Water and wastewater": "water-treatment", "Chemicals": "chemicals", "Sugar industry": "sugar",
+            "Ceramics and glass": "ceramics-glass", "Flue gas treatment": "flue-gas", "Construction": "construction",
+            "Steel and metallurgy": "steel", "Paper, leather and textile": "paper-leather", "Agriculture": "agriculture"}
 
 
 def ask_card(t, d, m):
@@ -242,10 +456,12 @@ def footer(root):
 </footer>'''
 
 
-def cta_band(root, title="Ask for a sample of the grade you want", text="Tell us your use, monthly volume and the grade you have in mind. You hear back directly from our engineer, with a sample and its Certificate of Analysis."):
+def cta_band(root, title="Ask for a sample of the grade you want", text="Tell us your use, monthly volume and the grade you have in mind. You hear back directly from our engineer, with a sample and its Certificate of Analysis.", product=""):
+    # product pre-selects the dropdown on the contact form via its ?product= reader
+    contact = href(root, 'contact') + (f"?product={quote(product)}" if product else "")
     return f'''<section class="cta-band"><div class="wrap cta-grid">
 <div><h2>{title}</h2><p>{text}</p></div>
-<div class="btn-row"><a class="btn btn-red" href="{href(root, 'contact')}">Request a quote</a><a class="btn btn-ghost-light" href="{WHATSAPP}">WhatsApp us</a></div>
+<div class="btn-row"><a class="btn btn-red" href="{contact}">Request a quote</a><a class="btn btn-ghost-light" href="{WHATSAPP}">WhatsApp us</a></div>
 </div></section>'''
 
 
@@ -258,6 +474,37 @@ ORG_LD = {
     "description": "Hydrated lime (calcium hydroxide) in four grades, 80 to 92% Ca(OH)2, made at Ransigaon, Jodhpur, Rajasthan, India.",
 }
 
+# LocalBusiness entity (Jodhpur manufacturer) — attached to every page alongside ORG_LD
+LOCAL_BUSINESS_LD = {
+    "@context": "https://schema.org", "@type": "LocalBusiness",
+    "name": "Calvara Labs & Minerals",
+    "legalName": "Calvara Labs and Minerals",
+    "url": SITE + "/", "telephone": PHONE_TEL, "email": EMAIL,
+    "image": SITE + "/assets/logo-512.png",
+    "address": {"@type": "PostalAddress", "streetAddress": "54 Patrakar Colony, Section 7, New Power House Road",
+                "addressLocality": "Jodhpur", "addressRegion": "Rajasthan", "postalCode": "342003", "addressCountry": "IN"},
+    "areaServed": "IN",
+    "taxId": GSTIN,
+    "description": "Manufacturer of hydrated lime (calcium hydroxide, CAS 1305-62-0, HSN 2522) and hydroxyapatite at its own plant in Ransigaon, Jodhpur, Rajasthan, India.",
+    "foundingDate": "2026",
+    "slogan": "Hydrated lime and hydroxyapatite from our own calcium.",
+}
+
+
+def video_ld():
+    """VideoObject for the three plant clips shown on the home page."""
+    clips = [
+        ("hero-bg", "Calvara lime plant, Ransigaon", "Our own lime plant near Jodhpur: limestone kilns feeding the hydrators, our signature clip over the home page.", "hero-bg-poster.jpg", 25),
+        ("plant-tour", "Inside the plant: kiln to lab", "Walk-through of the plant at Ransigaon, Jodhpur: kiln, raw-material stock, hydrators, classifier, bag and jumbo-bag packing and the plant lab.", "plant-tour-poster.jpg", 22),
+        ("packing-dispatch", "Packing and dispatch", "Packing and dispatch at our Ransigaon plant: 25 to 40 kg bags and 900 kg jumbo bags, ready stock.", "packing-dispatch-poster.jpg", 14),
+    ]
+    return [
+        {"@context": "https://schema.org", "@type": "VideoObject", "name": name, "description": desc,
+         "thumbnailUrl": SITE + f"/assets/media/{poster}", "uploadDate": "2026-11-20",
+         "duration": f"PT{sec}S", "contentUrl": SITE + f"/assets/media/{key}.mp4",
+         "embedUrl": SITE + "/", "publisher": {"@type": "Organization", "name": "Calvara Labs & Minerals", "url": SITE + "/"}}
+        for key, name, desc, poster, sec in clips]
+
 
 def hero_preload(root):
     m = f"{root}assets/media/hero-bg-poster"
@@ -268,19 +515,35 @@ def hero_preload(root):
 HI_ALT = {"": "hi/", "hydrated-lime": "hi/hydrated-lime/", "contact": "hi/contact/"}  # English page -> Hindi page
 
 
-def page(path, root, current, title, desc, body, extra_ld=None, noindex=False, lang="en", alt=None, head_html=None, foot_html=None, ui=None, head_extra=""):
+def page(path, root, current, title, desc, body, extra_ld=None, noindex=False, lang="en", alt=None, head_html=None, foot_html=None, ui=None, og_image=None, head_extra=""):
+
     canonical = SITE + "/" + (path + "/" if path and not path.endswith(".html") else "")
     ui = ui or {"wa": "Chat with Akshay on WhatsApp", "top": "Top", "top_label": "Back to top"}
     if lang == "en" and alt is None and path in HI_ALT and HINDI_READY:
         alt = HI_ALT[path]
-    if alt:
-        en_url = SITE + "/" + (path + "/" if path else "") if lang == "en" else SITE + "/" + alt
+    if alt is not None and not noindex:
+        # alt = the counterpart page's path (for EN pages the /hi/ path, for HI pages the EN path)
+        en_url = (SITE + "/" + (path + "/" if path else "")) if lang == "en" else (SITE + "/" + alt if alt else SITE + "/")
         hi_url = SITE + "/" + alt if lang == "en" else canonical
         alts = (f'<link rel="alternate" hreflang="en" href="{en_url}">\n<link rel="alternate" hreflang="hi" href="{hi_url}">\n'
                 f'<link rel="alternate" hreflang="x-default" href="{en_url}">')
     else:
         alts = ""
-    ld = [ORG_LD] + (extra_ld if isinstance(extra_ld, list) else [extra_ld] if extra_ld else [])
+    ld = [ORG_LD, LOCAL_BUSINESS_LD] + (extra_ld if isinstance(extra_ld, list) else [extra_ld] if extra_ld else [])
+    if lang == "en" and path and not path.endswith(".html") and not noindex:
+        # BreadcrumbList for inner pages; the home page is the first crumb everywhere
+        known = {"hydrated-lime": "Hydrated lime", "export": "Prices & export", "hydroxyapatite": "Hydroxyapatite",
+                 "documents": "Documents", "about": "About & quality", "contact": "Contact"}
+        if path.startswith("industries/"):
+            slug = path.rsplit("/", 1)[-1]
+            crumb_name = "Industries › " + IND_CONTENT[slug]["title"] if slug in IND_CONTENT else "Industries"
+        elif path == "industries":
+            crumb_name = "Industries"
+        else:
+            crumb_name = known.get(path, path.title())
+        ld.append({"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "Home", "item": SITE + "/"},
+            {"@type": "ListItem", "position": 2, "name": crumb_name, "item": SITE + "/" + path + "/"}]})
     html = f'''<!doctype html>
 <html lang="{lang}">
 <head>
@@ -296,7 +559,7 @@ def page(path, root, current, title, desc, body, extra_ld=None, noindex=False, l
 <meta property="og:title" content="{title}">
 <meta property="og:description" content="{desc}">
 <meta property="og:url" content="{canonical}">
-<meta property="og:image" content="{SITE}/assets/og.png">
+<meta property="og:image" content="{SITE}/assets/{og_image or 'og.png'}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#13202E">
 <meta name="format-detection" content="telephone=yes">
@@ -445,7 +708,9 @@ def engineer(root, short=False):
     more = "" if short else "<p>I am a chemical engineer from IIT&nbsp;Bombay and I lead Calvara Labs &amp; Minerals. When you write to us, you speak directly with me about chemistry, grades and dispatch, not with a call centre.</p>"
     return f'''<div class="engineer">{av}<div>
 <blockquote>“Tell me about your process. I'll suggest the grade that fits, and send you a sample to prove it.”</blockquote>
-<p class="eng-name"><b>Akshay Khadav</b><span>B.Tech Chemical Engineering, IIT&nbsp;Bombay</span></p>
+<p class="eng-name"><b>Akshay Khadav</b></p>
+<p class="eng-cred">B.Tech Chemical Engineering, IIT Bombay</p>
+
 {more}
 <div class="btn-row"><a class="btn btn-red" href="{WHATSAPP}">WhatsApp Akshay</a><a class="btn btn-ghost-light" href="tel:{PHONE_TEL}">Call {PHONE_DISPLAY}</a></div>
 </div></div>'''
@@ -486,11 +751,11 @@ def ranges():
 </div>'''
 
 
-def industries():
+def industries(root="../"):
     out = ""
     for name, use, gs in INDUSTRIES:
         chips = "".join(f'<li class="chip{" first" if i == 0 else ""}">{g}</li>' for i, g in enumerate(gs))
-        out += f'<div>{lic(IND_ICON.get(name, "factory"), "ic ind-ic")}<h3>{name}</h3><p>{use}</p><ul class="chips" aria-label="Suggested grades, first is the starting grade">{chips}</ul></div>'
+        out += f'<div>{lic(IND_ICON.get(name, "factory"), "ic ind-ic")}<h3>{name}</h3><p>{use}</p><ul class="chips" aria-label="Suggested grades, first is the starting grade">{chips}</ul><a class="ind-link" href="{href(root, "industries/" + IND_SLUG[name])}">Grade page for {name.lower()} →</a></div>'
     return f'<div class="inds">{out}</div>'
 
 
@@ -532,6 +797,61 @@ def coa_sample():
 def bags():
     items = "".join(f'<li><b>{k} kg</b><span>Bag, liner, laminated</span></li>' for k in (25, 30, 35, 40))
     return f'<ul class="bags">{items}<li class="jumbo"><b>Pallets</b><span>Palletised or non-palletised</span></li></ul>'
+
+
+# ---------- container load calculator ----------
+# EXPORT BUYERS' FIRST QUESTION: "how many tonnes fit in my container?"
+# The tonne figures below are INDICATIVE. Replace the LOADS values with the
+# real measured loads for each (box, packing) combination, then rebuild:
+#   python source/build.py live
+# bag_count is derived from tonnes × 1000 ÷ bag weight, so it stays right.
+def container_calc(root):
+    wa_base = wa("")  # base wa.me link, message appended by JS
+    base = wa_base.split("?text=")[0]
+    return f'''<div class="ccalc">
+<div class="ccalc-ctrl">
+<div class="field"><label for="cc-box">Container</label>
+<select id="cc-box"><option value="20">20 ft</option><option value="40" selected>40 ft</option></select></div>
+<div class="field"><label for="cc-pkg">Packing</label>
+<select id="cc-pkg"><option value="bag-25">25 kg bags</option><option value="bag-30">30 kg bags</option>
+<option value="bag-35">35 kg bags</option><option value="bag-40">40 kg bags</option><option value="jumbo">900 kg jumbo bags</option></select></div>
+<div class="field"><label for="cc-pal">Pallets</label>
+<select id="cc-pal"><option value="pal" selected>Palletised</option><option value="loose">Non-palletised</option></select></div>
+</div>
+<div class="ccalc-out">
+<div><span class="ccalc-t" id="cc-t">–</span><small>approx. tonnes in the box</small></div>
+<div><span class="ccalc-b" id="cc-b">–</span><small>approx. bags / jumbos</small></div>
+<p class="ccalc-note" id="cc-note">Indicative loads — send your box and packing and Akshay confirms the exact figure, palletised or not.</p>
+</div>
+<div class="ccalc-act"><a class="btn btn-wa" id="cc-wa" href="{base}">{lic("message-circle")}Get CIF price</a></div>
+</div>
+<script>
+(function(){{
+  // EDIT THESE with your real measured container loads (tonnes).
+  var LOADS = {{
+    "20": {{ "bags-pal": 25.0, "bags-loose": 27.0, "jumbo": 26.0 }},
+    "40": {{ "bags-pal": 27.0, "bags-loose": 27.5, "jumbo": 27.0 }}
+  }};
+  var BAG = {{ "bag-25": 25, "bag-30": 30, "bag-35": 35, "bag-40": 40, "jumbo": 900 }};
+  var PAL = document.getElementById("cc-pal");
+  function recalc(){{
+    var box = document.getElementById("cc-box").value, pkg = document.getElementById("cc-pkg").value;
+    var isJ = pkg === "jumbo", pal = isJ ? "pal" : PAL.value;
+    var t = LOADS[box][isJ ? "jumbo" : ("bags-" + (pal === "pal" ? "pal" : "loose"))];
+    var n = Math.round(t * 1000 / BAG[pkg]);
+    document.getElementById("cc-t").textContent = t.toFixed(1);
+    document.getElementById("cc-b").textContent = n + (isJ ? " jumbos" : " bags");
+    var msg = "Hello Akshay, please quote hydrated lime, CIF my port. "
+      + "Container: " + box + " ft · Packing: " + (isJ ? "900 kg jumbo bags" : BAG[pkg] + " kg bags, " + (pal === "pal" ? "palletised" : "non-palletised"))
+      + ". Estimated load: ~" + t.toFixed(1) + " t (about " + n + (isJ ? " jumbos" : " bags") + "). "
+      + "Grade: ___ · Port: ___ · Monthly volume: ___";
+    document.getElementById("cc-wa").href = "{base}?text=" + encodeURIComponent(msg);
+  }}
+  ["cc-box","cc-pkg","cc-pal"].forEach(function(id){{ document.getElementById(id).addEventListener("change", recalc); }});
+  document.getElementById("cc-pkg").addEventListener("change", function(){{ PAL.disabled = (this.value === "jumbo"); if(this.value==="jumbo") PAL.value="pal"; }});
+  recalc();
+}})();
+</script>'''
 
 
 def start_steps():
@@ -796,6 +1116,16 @@ def ticker(root):
 </div>'''
 
 
+PROCESS_STEPS = [
+    ("Kiln", "Rajasthan limestone is burnt to quicklime (CaO) and drawn out onto the conveyor."),
+    ("Measured water", "Quicklime is fed to the hydrator with a metered flow of water."),
+    ("Hydrator", "Quicklime is slaked into dry calcium hydroxide, Ca(OH)₂, in a rotating drum."),
+    ("Classifier", "Fine powder passes on; grit and silica are dropped out, so fineness stays within the grade."),
+    ("Packing", "25 to 40 kg bags and 900 kg jumbo bags, filled under a bag-filter dust collector."),
+]
+
+
+
 # ---------- home: "what are you looking for" tiles and the big process section ----------
 def path_tiles(root):
     tiles = [
@@ -817,7 +1147,7 @@ def path_tiles(root):
 </div></section>'''
 
 
-PROCESS_STEPS = [
+STORY_STEPS = [
     # title, what happens, what it means for you, spotlight box on the diagram (x, y, w, h in the 720 x 900 drawing)
     ("Quicklime from the kiln",
      "Limestone from the Jodhpur limestone belt is burnt to quicklime (CaO) and carried by conveyor to the hydrator.",
@@ -839,12 +1169,12 @@ PROCESS_STEPS = [
 
 def process_section(root):
     svg = (ROOT / "src" / "assets" / "media" / "process.svg").read_text()
-    boxes = ";".join(",".join(str(v) for v in b[3]) for b in PROCESS_STEPS)
+    boxes = ";".join(",".join(str(v) for v in b[3]) for b in STORY_STEPS)
     steps = "".join(
         f'''<article class="st" data-step="{i}"><span class="st-n">{i:02d}</span><h3>{t}</h3><p>{d}</p>
 <p class="st-why"><b>What it means for you</b>{w}</p></article>'''
-        for i, (t, d, w, _b) in enumerate(PROCESS_STEPS, 1))
-    dots = "".join(f'<button type="button" class="st-dot" data-go="{i}" aria-label="Step {i}: {t}">{i}</button>' for i, (t, *_r) in enumerate(PROCESS_STEPS, 1))
+        for i, (t, d, w, _b) in enumerate(STORY_STEPS, 1))
+    dots = "".join(f'<button type="button" class="st-dot" data-go="{i}" aria-label="Step {i}: {t}">{i}</button>' for i, (t, *_r) in enumerate(STORY_STEPS, 1))
     def vid(key, title, text):
         m = f"{root}assets/media/{key}"
         return f'''<figure class="reel reel-arch">
@@ -902,24 +1232,38 @@ def process_section(root):
 </script>'''
 
 
+
 def motion_section(root):
-    svg = (ROOT / "src" / "assets" / "media" / "process.svg").read_text()
-    def vid(key, title, text):
+    svg = (ROOT / "src" / "assets" / "media" / "process.svg").read_text(encoding="utf-8")
+    arch = (ROOT / "src" / "assets" / "jharokha.svg").read_text(encoding="utf-8").replace("<svg ", "<svg class=\"arch\" ", 1)
+    steps = "".join(f'<li><span class="n">{i + 1}</span><div><h3>{t}</h3><p>{d}</p></div></li>'
+                    for i, (t, d) in enumerate(PROCESS_STEPS))
+    def vid(key, title, text, cls=""):
         m = f"{root}assets/media/{key}"
-        return f'''<figure class="reel">
-<div class="reel-media"><video muted loop playsinline preload="none" data-poster="{m}-poster.jpg" aria-label="{title}"><source src="{m}.webm" type="video/webm"><source src="{m}.mp4" type="video/mp4"></video>
+        return f'''<figure class="reel {cls}">
+<div class="reel-media"><video muted loop playsinline preload="none" poster="{m}-poster.jpg" aria-label="{title}"><source src="{m}.webm" type="video/webm"><source src="{m}.mp4" type="video/mp4"></video>
+
 <button class="reel-btn" type="button" aria-label="Pause {title.lower()}">{lic("pause", "ic i-pause")}{lic("play", "ic i-play")}</button></div>
 <figcaption><b>{title}</b>{text}</figcaption></figure>'''
     return f'''<section class="section motion"><div class="wrap">
 <div class="section-head"><h2>See how your lime is made</h2><p class="lede">From quicklime to a sealed bag at our plant in Ransigaon, Jodhpur. Plant visits are welcome by appointment.</p></div>
-<div class="reels">
-<figure class="reel reel-svg"><div class="reel-media">{svg}
+<div class="featured lattice">
+<div class="featured-grid">
+<div class="featured-media">
+<figure class="reel reel-svg">{arch}<div class="reel-media">{svg}
 <button class="reel-btn" type="button" aria-label="Pause process animation">{lic("pause", "ic i-pause")}{lic("play", "ic i-play")}</button></div>
 <figcaption><b>The process</b>Quicklime and measured water become dry hydrated lime.</figcaption></figure>
-{vid("plant-tour", "Inside the plant", "Kiln, hydrators, classifier, packing and the plant lab.")}
-{vid("packing-dispatch", "Packing and dispatch", "25 to 40 kg bags and 900 kg jumbo bags, ready stock.")}
 </div>
-<p class="swipe-hint">Swipe to see all three.</p>
+<div class="featured-legend">
+<h3>Five steps, one roof</h3>
+<ol class="featured-steps">{steps}</ol>
+<p class="featured-note"><b>Why you should care:</b> because the same plant runs the kiln, the hydrator and the lab, every lot can be tested and shipped with its own Certificate of Analysis.</p>
+</div>
+</div>
+<div class="featured-proof reels"><b>Watch the plant run</b>
+<div class="reels-duo">{vid("plant-tour", "Inside the plant", "Kiln, hydrators, classifier, packing and the plant lab.")}{vid("packing-dispatch", "Packing and dispatch", "25 to 40 kg bags and 900 kg jumbo bags, ready stock.")}</div>
+</div>
+</div>
 </div></section>
 <script>
 (function(){{
@@ -931,7 +1275,7 @@ def motion_section(root):
     function play(){{ if(v){{ var p=v.play(); if(p&&p.catch)p.catch(function(){{}}); }} if(s) s.unpauseAnimations(); setBtn(b,false); }}
     function stop(){{ if(v) v.pause(); if(s) s.pauseAnimations(); setBtn(b,true); }}
     b.addEventListener('click', function(){{ user = true; if(b.classList.contains('is-paused')) play(); else stop(); }});
-    if(reduce){{ stop(); return; }}
+    if(reduce || (navigator.connection && navigator.connection.saveData)){{ stop(); return; }}  // honour Data Saver: stay on the poster, tap Play to run the clip
     if('IntersectionObserver' in window){{
       new IntersectionObserver(function(es){{ es.forEach(function(e){{ if(user) return; if(e.isIntersecting) play(); else stop(); }}); }}, {{threshold:.35}}).observe(r);
     }} else play();
@@ -1004,7 +1348,7 @@ def documents():
 </div></section>
 {cta_band(root)}'''
     page("documents", root, "documents", "Documents: GST, IEC, Udyam MSME, Lab Reports | Calvara Labs &amp; Minerals",
-         f"Calvara Labs and Minerals company documents: GST registration (GSTIN {GSTIN}), Importer-Exporter Code (IEC ETMPK7731R), Udyam MSME registration and lab test reports.", body)
+         f"Calvara Labs and Minerals company documents: GST registration (GSTIN {GSTIN}), Importer-Exporter Code (IEC ETMPK7731R), Udyam MSME registration and lab test reports.", body, og_image="og-documents.png")
 
 
 
@@ -1041,26 +1385,30 @@ def home():
 <p class="more-link"><a href="{href(root, 'export')}">Prices, packing, containers and payment terms explained</a></p>
 </div></section>
 
-<section class="section" id="industries"><div class="wrap">
-<div class="section-head"><h2>One powder, nine industries</h2><p class="lede">Start with the grade in red. The right final grade depends on how much silica and inert matter your process can tolerate.</p></div>
-{industries()}
-</div></section>
-{marquee(MQ_IND, "sm", reverse=True, speed=45)}
-
-<section class="section"><div class="wrap split">
-<div class="prose">
-<h2>Our own plant. Run by an engineer.</h2>
-<p>We make hydrated lime at our own plant in Ransigaon, in the limestone belt of Jodhpur. Each grade has a published specification: you test a sample first, and we supply to the sample you approve.</p>
-<p><a href="{href(root, 'about')}">About our plant and quality checks</a></p>
+<section class="section"><div class="wrap">
+<div class="section-head"><h2>Go deeper</h2><p class="lede">This page keeps things short. The detail lives on the pages below.</p></div>
+<div class="nextup">
+<a class="nextup-card" href="{href(root, 'hydrated-lime')}"><h3>Hydrated lime</h3><p>Grades and specifications, uses by industry, storage, and the grade-by-grade data table.</p><span class="go">Read the spec</span></a>
+<a class="nextup-card" href="{href(root, 'industries')}"><h3>By industry</h3><p>Ten application pages: water, effluent, sugar, steel and more — which grade, why, and how it is used.</p><span class="go">Find your use</span></a>
+<a class="nextup-card" href="{href(root, 'export')}"><h3>Prices &amp; export</h3><p>CIF, CFR and FOB terms, container quantities, packing, and ready-to-send questions.</p><span class="go">See export details</span></a>
+<a class="nextup-card" href="{href(root, 'about')}"><h3>About &amp; quality</h3><p>Our plant, the six production steps, what each lab test means, and how we prevent bad lime.</p><span class="go">Meet the plant</span></a>
+<a class="nextup-card" href="{href(root, 'documents')}"><h3>Documents</h3><p>GST, IEC and MSME registrations, and independent lab reports, each with a verify link.</p><span class="go">Open documents</span></a>
+<a class="nextup-card" href="{href(root, 'hydroxyapatite')}"><h3>Hydroxyapatite</h3><p>Animal-free HAp for toothpaste, tablets and labs. Micro grade samples open, 250 g with CoA.</p><span class="go">Request a sample</span></a>
 </div>
-{engineer(root)}
+</div></section>
+
+<section class="section section-tint"><div class="wrap split">
+<div class="prose"><h2>Also from our calcium: hydroxyapatite</h2><p>We make synthetic, animal-free hydroxyapatite from purified calcium for toothpaste, tablets, cosmetics and labs. Micro grade samples are open now.</p><p><a href="{href(root, 'hydroxyapatite')}">Hydroxyapatite specification</a></p></div>
+<div class="mini-tile"><span class="formula">Ca<sub>10</sub>(PO<sub>4</sub>)<sub>6</sub>(OH)<sub>2</sub></span><span class="meta">CAS 1306-06-5 · Ca/P 1.67 · D50 3 to 8 µm</span></div>
+
 </div></section>
 
 {cta_band(root)}
 '''
     page("", root, "", "Hydrated Lime Manufacturer, Jodhpur | Grades 80–92 | Calvara Labs",
-         "Hydrated lime in four grades, 80 to 92% Ca(OH)2, made at our plant near Jodhpur. Silica as low as 1.06%, fineness up to 98.5% through 200 mesh, CoA with every lot.",
-         body, head_extra=hero_preload(root))
+         "Hydrated lime in four grades, 80 to 92% Ca(OH)2, made at our plant near Jodhpur. Silica from 1.06%, up to 98.5% through 200 mesh, CoA with every lot.",
+         body, extra_ld=video_ld(), head_extra=hero_preload(root))
+
 
 
 def lime():
@@ -1124,8 +1472,8 @@ def lime():
 {common_props()}
 </div></section>
 
-<section class="section"><div class="wrap">
-<div class="section-head"><h2>Find your grade by industry</h2><p class="lede">Start with the grade in red.</p></div>
+<section class="section" id="industries"><div class="wrap">
+<div class="section-head"><h2>Find your grade by industry</h2><p class="lede">Start with the grade in red. Each industry has its own page: grade, why and the typical use.</p></div>
 {industries()}
 </div></section>
 
@@ -1156,16 +1504,21 @@ def lime():
 </div></section>
 
 <section class="section"><div class="wrap">
+<div class="section-head"><h2>How to start buying</h2></div>
+{start_steps()}
+</div></section>
+
+<section class="section"><div class="wrap">
 <div class="section-head"><h2>Questions buyers ask</h2></div>
 <div class="faq">{faqs}</div>
 </div></section>
 
-{cta_band(root, "Get a hydrated lime quote", "Send the grade, monthly quantity and delivery city or port. You hear back directly from our engineer.")}
+{cta_band(root, "Get a hydrated lime quote", "Send the grade, monthly quantity and delivery city or port. You hear back directly from our engineer.", product="hydrated lime")}
 '''
     page("hydrated-lime", root, "hydrated-lime", "Hydrated Lime Grades 80–92% | Specifications | Calvara Labs, Jodhpur",
          "Compare four hydrated lime grades: Ca(OH)2 80–92%, silica 1.06–8%, moisture 0.8–2.0%, 90–98.5% through 200 mesh. 25 to 40 kg bags, CoA with every lot.",
          body, [faq_ld, product_ld("Hydrated lime (calcium hydroxide)", "Hydrated lime in four grades, 80 to 92% Ca(OH)2, made at our plant near Jodhpur, Rajasthan. Packed in 25, 30, 35 or 40 kg bags or 900 kg jumbo bags, with a Certificate of Analysis for every lot.",
-                                   "hydrated-lime/", "Industrial chemicals", {"additionalProperty": [{"@type": "PropertyValue", "name": "CAS", "value": "1305-62-0"}, {"@type": "PropertyValue", "name": "HSN", "value": "2522"}]})])
+                                   "hydrated-lime/", "Industrial chemicals", {"additionalProperty": [{"@type": "PropertyValue", "name": "CAS", "value": "1305-62-0"}, {"@type": "PropertyValue", "name": "HSN", "value": "2522"}]})], og_image="og-lime.png")
 
 
 def hap():
@@ -1274,12 +1627,12 @@ def hap():
 <div class="faq">{faqs}</div>
 </div></section>
 
-{cta_band(root, "Request a hydroxyapatite sample", "Tell us your application, particle size and expected quantity. We send 250 g with a Certificate of Analysis.")}
+{cta_band(root, "Request a hydroxyapatite sample", "Tell us your application, particle size and expected quantity. We send 250 g with a Certificate of Analysis.", product="hydroxyapatite")}
 '''
     page("hydroxyapatite", root, "hydroxyapatite", "Hydroxyapatite Powder Manufacturer India | Animal-Free | Calvara Labs",
          "Synthetic, animal-free hydroxyapatite (micro grade, D50 3–8 µm) for toothpaste, tablets, cosmetics and labs. HAp ≥95% by XRD, Ca/P 1.67. Free 250 g sample.",
          body, [faq_ld, product_ld("Hydroxyapatite (synthetic)", "Synthetic, animal-free hydroxyapatite, micro grade D50 3 to 8 µm, made from purified calcium near Jodhpur, India. 250 g samples with a Certificate of Analysis.",
-                                   "hydroxyapatite/", "Calcium phosphates", {"additionalProperty": [{"@type": "PropertyValue", "name": "CAS", "value": "1306-06-5"}]})])
+                                   "hydroxyapatite/", "Calcium phosphates", {"additionalProperty": [{"@type": "PropertyValue", "name": "CAS", "value": "1306-06-5"}]})], og_image="og-hap.png")
 
 
 def about():
@@ -1331,11 +1684,16 @@ def about():
 {coa_sample()}
 </div></section>
 
+<section class="section"><div class="wrap">
+<div class="section-head"><h2>Bad lime costs you money. Here's how we prevent it.</h2><p class="lede">Most lime problems show up in your plant, not on the invoice. These are the five we hear about most often.</p></div>
+{problems()}
+</div></section>
+
 {cta_band(root, "Talk to us about your process")}
 '''
     page("about", root, "about", "About Calvara Labs & Minerals | Lime Plant, Ransigaon, Jodhpur",
          "Calvara Labs & Minerals makes hydrated lime at its own plant in Ransigaon, Jodhpur. Plant lab tests every lot; CoA, lot traceability and approved-sample supply.",
-         body)
+         body, og_image="og-about.png")
 
 
 def contact():
@@ -1393,7 +1751,7 @@ def contact():
 '''
     page("contact", root, "contact", "Contact Calvara Labs & Minerals | Hydrated Lime Quote, Jodhpur",
          "Ask for a hydrated lime sample, specification sheet or grade advice. Call or WhatsApp +91 98927 27068. Office: Patrakar Colony, Jodhpur. Works: Ransigaon.",
-         body)
+         body, og_image="og-contact.png")
 
 
 def export():
@@ -1421,6 +1779,11 @@ def export():
 
 <section class="section" id="quote"><div class="wrap">
 {quote_builder(root)}
+</div></section>
+
+<section class="section"><div class="wrap">
+<div class="section-head"><h2>Container load calculator</h2><p class="lede">How much lime fits in your box — pick the container, packing and pallets, then send Akshay the figure for a CIF quote.</p></div>
+{container_calc(root)}
 </div></section>
 
 <section class="section section-tint"><div class="wrap">
@@ -1452,7 +1815,7 @@ def export():
 '''
     page("export", root, "export", "Hydrated Lime Prices CIF, CFR, FOB & Export | Calvara Labs",
          "Hydrated lime prices CIF, CFR, FOB India or ex-works Jodhpur. 25 to 40 kg bags, palletised or not, 20 and 40 ft containers, TDS, CoA and SDS.",
-         body, faq_ld)
+         body, faq_ld, og_image="og-export.png")
 
 
 def thanks():
@@ -1492,16 +1855,21 @@ def extras():
         shutil.copy(ROOT / "src" / "brand" / f, OUT / "assets" / "brand" / f)
     for f in ["favicon.svg", "favicon-32.png", "apple-touch-icon.png"]:
         shutil.copy(ROOT / "src" / f, OUT / f)
-    (OUT / ".htaccess").write_text("ErrorDocument 404 /404.html\nDirectoryIndex index.html\n")
-    (OUT / "robots.txt").write_text(f"User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n")
-    urls = ["", "hydrated-lime/", "export/", "hydroxyapatite/", "documents/", "about/", "contact/"] + (["hi/", "hi/hydrated-lime/", "hi/contact/"] if HINDI_READY else [])
+    (OUT / ".htaccess").write_text("ErrorDocument 404 /404.html\nDirectoryIndex index.html\n", encoding="utf-8")
+    (OUT / "robots.txt").write_text(f"User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n", encoding="utf-8")
+    urls = ["", "hydrated-lime/", "export/", "hydroxyapatite/", "documents/", "about/", "contact/",
+            "industries/"] + [f"industries/{s}/" for s in IND_ORDER] + (["hi/", "hi/hydrated-lime/", "hi/contact/"] if HINDI_READY else [])
     items = "".join(f"<url><loc>{SITE}/{u}</loc><lastmod>{datetime.date.today().isoformat()}</lastmod></url>" for u in urls)
-    (OUT / "sitemap.xml").write_text(f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{items}</urlset>\n')
+    (OUT / "sitemap.xml").write_text(f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{items}</urlset>\n', encoding="utf-8")
 
 
 if __name__ == "__main__":
     if OUT.exists():
         shutil.rmtree(OUT)
     OUT.mkdir(parents=True)
-    home(); lime(); export(); hap(); about(); contact(); documents(); thanks(); not_found(); hindi.build(sys.modules[__name__]); extras()
+    home(); lime(); export(); hap(); about(); contact(); documents(); thanks(); not_found()
+    industry_index()
+    for _slug in IND_ORDER:
+        industry(_slug)
+    hindi.build(sys.modules[__name__]); extras()
     print("built", OUT)

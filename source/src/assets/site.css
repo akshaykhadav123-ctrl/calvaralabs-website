@@ -850,6 +850,88 @@ html[lang="hi"] .mq-lg li:nth-child(even){-webkit-text-stroke:1px var(--ink)}
 .broch-band{padding-block:clamp(16px,2.4vw,28px) clamp(36px,5vw,64px)}
 .section-head{margin-bottom:clamp(22px,3vw,40px)}
 
+/* ===== v25: concise home — "Go deeper" link cards ===== */
+.nextup{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.nextup-card{display:flex;flex-direction:column;gap:6px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:22px 24px;text-decoration:none;color:var(--ink);transition:border-color .2s,background .2s}
+.nextup-card:hover{border-color:var(--ink);background:var(--ground)}
+.nextup-card h3{font-size:21px;display:flex;align-items:baseline}
+.nextup-card h3::after{content:"";width:44px;height:8px;margin-left:auto;background:url("rule.svg") no-repeat right center/contain}
+.nextup-card p{font-size:15px;color:var(--ink-soft);flex:1}
+.nextup-card .go{font-family:var(--display);font-weight:600;font-size:15px;color:var(--red-deep)}
+.nextup-card:hover .go{text-decoration:underline}
+@media (max-width:760px){.nextup{grid-template-columns:1fr}}
+
+/* ===== v24: featured process (jharokha arch + step legend) + engineer card + lattice ===== */
+.lattice{position:relative}
+.lattice::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background:url("jaali.svg") 0 0/48px 48px}
+@media (max-width:900px){.lattice::before{display:none}}
+
+.engineer .eng-name{margin:0;font-family:var(--display);font-weight:600;font-size:19px;color:#fff}
+.engineer .eng-cred{margin:4px 0 0;font-size:14.5px;color:#C3CAD3;white-space:nowrap}
+@media (max-width:520px){.engineer .eng-cred{white-space:normal}}
+
+.featured{background:var(--paper);position:relative}
+.featured::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background:url("jaali.svg") 0 0/48px 48px}
+.featured > *{position:relative;z-index:1}
+@media (max-width:900px){.featured::before{display:none}}
+.featured-grid{display:grid;grid-template-columns:minmax(0,58%) minmax(0,42%);gap:clamp(28px,4vw,56px);align-items:center;padding:clamp(34px,5vw,68px) clamp(28px,4.6vw,64px);background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);box-shadow:0 26px 60px -34px rgba(19,32,46,.4)}
+@media (max-width:900px){.featured-grid{grid-template-columns:1fr}}
+.featured-media{position:relative;margin:0;text-align:center}
+.featured-media .arch{display:block;width:auto;height:clamp(92px,12vw,140px);margin:0 auto}
+.featured-media .reel-svg .reel-media{aspect-ratio:auto;height:auto;border:0;margin-top:-26px}
+.featured-media .reel-svg .reel-media > svg{height:auto;max-width:400px;margin:0 auto;background:var(--paper)}
+.featured-media figcaption{padding-bottom:8px}
+.featured-media .reel-btn{top:14px;right:14px;background:rgba(19,32,46,.55)}
+@media (max-width:900px){
+  .featured-media{text-align:left}
+  .featured-media .arch{margin:0 auto clamp(-30px,0px,0)}
+  .featured-media .reel-svg .reel-media{margin-top:-26px}
+  .featured-media .reel-svg .reel-media > svg{max-width:100%}
+}
+.featured-steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:14px}
+.featured-steps li{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start}
+.featured-steps .n{flex:none;width:32px;height:32px;border-radius:50%;background:var(--red);color:#fff;font-family:var(--display);font-weight:600;font-size:16px;display:grid;place-items:center;margin-top:2px}
+.featured-steps h3{font-size:18px;line-height:1.25}
+.featured-steps p{font-size:15px;color:var(--ink-soft);margin-top:3px}
+.featured-note{margin:22px 0 0;padding:14px 16px;border:1px dashed var(--line-strong);border-radius:10px;background:var(--ground);font-size:14.5px;color:var(--ink-soft)}
+.featured-note b{font-family:var(--display);color:var(--ink);font-weight:600}
+.featured-proof{margin-top:clamp(22px,3vw,34px)}
+.featured-proof > b{font-family:var(--display);font-weight:600;font-size:19px}
+.featured-proof figcaption{font-size:15px;color:var(--ink-soft)}
+.featured-proof .reel-media{aspect-ratio:16/9}
+.reels-duo{display:grid;grid-template-columns:1fr 1fr;gap:clamp(14px,2vw,20px);margin-top:14px}
+@media (max-width:760px){.reels-duo{grid-template-columns:1fr}.reels-duo .reel-media{aspect-ratio:16/9}}
+@media (max-width:900px){
+  .featured-steps{gap:12px}
+  .featured-steps li{grid-template-columns:auto 1fr}
+}
+@media (max-width:620px){
+  .featured-steps .n{width:28px;height:28px;font-size:14px}
+  .featured-steps h3{font-size:17px}
+}
+
+/* ===== v26: industry tiles — per-page link + grade tile on industry pages ===== */
+.inds .ind-link{display:inline-block;margin-top:8px;font-family:var(--display);font-weight:600;font-size:14px;color:var(--red-deep);text-decoration:none}
+.inds .ind-link:hover{text-decoration:underline}
+.ind-page-grade .gcard-top b{font-size:52px;color:var(--red-deep)}
+/* other-application cards on industry pages: tighter, 4-col on wide */
+@media (min-width:980px){.nextup.other-apps{grid-template-columns:repeat(4,1fr)}}
+
+/* ===== v27: container load calculator ===== */
+.ccalc{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:24px;display:grid;grid-template-columns:1.1fr 1fr;gap:24px;position:relative;overflow:hidden}
+.ccalc::before{content:"";position:absolute;inset:0 0 auto 0;height:6px;background:url("rule.svg") repeat-x center/24px 6px}
+.ccalc-ctrl{display:grid;gap:14px;grid-template-columns:1fr 1fr;align-content:start}
+.ccalc-ctrl .field{display:flex;flex-direction:column;gap:6px}
+.ccalc-ctrl label{font-family:var(--display);font-weight:600;font-size:14px;color:var(--ink-soft)}
+.ccalc-ctrl select{font-family:var(--body);font-size:15px;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--ground);color:var(--ink)}
+.ccalc-out{display:flex;flex-direction:column;justify-content:center;gap:14px}
+.ccalc-out>div{display:flex;align-items:baseline;gap:10px}
+.ccalc-out small{color:var(--ink-soft);font-size:14px}
+.ccalc-t{font-family:var(--display);font-weight:700;font-size:44px;line-height:1;color:var(--ink)}
+.ccalc-b{font-family:var(--display);font-weight:700;font-size:28px;line-height:1;color:var(--red-deep)}
+.ccalc-note{font-size:13px;color:var(--ink-soft);margin:0}
+.ccalc-act{grid-column:1/-1;display:flex;justify-content:flex-end}
+@media (max-width:760px){.ccalc{grid-template-columns:1fr}.ccalc-act{justify-content:flex-start}}
 /* ===== v24: concise home — "what are you looking for" tiles + big process ===== */
 .paths-band{padding-block:clamp(28px,4vw,48px) clamp(20px,3vw,36px);background:var(--paper)}
 .paths-h{font-size:clamp(22px,2.4vw,28px);font-weight:500;margin-bottom:clamp(14px,2vw,22px)}

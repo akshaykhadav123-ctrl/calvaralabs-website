@@ -92,7 +92,7 @@ def build(B):
 </div></section>'''
 
     def hpage(path, root, current, en_path, title, desc, body, noindex=False, head_extra=""):
-        page(path, root, current, title, desc, body, lang="hi", alt=path + "/", noindex=noindex,
+        page(path, root, current, title, desc, body, lang="hi", alt=en_path, noindex=noindex,
              head_html=header(root, current, en_path), foot_html=footer(root), ui=UI, head_extra=head_extra)
 
     def ladder():
@@ -119,11 +119,23 @@ def build(B):
         for name, _use, gs in B.INDUSTRIES:
             hn, hu = IND_HI[name]
             chips = "".join(f'<li class="chip{" first" if i == 0 else ""}">{g}</li>' for i, g in enumerate(gs))
-            out += f'<div>{lic(B.IND_ICON.get(name, "factory"), "ic ind-ic")}<h3>{hn}</h3><p>{hu}</p><ul class="chips" aria-label="सुझाए गए ग्रेड, पहला ग्रेड शुरुआत के लिए">{chips}</ul></div>'
+            slug = B.IND_SLUG[name]
+            out += f'<div>{lic(B.IND_ICON.get(name, "factory"), "ic ind-ic")}<h3>{hn}</h3><p>{hu}</p><ul class="chips" aria-label="सुझाए गए ग्रेड, पहला ग्रेड शुरुआत के लिए">{chips}</ul><a class="ind-link" href="{href(root, "industries/" + slug)}" hreflang="en">{hn} के लिए ग्रेड पेज →</a></div>'
         return f'<div class="inds">{out}</div>'
 
     def faq():
         return '<div class="faq">' + "".join(f"<details><summary>{q}</summary><p>{a}</p></details>" for q, a in FAQ_HI) + "</div>"
+
+    def nextup():
+        cards = [
+            ("hydrated-lime", "हाइड्रेटेड लाइम", "ग्रेड और स्पेसिफ़िकेशन, उद्योग के हिसाब से इस्तेमाल, भंडारण और ग्रेड-दर-ग्रेड डेटा टैबल।", "स्पेसिफ़िकेशन देखें"),
+            ("industries", "उद्योग के अनुसार", "दस इस्तेमाल के पेज: पानी, एफ्लुएंट, चीनी, स्टील और और — कौन सा ग्रेड, क्यों और कैसे इस्तेमाल।", "अपना उपयोग खोजें"),
+            ("export", "भाव और एक्सपोर्ट", "CIF, CFR और FOB शर्तें, कंटेनर की मात्रा, पैकिंग, और तैयार पूछताछ।", "एक्सपोर्ट विवरण देखें"),
+            ("documents", "दस्तावेज़", "GST, IEC और MSME पंजीकरण, और स्वतंत्र लैब रिपोर्ट, हर एक की वेरिफ़ाई लिंक के साथ।", "दस्तावेज़ खोलें"),
+            ("hydroxyapatite", "हाइड्रॉक्सीएपेटाइट", "टूथपेस्ट, टैबलेट और लैब के लिए एनिमल-फ्री HAp। माइक्रो ग्रेड सैंपल उपलब्ध, 250 ग्राम CoA के साथ।", "सैंपल माँगें"),
+        ]
+        out = "".join(f'<a class="nextup-card" href="{href(root, pg)}"{"" if pg.startswith("hi/") else ' hreflang="en"'}><h3>{t}</h3><p>{d}</p><span class="go">{g}</span></a>' for pg, t, d, g in cards)
+        return f'<div class="nextup">{out}</div>'
 
     def quote(root):
         s = B.quote_builder(root)
@@ -156,7 +168,26 @@ def build(B):
             ("<h2>See how your lime is made</h2>", "<h2>देखिए आपका चूना कैसे बनता है</h2>"),
             ("From quicklime to a sealed bag at our plant in Ransigaon, Jodhpur. Plant visits are welcome by appointment.",
              "क्विकलाइम से सील बंद बैग तक, जोधपुर के रणसीगांव स्थित हमारे प्लांट में। समय लेकर प्लांट देखने ज़रूर आइए।"),
-            ("<b>The process</b>Quicklime and measured water become dry hydrated lime.", "<b>प्रक्रिया</b>क्विकलाइम और नपा-तुला पानी मिलकर सूखा हाइड्रेटेड लाइम बनाते हैं।"),
+            ("<h3>Five steps, one roof</h3>", "<h3>पाँच क़दम, एक छत</h3>"),
+            ("<b>The process</b>Quicklime and measured water become dry hydrated lime.", "<b>प्रक्रिया</b>क्विकलाइम और नपा-तुला पानी मिलकर सूखा हाइड्रेटेड लाइम बनते हैं।"),
+            ("<h3>Kiln</h3>", "<h3>भट्टी</h3>"),
+            ("Rajasthan limestone is burnt to quicklime (CaO) and drawn out onto the conveyor.",
+             "राजस्थान का चूना पत्थर क्विकलाइम (CaO) में पकता है और कंवेयर पर आता है।"),
+            ("<h3>Measured water</h3>", "<h3>नपा-तुला पानी</h3>"),
+            ("Quicklime is fed to the hydrator with a metered flow of water.",
+             "क्विकलाइम मीटर किया हुआ पानी के साथ हाइड्रेटर में जाता है।"),
+            ("<h3>Hydrator</h3>", "<h3>हाइड्रेटर</h3>"),
+            ("Quicklime is slaked into dry calcium hydroxide, Ca(OH)₂, in a rotating drum.",
+             "क्विकलाइम घूमते ड्रम में सूखा कैल्शियम हाइड्रॉक्साइड, Ca(OH)₂, बन जाता है।"),
+            ("<h3>Classifier</h3>", "<h3>क्लासिफ़ायर</h3>"),
+            ("Fine powder passes on; grit and silica are dropped out, so fineness stays within the grade.",
+             "महीन पाउडर आगे जाता है; गिट्टी और सिलिका बाहर गिरती है, इसलिए महीनता ग्रेड के अंदर रहती है।"),
+            ("<h3>Packing</h3>", "<h3>पैकिंग</h3>"),
+            ("25 to 40 kg bags and 900 kg jumbo bags, filled under a bag-filter dust collector.",
+             "25 से 40 किलो के बैग और 900 किलो के जंबो बैग, बैग-फ़िल्टर डस्ट कलेक्टर के नीचे भरते हैं।"),
+            ("<b>Why you should care:</b> because the same plant runs the kiln, the hydrator and the lab, every lot can be tested and shipped with its own Certificate of Analysis.",
+             "<b>यह क्यों देखें:</b> इसी प्लांट में भट्टी, हाइड्रेटर और लैब चलते हैं, इसलिए हर लॉट की जाँच होकर उसके अपने CoA के साथ भेजा जा सकता है।"),
+            ("<b>Watch the plant run</b>", "<b>प्लांट चलते देखें</b>"),
             ("<b>Inside the plant</b>Kiln, hydrators, classifier, packing and the plant lab.", "<b>प्लांट के अंदर</b>भट्टी, हाइड्रेटर, क्लासिफ़ायर, पैकिंग और प्लांट लैब।"),
             ("<b>Packing and dispatch</b>25 to 40 kg bags and 900 kg jumbo bags, ready stock.", "<b>पैकिंग और डिस्पैच</b>25 से 40 किलो के बैग और 900 किलो के जंबो बैग, तैयार स्टॉक।"),
             ("Swipe to see all three.", "तीनों देखने के लिए स्वाइप करें।"),
@@ -235,15 +266,9 @@ def build(B):
 {engineer(root)}
 </div></section>
 
-<section class="section"><div class="wrap">
-<div class="section-head"><h2>एक पाउडर, नौ उद्योग</h2><p class="lede">लाल रंग वाले ग्रेड से शुरुआत करें। सही ग्रेड इस पर निर्भर है कि आपकी प्रक्रिया कितनी सिलिका और अघुलनशील पदार्थ सह सकती है।</p></div>
-{industries()}
-</div></section>
-{B.marquee([IND_HI[n][0] for n, _, _ in B.INDUSTRIES], "sm", reverse=True, speed=45)}
-
-<section class="section"><div class="wrap">
-<div class="section-head"><h2>ख़रीदारों के आम सवाल</h2></div>
-{faq()}
+<section class="section section-tint"><div class="wrap">
+<div class="section-head"><h2>आगे की जानकारी</h2><p class="lede">यह पेज छोला रखते हैं। विस्तार नीचे दिए पेजों पर है।</p></div>
+{nextup()}
 </div></section>
 
 {cta(root)}'''
