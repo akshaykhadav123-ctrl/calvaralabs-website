@@ -909,3 +909,26 @@ html[lang="hi"] .mq-lg li:nth-child(even){-webkit-text-stroke:1px var(--ink)}
   .featured-steps .n{width:28px;height:28px;font-size:14px}
   .featured-steps h3{font-size:17px}
 }
+
+/* ===== v26: industry tiles — per-page link + grade tile on industry pages ===== */
+.inds .ind-link{display:inline-block;margin-top:8px;font-family:var(--display);font-weight:600;font-size:14px;color:var(--red-deep);text-decoration:none}
+.inds .ind-link:hover{text-decoration:underline}
+.ind-page-grade .gcard-top b{font-size:52px;color:var(--red-deep)}
+/* other-application cards on industry pages: tighter, 4-col on wide */
+@media (min-width:980px){.nextup.other-apps{grid-template-columns:repeat(4,1fr)}}
+
+/* ===== v27: container load calculator ===== */
+.ccalc{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:24px;display:grid;grid-template-columns:1.1fr 1fr;gap:24px;position:relative;overflow:hidden}
+.ccalc::before{content:"";position:absolute;inset:0 0 auto 0;height:6px;background:url("rule.svg") repeat-x center/24px 6px}
+.ccalc-ctrl{display:grid;gap:14px;grid-template-columns:1fr 1fr;align-content:start}
+.ccalc-ctrl .field{display:flex;flex-direction:column;gap:6px}
+.ccalc-ctrl label{font-family:var(--display);font-weight:600;font-size:14px;color:var(--ink-soft)}
+.ccalc-ctrl select{font-family:var(--body);font-size:15px;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--ground);color:var(--ink)}
+.ccalc-out{display:flex;flex-direction:column;justify-content:center;gap:14px}
+.ccalc-out>div{display:flex;align-items:baseline;gap:10px}
+.ccalc-out small{color:var(--ink-soft);font-size:14px}
+.ccalc-t{font-family:var(--display);font-weight:700;font-size:44px;line-height:1;color:var(--ink)}
+.ccalc-b{font-family:var(--display);font-weight:700;font-size:28px;line-height:1;color:var(--red-deep)}
+.ccalc-note{font-size:13px;color:var(--ink-soft);margin:0}
+.ccalc-act{grid-column:1/-1;display:flex;justify-content:flex-end}
+@media (max-width:760px){.ccalc{grid-template-columns:1fr}.ccalc-act{justify-content:flex-start}}
