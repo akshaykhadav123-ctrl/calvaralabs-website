@@ -91,9 +91,9 @@ def build(B):
 <div class="btn-row"><a class="btn btn-red" href="{href(root, 'hi/contact')}">भाव पूछें</a><a class="btn btn-ghost-light" href="{B.WHATSAPP}">व्हाट्सऐप करें</a></div>
 </div></section>'''
 
-    def hpage(path, root, current, en_path, title, desc, body, noindex=False):
+    def hpage(path, root, current, en_path, title, desc, body, noindex=False, head_extra=""):
         page(path, root, current, title, desc, body, lang="hi", alt=en_path, noindex=noindex,
-             head_html=header(root, current, en_path), foot_html=footer(root), ui=UI)
+             head_html=header(root, current, en_path), foot_html=footer(root), ui=UI, head_extra=head_extra)
 
     def ladder():
         rows = ""
@@ -202,8 +202,8 @@ def build(B):
         s = B.brochure_block(root)
         for a, b in [
             ("Free download", "मुफ़्त डाउनलोड"),
-            (">Hydrated Lime Brochure 2026<", ">हाइड्रेटेड लाइम ब्रोशर 2026<"),
-            (">Hydroxyapatite Brochure 2026<", ">हाइड्रॉक्सीएपेटाइट ब्रोशर 2026<"),
+            (">Hydrated Lime Brochure<", ">हाइड्रेटेड लाइम ब्रोशर<"),
+            (">Hydroxyapatite Brochure<", ">हाइड्रॉक्सीएपेटाइट ब्रोशर<"),
             ("All 4 grades and specs, plant photos, packing, export loading and CoA format.",
              "चारों ग्रेड और उनकी स्पेसिफ़िकेशन, प्लांट की तस्वीरें, पैकिंग, लोडिंग और CoA का फ़ॉर्मेट। ब्रोशर अंग्रेज़ी में है।"),
             ("Micro and nano grades, full specification, how we make it, and how to start with a 250 g sample.",
@@ -222,7 +222,7 @@ def build(B):
         av = f'<img class="avatar" src="{img}" alt="अक्षय खदाव" loading="lazy" width="84" height="84" style="padding:0">' if img else ""
         return f'''<div class="engineer">{av}<div>
 <blockquote>“अपनी प्रक्रिया के बारे में बताइए। मैं सही ग्रेड सुझाऊँगा, और सैंपल भेजकर दिखाऊँगा कि वह काम करता है।”</blockquote>
-<p><b>अक्षय खदाव</b>, बी.टेक केमिकल इंजीनियरिंग, IIT बॉम्बे</p>
+<p class="eng-name"><b>अक्षय खदाव</b><span>बी.टेक केमिकल इंजीनियरिंग, IIT&nbsp;बॉम्बे</span></p>
 <p>आप हमें लिखते हैं तो सीधे मुझसे बात होती है: केमिस्ट्री, ग्रेड और डिस्पैच, किसी कॉल सेंटर से नहीं।</p>
 <div class="btn-row"><a class="btn btn-red" href="{B.WHATSAPP}">अक्षय को व्हाट्सऐप करें</a><a class="btn btn-ghost-light" href="tel:{B.PHONE_TEL}">कॉल करें {B.PHONE_DISPLAY}</a></div>
 </div></div>'''
@@ -233,7 +233,7 @@ def build(B):
     # ---------- /hi/ home ----------
     root = "../"
     body = f'''
-<section class="hero hero-video"><video class="hero-bg" muted loop playsinline preload="none" poster="{root}assets/media/hero-bg-poster.jpg" aria-hidden="true"><source src="{root}assets/media/hero-bg.webm" type="video/webm"><source src="{root}assets/media/hero-bg.mp4" type="video/mp4"></video><div class="wrap hero-grid">
+<section class="hero hero-video"><video class="hero-bg" muted loop playsinline preload="none" poster="{root}assets/media/hero-bg-poster.webp" aria-hidden="true"><source src="{root}assets/media/hero-bg.webm" type="video/webm"><source src="{root}assets/media/hero-bg.mp4" type="video/mp4"></video><div class="wrap hero-grid">
 <div class="hero-copy">
 <p class="eyebrow-plain">हाइड्रेटेड लाइम · जोधपुर, राजस्थान</p>
 <h1>आपकी ज़रूरत के ग्रेड का हाइड्रेटेड लाइम</h1>
@@ -273,7 +273,7 @@ def build(B):
 
 {cta(root)}'''
     hpage("hi", root, "hi", "", "हाइड्रेटेड लाइम निर्माता, जोधपुर | ग्रेड 80–92 | Calvara Labs",
-          "जोधपुर के अपने प्लांट में बना हाइड्रेटेड लाइम, चार ग्रेड: 80 से 92 % Ca(OH)2। सिलिका 1.06 % से, 98.5 % तक 200 मेश से पार, हर लॉट के साथ CoA।", body)
+          "जोधपुर के अपने प्लांट में बना हाइड्रेटेड लाइम, चार ग्रेड: 80 से 92 % Ca(OH)2। सिलिका 1.06 % से, 98.5 % तक 200 मेश से पार, हर लॉट के साथ CoA।", body, head_extra=B.hero_preload(root))
 
     # ---------- /hi/hydrated-lime/ ----------
     root = "../../"
@@ -375,10 +375,10 @@ def build(B):
 <aside style="display:flex;flex-direction:column;gap:20px">
 <div class="side-card dark">
 <h2 style="font-size:22px">आपके इंजीनियर</h2>
-<p><b style="color:#fff">अक्षय खदाव</b><br>बी.टेक केमिकल इंजीनियरिंग, IIT बॉम्बे</p>
+<p><b style="color:#fff">अक्षय खदाव</b><br>बी.टेक केमिकल इंजीनियरिंग, IIT&nbsp;बॉम्बे</p>
 <div class="contact-line"><span>कॉल या व्हाट्सऐप</span><a href="tel:{B.PHONE_TEL}">{B.PHONE_DISPLAY}</a></div>
 <div class="contact-line"><span>ईमेल</span><a href="mailto:{B.EMAIL}">{B.EMAIL}</a></div>
-<div class="contact-line"><span>ऑफ़िस</span><p>{B.OFFICE}</p></div>
+<div class="contact-line"><span>ऑफ़िस</span><p>{B.OFFICE}<br><a href="{B.MAPS}" target="_blank" rel="noopener">Google Maps पर देखें</a></p></div>
 <div class="contact-line"><span>प्लांट</span><p>{B.WORKS}</p></div>
 </div>
 <div class="side-card light">

@@ -33,6 +33,7 @@ AUTORESPONSE = ("Thank you for contacting Calvara Labs & Minerals. Akshay Khadav
                 "Hydroxyapatite: https://calvaralabs.com/brochures/Calvara-Hydroxyapatite-Brochure-2026.pdf\n\n"
                 "For a faster reply, WhatsApp +91 98927 27068.\n\n"
                 "Calvara Labs & Minerals, Jodhpur, Rajasthan, India · calvaralabs.com")
+MAPS = "https://www.google.com/maps/search/?api=1&query=Calvara+Labs+and+Minerals+Jodhpur"
 OFFICE = "54 Patrakar Colony, Section 7, New Power House Road, Jodhpur, Rajasthan 342003, India"
 WORKS = "Ransigaon, Tehsil Bilara, District Jodhpur, Rajasthan, India"
 
@@ -469,6 +470,7 @@ ORG_LD = {
     "url": SITE + "/", "logo": SITE + "/assets/logo-512.png", "email": EMAIL, "telephone": PHONE_TEL,
     "address": {"@type": "PostalAddress", "streetAddress": "54 Patrakar Colony, Section 7, New Power House Road",
                 "addressLocality": "Jodhpur", "addressRegion": "Rajasthan", "postalCode": "342003", "addressCountry": "IN"},
+    "hasMap": MAPS,
     "description": "Hydrated lime (calcium hydroxide) in four grades, 80 to 92% Ca(OH)2, made at Ransigaon, Jodhpur, Rajasthan, India.",
 }
 
@@ -504,10 +506,17 @@ def video_ld():
         for key, name, desc, poster, sec in clips]
 
 
+def hero_preload(root):
+    m = f"{root}assets/media/hero-bg-poster"
+    return (f'<link rel="preload" as="image" href="{m}-768.webp" media="(max-width:768px)" fetchpriority="high">\n'
+            f'<link rel="preload" as="image" href="{m}.webp" media="(min-width:769px)" fetchpriority="high">\n')
+
+
 HI_ALT = {"": "hi/", "hydrated-lime": "hi/hydrated-lime/", "contact": "hi/contact/"}  # English page -> Hindi page
 
 
-def page(path, root, current, title, desc, body, extra_ld=None, noindex=False, lang="en", alt=None, head_html=None, foot_html=None, ui=None, og_image=None):
+def page(path, root, current, title, desc, body, extra_ld=None, noindex=False, lang="en", alt=None, head_html=None, foot_html=None, ui=None, og_image=None, head_extra=""):
+
     canonical = SITE + "/" + (path + "/" if path and not path.endswith(".html") else "")
     ui = ui or {"wa": "Chat with Akshay on WhatsApp", "top": "Top", "top_label": "Back to top"}
     if lang == "en" and alt is None and path in HI_ALT and HINDI_READY:
@@ -557,7 +566,7 @@ def page(path, root, current, title, desc, body, extra_ld=None, noindex=False, l
 <link rel="icon" href="{root}favicon.svg" type="image/svg+xml">
 <link rel="icon" href="{root}favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="{root}apple-touch-icon.png">
-<link rel="preload" href="{root}assets/fonts/jost.woff2" as="font" type="font/woff2" crossorigin>
+{head_extra}<link rel="preload" href="{root}assets/fonts/jost.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="{root}assets/site.css">
 <script type="application/ld+json">{json.dumps(ld if len(ld) > 1 else ld[0], ensure_ascii=False)}</script>
 {f"""<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{{"token": "{CF_BEACON_TOKEN}"}}'></script>""" if CF_BEACON_TOKEN else ""}
@@ -580,13 +589,14 @@ def page(path, root, current, title, desc, body, extra_ld=None, noindex=False, l
     if(matchMedia('(prefers-reduced-motion: reduce)').matches) tset(true);
   }}
   var smooth=!matchMedia('(prefers-reduced-motion: reduce)').matches;
-  function pad(){{ if(top) document.documentElement.style.scrollPaddingTop=(top.offsetHeight+12)+'px'; }}
+  function pad(){{ if(top){{ document.documentElement.style.scrollPaddingTop=(top.offsetHeight+12)+'px'; document.documentElement.style.setProperty('--toph', top.offsetHeight+'px'); }} }}
   pad(); addEventListener('resize',pad);
   var hv=document.querySelector('video.hero-bg');
-  if(hv && !matchMedia('(prefers-reduced-motion: reduce)').matches && !(navigator.connection && navigator.connection.saveData)){{
+  var cn=navigator.connection||{{}};
+  if(hv && innerWidth>=900 && !matchMedia('(prefers-reduced-motion: reduce)').matches && !cn.saveData && !/(^|slow-)2g|3g/.test(cn.effectiveType||'')){{
     hv.dataset.ok='1';
     var go=function(){{ hv.preload='auto'; hv.play().catch(function(){{}}); }};
-    if(document.readyState==='complete') setTimeout(go,300); else addEventListener('load',function(){{ setTimeout(go,300); }});
+    if(document.readyState==='complete') setTimeout(go,1500); else addEventListener('load',function(){{ setTimeout(go,1500); }});
     if('IntersectionObserver' in window) new IntersectionObserver(function(es){{ if(document.documentElement.classList.contains('motion-paused')) return; es[0].isIntersecting ? hv.play().catch(function(){{}}) : hv.pause(); }}).observe(hv);
     hv.addEventListener('playing',function(){{ hv.classList.add('is-on'); }});
   }}
@@ -695,11 +705,12 @@ def stats():
 def engineer(root, short=False):
     img = photo("akshay")
     av = f'<img class="avatar" src="{img}" alt="Akshay Khadav" loading="lazy" width="84" height="84" style="padding:0">' if img else '<span class="avatar" aria-hidden="true">AK</span>'
-    more = "" if short else "<p>I am a chemical engineer from IIT Bombay and I lead Calvara Labs &amp; Minerals. When you write to us, you speak directly with me about chemistry, grades and dispatch, not with a call centre.</p>"
+    more = "" if short else "<p>I am a chemical engineer from IIT&nbsp;Bombay and I lead Calvara Labs &amp; Minerals. When you write to us, you speak directly with me about chemistry, grades and dispatch, not with a call centre.</p>"
     return f'''<div class="engineer">{av}<div>
 <blockquote>“Tell me about your process. I'll suggest the grade that fits, and send you a sample to prove it.”</blockquote>
 <p class="eng-name"><b>Akshay Khadav</b></p>
 <p class="eng-cred">B.Tech Chemical Engineering, IIT Bombay</p>
+
 {more}
 <div class="btn-row"><a class="btn btn-red" href="{WHATSAPP}">WhatsApp Akshay</a><a class="btn btn-ghost-light" href="tel:{PHONE_TEL}">Call {PHONE_DISPLAY}</a></div>
 </div></div>'''
@@ -725,7 +736,7 @@ def problems():
         ("Every truck is different", "One good lot, then the next one upsets your process.",
          "Supplied to your approved sample", "We agree the specification against the sample you approved, and every lot is traceable by lot number."),
         ("Nobody to call", "A trader can't answer technical questions or fix a problem.",
-         "A chemical engineer on the phone", "Akshay Khadav (IIT Bombay) answers technical questions directly."),
+         "A chemical engineer on the phone", "Akshay Khadav (IIT&nbsp;Bombay) answers technical questions directly."),
     ]
     out = "".join(f'<div class="pf-row"><div class="bad"><h3>{a}</h3><p>{b}</p></div><div class="good"><h3>{c}</h3><p>{d}</p></div></div>' for a, b, c, d in rows)
     return f'''<div class="pf">{out}</div>
@@ -1020,7 +1031,7 @@ HAP_ASKS = [
      "1, 5 and 25 kg packs. We make small lots today and scale with demand; ask for monthly capacity and lead time.",
      "Hello Akshay, what monthly hydroxyapatite quantity can you supply, and what is the lead time?"),
     ("Nano grade",
-     "Nano grade (20 to 100 nm) is in development. Ask Akshay for the expected timeline and to join the first sample list.",
+     "Nano grade (20 to 100 nm, rod-shaped, Ca/P 1.65 to 1.68, purity 99 % min) is in development. Ask Akshay for the expected timeline and to join the first sample list.",
      "Hello Akshay, please add us to the first sample list for nano hydroxyapatite. Our use: ___"),
     ("Regulatory documents",
      "Synthetic and animal-free. Tell us the documents your regulatory or QA team needs and Akshay confirms what we can provide.",
@@ -1037,9 +1048,9 @@ def hap_asks_grid():
 # Brochures shown at the top of the home page. Set "file" to a PDF in src/brochures/ to publish one;
 # file None shows a "coming soon" card.
 BROCHURES = {
-    "lime": {"title": "Hydrated Lime Brochure 2026", "file": "Calvara-Hydrated-Lime-Brochure-2026.pdf",
+    "lime": {"title": "Hydrated Lime Brochure", "file": "Calvara-Hydrated-Lime-Brochure-2026.pdf",
              "meta": "10 pages · PDF · 1.3 MB", "what": "All 4 grades and specs, plant photos, packing, export loading and CoA format."},
-    "hap": {"title": "Hydroxyapatite Brochure 2026", "file": "Calvara-Hydroxyapatite-Brochure-2026.pdf",
+    "hap": {"title": "Hydroxyapatite Brochure", "file": "Calvara-Hydroxyapatite-Brochure-2026.pdf",
             "meta": "6 pages · PDF · 0.8 MB", "what": "Micro and nano grades, full specification, how we make it, and how to start with a 250 g sample."},
 }
 
@@ -1114,6 +1125,114 @@ PROCESS_STEPS = [
 ]
 
 
+
+# ---------- home: "what are you looking for" tiles and the big process section ----------
+def path_tiles(root):
+    tiles = [
+        ("ruler", "Grades and specs", "Compare 92, 90, 85 and 80: silica, moisture, fineness.", f"{href(root, 'hydrated-lime')}#spec"),
+        ("indian-rupee", "Get a price", "Pick grade, packing and port. One message to Akshay.", "#quote"),
+        ("factory", "How we make it", "From quicklime to a sealed bag, step by step.", "#process"),
+        ("download", "Brochures (PDF)", "Hydrated lime and hydroxyapatite, free download.", "#brochure"),
+        ("microscope", "Lab reports and certificates", "Independent test reports, GST, IEC and Udyam.", href(root, "documents")),
+        ("ship", "Export and containers", "CIF, CFR, FOB, palletised loading, documents.", href(root, "export")),
+        ("hexagon", "Hydroxyapatite", "Animal-free HAP for toothpaste and cosmetics.", href(root, "hydroxyapatite")),
+        ("message-circle", "Talk to the engineer", "WhatsApp Akshay, usually a same-day reply.", WHATSAPP),
+    ]
+    items = "".join(
+        f'<a class="path" href="{u}">{lic(ic, "ic path-ic")}<span class="path-t">{t}</span><span class="path-d">{d}</span>{lic("arrow-right", "ic path-go")}</a>'
+        for ic, t, d, u in tiles)
+    return f'''<section class="paths-band" aria-labelledby="paths-h"><div class="wrap">
+<h2 id="paths-h" class="paths-h">What are you looking for?</h2>
+<nav class="paths" aria-label="Jump to">{items}</nav>
+</div></section>'''
+
+
+STORY_STEPS = [
+    # title, what happens, what it means for you, spotlight box on the diagram (x, y, w, h in the 720 x 900 drawing)
+    ("Quicklime from the kiln",
+     "Limestone from the Jodhpur limestone belt is burnt to quicklime (CaO) and carried by conveyor to the hydrator.",
+     "Good stone and a full burn set the ceiling for purity. Every grade starts here.", (70, 150, 420, 255)),
+    ("Measured water",
+     "Water is added in a measured amount: just enough to slake the quicklime into a dry powder, no more.",
+     "Too little water leaves quicklime that heats up in your process; too much makes lumps. Moisture stays between 0.8 and 2.0 %.", (405, 145, 305, 250)),
+    ("Hydrator",
+     "Quicklime and water are mixed as they react. The reaction gives off heat and steam and forms calcium hydroxide.",
+     "CaO + H<sub>2</sub>O → Ca(OH)<sub>2</sub> + heat. Fully hydrated lime is stable, safe to handle and easy to dose.", (15, 305, 590, 265)),
+    ("Classifier",
+     "Fine powder is carried on, while grit and coarse, silica-rich particles are separated out.",
+     "This sets each grade's fineness (up to 98.5 % through 200 mesh) and keeps silica down to 1.06 % in grade 92.", (285, 535, 400, 205)),
+    ("Packed and tested",
+     "The powder is filled in 25, 30, 35 or 40 kg bags or 900 kg jumbo bags. Every lot is tested in our plant lab.",
+     "You get the grade you approved, lot after lot, with a Certificate of Analysis on every dispatch.", (85, 722, 630, 175)),
+]
+
+
+def process_section(root):
+    svg = (ROOT / "src" / "assets" / "media" / "process.svg").read_text()
+    boxes = ";".join(",".join(str(v) for v in b[3]) for b in STORY_STEPS)
+    steps = "".join(
+        f'''<article class="st" data-step="{i}"><span class="st-n">{i:02d}</span><h3>{t}</h3><p>{d}</p>
+<p class="st-why"><b>What it means for you</b>{w}</p></article>'''
+        for i, (t, d, w, _b) in enumerate(STORY_STEPS, 1))
+    dots = "".join(f'<button type="button" class="st-dot" data-go="{i}" aria-label="Step {i}: {t}">{i}</button>' for i, (t, *_r) in enumerate(STORY_STEPS, 1))
+    def vid(key, title, text):
+        m = f"{root}assets/media/{key}"
+        return f'''<figure class="reel reel-arch">
+<div class="reel-media"><video muted loop playsinline preload="none" data-poster="{m}-poster.jpg" aria-label="{title}"><source src="{m}.webm" type="video/webm"><source src="{m}.mp4" type="video/mp4"></video>
+<button class="reel-btn" type="button" aria-label="Pause {title.lower()}">{lic("pause", "ic i-pause")}{lic("play", "ic i-play")}</button></div>
+<figcaption><b>{title}</b>{text}</figcaption></figure>'''
+    return f'''<section class="proc-story motion" id="process"><div class="wrap">
+<div class="section-head"><h2>How we make your hydrated lime</h2><p class="lede">Five steps at our plant in Ransigaon, Jodhpur. Scroll through them to see what happens at each step and what it means for the lime you receive.</p></div>
+<div class="story" data-boxes="{boxes}">
+<div class="story-fig">
+<figure class="reel reel-svg proc-figure"><div class="reel-media">{svg}
+<div class="spot" aria-hidden="true"><i class="spot-win"></i></div>
+<button class="reel-btn" type="button" aria-label="Pause process animation">{lic("pause", "ic i-pause")}{lic("play", "ic i-play")}</button></div></figure>
+<div class="st-dots" role="group" aria-label="Go to step">{dots}</div>
+</div>
+<div class="story-steps">{steps}</div>
+</div>
+<div class="reels reels-2">
+{vid("plant-tour", "Inside the plant", "Kiln, hydrators, classifier, packing and the plant lab.")}
+{vid("packing-dispatch", "Packing and dispatch", "25 to 40 kg bags and 900 kg jumbo bags, ready stock.")}
+</div>
+<p class="swipe-hint">Swipe to see both videos.</p>
+</div></section>
+<script>
+(function(){{
+  var story=document.querySelector('.story'); if(!story) return;
+  var boxes=story.dataset.boxes.split(';').map(function(b){{return b.split(',').map(Number);}});
+  var win=story.querySelector('.spot-win');
+  var steps=[].slice.call(story.querySelectorAll('.st')), dots=[].slice.call(story.querySelectorAll('.st-dot'));
+  var active=-1, ticking=false, on=false, mq=matchMedia('(max-width:860px)');
+  function place(n){{ var p=6, b=n?boxes[n-1]:[-p,-p,720+2*p,900+2*p];
+    var x=b[0]-(n?p:0), y=b[1]-(n?p:0), w=b[2]+(n?2*p:0), h=b[3]+(n?2*p:0);
+    win.style.left=(x/7.2)+'%'; win.style.top=(y/9)+'%'; win.style.width=(w/7.2)+'%'; win.style.height=(h/9)+'%';
+    win.classList.toggle('is-on', !!n); }}
+  function activate(n){{ if(n===active) return; active=n;
+    steps.forEach(function(s){{ s.classList.toggle('is-on', +s.dataset.step===n); }});
+    dots.forEach(function(d){{ var o=+d.dataset.go===n; d.classList.toggle('is-on', o); d.setAttribute('aria-pressed', o); }});
+    place(n); }}
+  function pick(){{ ticking=false; var a=innerHeight*(mq.matches?.74:.5), best=1, bd=1e9;
+    for(var i=0;i<steps.length;i++){{ var r=steps[i].getBoundingClientRect();
+      if(r.top<=a && r.bottom>=a){{ best=i+1; bd=0; break; }}
+      var d=Math.min(Math.abs(r.top-a),Math.abs(r.bottom-a)); if(d<bd){{ bd=d; best=i+1; }} }}
+    activate(best); }}
+  function onScroll(){{ if(!ticking){{ ticking=true; requestAnimationFrame(pick); }} }}
+  activate(0);
+  if('IntersectionObserver' in window){{
+    new IntersectionObserver(function(es){{ var v=es[0].isIntersecting;
+      if(v && !on){{ on=true; addEventListener('scroll',onScroll,{{passive:true}}); pick(); }}
+      else if(!v && on){{ on=false; removeEventListener('scroll',onScroll); activate(0); }} }},{{threshold:0}}).observe(story);
+  }} else {{ addEventListener('scroll',onScroll,{{passive:true}}); pick(); }}
+  dots.forEach(function(d){{ d.addEventListener('click',function(){{ var s=steps[+d.dataset.go-1];
+    var r=matchMedia('(prefers-reduced-motion: reduce)').matches;
+    scrollTo({{top:s.getBoundingClientRect().top+scrollY-innerHeight*(mq.matches?.74:.5)+Math.min(s.offsetHeight/2,80), behavior:r?'auto':'smooth'}}); }}); }});
+}})();
+</script>'''
+
+
+
 def motion_section(root):
     svg = (ROOT / "src" / "assets" / "media" / "process.svg").read_text(encoding="utf-8")
     arch = (ROOT / "src" / "assets" / "jharokha.svg").read_text(encoding="utf-8").replace("<svg ", "<svg class=\"arch\" ", 1)
@@ -1123,6 +1242,7 @@ def motion_section(root):
         m = f"{root}assets/media/{key}"
         return f'''<figure class="reel {cls}">
 <div class="reel-media"><video muted loop playsinline preload="none" poster="{m}-poster.jpg" aria-label="{title}"><source src="{m}.webm" type="video/webm"><source src="{m}.mp4" type="video/mp4"></video>
+
 <button class="reel-btn" type="button" aria-label="Pause {title.lower()}">{lic("pause", "ic i-pause")}{lic("play", "ic i-play")}</button></div>
 <figcaption><b>{title}</b>{text}</figcaption></figure>'''
     return f'''<section class="section motion"><div class="wrap">
@@ -1151,6 +1271,7 @@ def motion_section(root):
   function setBtn(b, paused){{ b.classList.toggle('is-paused', paused); b.setAttribute('aria-label', (paused ? 'Play ' : 'Pause ') + b.getAttribute('aria-label').replace(/^(Play|Pause) /,'')); }}
   document.querySelectorAll('.reel').forEach(function(r){{
     var v = r.querySelector('video'), s = r.querySelector('.reel-media > svg'), b = r.querySelector('.reel-btn'), user = false;
+    if(v && v.dataset.poster){{ if('IntersectionObserver' in window){{ var po=new IntersectionObserver(function(es){{ if(es[0].isIntersecting){{ v.poster=v.dataset.poster; po.disconnect(); }} }},{{rootMargin:'600px 0px'}}); po.observe(r); }} else v.poster=v.dataset.poster; }}
     function play(){{ if(v){{ var p=v.play(); if(p&&p.catch)p.catch(function(){{}}); }} if(s) s.unpauseAnimations(); setBtn(b,false); }}
     function stop(){{ if(v) v.pause(); if(s) s.pauseAnimations(); setBtn(b,true); }}
     b.addEventListener('click', function(){{ user = true; if(b.classList.contains('is-paused')) play(); else stop(); }});
@@ -1235,8 +1356,9 @@ def documents():
 import hindi  # noqa: E402  (Hindi pages; uses the helpers above)
 def home():
     root = ""
+    motion_js = motion_section(root).split("</section>", 1)[1]  # reuse the play/pause script only
     body = f'''
-<section class="hero hero-video"><video class="hero-bg" muted loop playsinline preload="none" poster="assets/media/hero-bg-poster.jpg" aria-hidden="true"><source src="assets/media/hero-bg.webm" type="video/webm"><source src="assets/media/hero-bg.mp4" type="video/mp4"></video><div class="wrap hero-grid">
+<section class="hero hero-video"><video class="hero-bg" muted loop playsinline preload="none" poster="assets/media/hero-bg-poster.webp" aria-hidden="true"><source src="assets/media/hero-bg.webm" type="video/webm"><source src="assets/media/hero-bg.mp4" type="video/mp4"></video><div class="wrap hero-grid">
 <div class="hero-copy">
 <p class="eyebrow-plain">Hydrated lime · Jodhpur, Rajasthan</p>
 <h1>Hydrated lime, made to the grade you need.</h1>
@@ -1245,9 +1367,12 @@ def home():
 </div>
 <div class="hero-ladder">{ladder()}</div>
 </div></section>
+
+{path_tiles(root)}
 {marquee(MQ_HOME, "lg", speed=55)}
 
-{motion_section(root)}
+{process_section(root)}
+{motion_js}
 
 <section class="broch-band" id="brochure"><div class="wrap">
 {brochure_block(root)}
@@ -1257,6 +1382,7 @@ def home():
 
 <section class="section section-tint" id="quote"><div class="wrap">
 {quote_builder(root)}
+<p class="more-link"><a href="{href(root, 'export')}">Prices, packing, containers and payment terms explained</a></p>
 </div></section>
 
 <section class="section"><div class="wrap">
@@ -1274,13 +1400,15 @@ def home():
 <section class="section section-tint"><div class="wrap split">
 <div class="prose"><h2>Also from our calcium: hydroxyapatite</h2><p>We make synthetic, animal-free hydroxyapatite from purified calcium for toothpaste, tablets, cosmetics and labs. Micro grade samples are open now.</p><p><a href="{href(root, 'hydroxyapatite')}">Hydroxyapatite specification</a></p></div>
 <div class="mini-tile"><span class="formula">Ca<sub>10</sub>(PO<sub>4</sub>)<sub>6</sub>(OH)<sub>2</sub></span><span class="meta">CAS 1306-06-5 · Ca/P 1.67 · D50 3 to 8 µm</span></div>
+
 </div></section>
 
 {cta_band(root)}
 '''
     page("", root, "", "Hydrated Lime Manufacturer, Jodhpur | Grades 80–92 | Calvara Labs",
          "Hydrated lime in four grades, 80 to 92% Ca(OH)2, made at our plant near Jodhpur. Silica from 1.06%, up to 98.5% through 200 mesh, CoA with every lot.",
-         body, extra_ld=video_ld())
+         body, extra_ld=video_ld(), head_extra=hero_preload(root))
+
 
 
 def lime():
@@ -1322,6 +1450,11 @@ def lime():
 <div class="section-head"><h2>Typical specification by grade</h2><p class="lede">The grade number is the minimum Ca(OH)<sub>2</sub> content. Higher grades carry less silica and are finer.</p></div>
 {spec_table()}
 <p class="table-note">Typical, indicative values. Final specifications are confirmed against an agreed sample and the Certificate of Analysis for each lot.</p>
+</div></section>
+
+<section class="section"><div class="wrap">
+<div class="section-head"><h2>Bad lime costs you money. Here's how we prevent it.</h2><p class="lede">Most lime problems show up in your plant, not on the invoice. These are the five we hear about most often.</p></div>
+{problems()}
 </div></section>
 
 <section class="section section-tint" id="quote"><div class="wrap">
@@ -1398,7 +1531,7 @@ def hap():
     rows = "".join(f'<tr><th scope="row">{a}</th><td class="num">{b}</td></tr>' for a, b in spec)
     faq = [
         ("Is your hydroxyapatite animal-free?", "Yes. It is made synthetically from calcium hydroxide and food-grade phosphoric acid. No bone or fish is used."),
-        ("What is the difference between micro and nano hydroxyapatite?", "Nano hydroxyapatite has particles under 100 nm. Our micro grade (D50 3 to 8 µm) is available for samples now. Nano grade (20 to 100 nm) is in development."),
+        ("What is the difference between micro and nano hydroxyapatite?", "Nano hydroxyapatite has particles under 100 nm. Our micro grade (D50 3 to 8 µm) is available for samples now. Nano grade (20 to 100 nm, rod-shaped, Ca/P 1.65 to 1.68, purity 99 % min) is in development."),
         ("What does the Ca/P ratio tell me?", "Pure hydroxyapatite has a calcium to phosphorus molar ratio of 1.67. A ratio close to this shows the product is mostly hydroxyapatite."),
         ("Can I use it in a medical device or bone graft?", "No. Medical-grade hydroxyapatite needs a medical device licence, and we do not offer it."),
     ]
@@ -1424,7 +1557,7 @@ def hap():
 <div class="table-box"><table style="min-width:0">
 <thead><tr><th scope="col">Grade</th><th scope="col">Particle size</th><th scope="col">Status</th></tr></thead>
 <tbody><tr><th scope="row">Micro</th><td class="num">D50 3 to 8 µm</td><td>Samples available now</td></tr>
-<tr><th scope="row">Nano</th><td class="num">20 to 100 nm</td><td>In development</td></tr></tbody></table></div>
+<tr><th scope="row">Nano</th><td class="num">20 to 100 nm, rod-shaped</td><td>In development, <a href="#nano">target specification</a></td></tr></tbody></table></div>
 </div></section>
 
 <section class="section section-tint" id="spec"><div class="wrap split">
@@ -1432,6 +1565,24 @@ def hap():
 <p>These are the limits we make the micro grade to. Each lot ships with its own Certificate of Analysis showing the measured values.</p>
 <p>Heavy metals and fluoride are controlled from the start: we test the incoming lime and use only food-grade phosphoric acid.</p><p>Need a TDS, sample CoA or a specific test report (XRD, Ca/P, heavy metals, particle size)? <a href="https://wa.me/919892727068?text=Hello%20Akshay%2C%20please%20send%20the%20TDS%20and%20sample%20CoA%20for%20your%20hydroxyapatite.%20We%20also%20need%3A%20___">Ask Akshay</a> and he will confirm what is available for your sample lot.</p></div>
 <div class="table-box"><table style="min-width:0"><caption>Micro grade, target limits</caption><tbody>{rows}</tbody></table></div>
+</div></section>
+
+<section class="section" id="nano"><div class="wrap split">
+<div class="prose"><h2>Nano grade: target specification</h2>
+<p>We are developing nano hydroxyapatite to the limits that remineralising toothpaste makers ask us for. These are <b>target limits, not test results</b>. Development samples will ship with their own Certificate of Analysis.</p>
+<p>Working to a different spec? Send it and we will develop to your numbers.</p>
+<div class="btn-row"><a class="btn btn-wa" href="{wa("Hello Akshay, here is our nano hydroxyapatite specification: ___")}">Share your nano spec on WhatsApp</a></div>
+</div>
+<div class="table-box"><table class="spec-2col" style="min-width:0"><caption>Nano grade, target limits (in development)</caption><tbody>
+<tr><th scope="row">Particle size</th><td class="num">20 to 100 nm</td></tr>
+<tr><th scope="row">Particle shape</th><td class="num">Rod-shaped preferred: 20 to 40 nm wide, 60 to 90 nm long</td></tr>
+<tr><th scope="row">Ca/P molar ratio</th><td class="num">1.65 to 1.68 (target 1.67)</td></tr>
+<tr><th scope="row">Purity</th><td class="num">99 % min</td></tr>
+<tr><th scope="row">Lead (Pb)</th><td class="num">below 0.5 ppm</td></tr>
+<tr><th scope="row">Arsenic (As)</th><td class="num">below 0.5 ppm</td></tr>
+<tr><th scope="row">Cadmium (Cd)</th><td class="num">below 0.1 ppm</td></tr>
+<tr><th scope="row">Mercury (Hg)</th><td class="num">below 0.1 ppm</td></tr>
+</tbody></table></div>
 </div></section>
 
 <section class="section"><div class="wrap split">
@@ -1582,10 +1733,10 @@ def contact():
 <aside style="display:flex;flex-direction:column;gap:20px">
 <div class="side-card dark">
 <h2 style="font-size:22px">Your engineer</h2>
-<p><b style="color:#fff">Akshay Khadav</b><br>B.Tech Chemical Engineering, IIT Bombay</p>
+<p><b style="color:#fff">Akshay Khadav</b><br>B.Tech Chemical Engineering, IIT&nbsp;Bombay</p>
 <div class="contact-line"><span>Call or WhatsApp</span><a href="tel:{PHONE_TEL}">{PHONE_DISPLAY}</a></div>
 <div class="contact-line"><span>Email</span><a href="mailto:{EMAIL}">{EMAIL}</a></div>
-<div class="contact-line"><span>Office</span><p>{OFFICE}</p></div>
+<div class="contact-line"><span>Office</span><p>{OFFICE}<br><a href="{MAPS}" target="_blank" rel="noopener">Find us on Google Maps</a></p></div>
 <div class="contact-line"><span>Works</span><p>{WORKS}</p></div>
 </div>
 <div class="side-card light">
@@ -1689,6 +1840,11 @@ def not_found():
 
 def extras():
     shutil.copytree(ROOT / "src" / "assets", OUT / "assets", dirs_exist_ok=True)
+    css = (OUT / "assets" / "site.css").read_text()
+    css = re.sub(r"/\*.*?\*/", "", css, flags=re.S)
+    css = re.sub(r"\s+", " ", css)
+    css = re.sub(r"\s*([{}:;,>])\s*", r"\1", css).replace(";}", "}")
+    (OUT / "assets" / "site.css").write_text(css.strip() + "\n")
     shutil.copytree(ROOT / "src" / "brochures", OUT / "brochures", dirs_exist_ok=True)
     shutil.copytree(ROOT / "src" / "documents", OUT / "documents", dirs_exist_ok=True)
     shutil.copytree(ROOT / "src" / "icons", OUT / "assets" / "icons", dirs_exist_ok=True)
